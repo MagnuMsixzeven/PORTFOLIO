@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QuickOrder — GrillZone Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0a0a0a;--bgc:#111;--bgm:#1a1a1a;--p:#ff6b00;--pl:#ff8c33;--pd:#d95a00;--pg:rgba(255,107,0,.2);--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--txt:#ffffff;--txt2:#aaaaaa;--bdr:#2a2a2a;--r:10px;--rm:16px;--rs:8px;--rf:999px;--sw:240px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.hidden{display:none!important}
+/* DEMO BANNER */
+.demo-banner{background:linear-gradient(90deg,rgba(255,107,0,.12),rgba(255,107,0,.05));border-bottom:1px solid rgba(255,107,0,.2);padding:9px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#ff8c33;font-weight:600;position:sticky;top:0;z-index:200}
+.demo-banner-left{display:flex;align-items:center;gap:8px}
+.view-toggle{display:flex;gap:4px;background:rgba(0,0,0,.3);padding:4px;border-radius:var(--r);border:1px solid rgba(255,255,255,.06)}
+.vbtn{padding:5px 14px;border-radius:7px;font-size:11.5px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--txt2);font-family:inherit;transition:all .2s}
+.vbtn.active{background:rgba(255,107,0,.18);color:var(--p)}
+/* CLIENT HEADER */
+.c-header{background:rgba(10,10,10,.96);border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(18px);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:38px;z-index:90}
+.c-logo{display:flex;align-items:center;gap:10px}.c-logo-ico{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;box-shadow:0 4px 14px rgba(255,107,0,.3)}
+.c-logo-txt{font-size:1.15rem;font-weight:800;letter-spacing:-.02em}.c-logo-txt span{color:var(--p)}
+.c-nav{display:flex;gap:20px;font-size:.88rem;color:var(--txt2)}.c-nav a:hover{color:var(--txt)}
+.c-cart-btn{display:flex;align-items:center;gap:8px;background:var(--p);color:#fff;border:none;padding:8px 16px;border-radius:var(--r);font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit}
+.c-cart-badge{width:18px;height:18px;border-radius:50%;background:#fff;color:var(--p);font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+/* HERO CLIENTE */
+.c-hero{background:linear-gradient(135deg,#100800,#1a0d00,#0f0f0f);padding:42px 24px;display:flex;align-items:center;gap:36px;overflow:hidden;position:relative}
+.c-hero::before{content:"";position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.14),transparent 70%);top:-60px;right:60px;pointer-events:none}
+.c-hero-text{max-width:560px;position:relative;z-index:1}
+.c-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:var(--rf);background:rgba(255,107,0,.12);border:1px solid rgba(255,107,0,.22);color:var(--pl);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.c-hero h1{font-size:2.2rem;font-weight:800;line-height:1.1;margin-bottom:10px}.c-hero h1 span{color:var(--p)}
+.c-hero p{color:var(--txt2);font-size:.95rem;margin-bottom:20px;line-height:1.65}
+.c-hero-actions{display:flex;gap:10px}
+.c-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:var(--r);font-size:.88rem;font-weight:700;cursor:pointer;border:none;font-family:inherit}
+.c-btn-p{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;box-shadow:0 8px 24px rgba(255,107,0,.28)}
+.c-btn-g{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--txt)}
+.c-hero-cards{display:flex;gap:12px;position:relative;z-index:1}
+.c-hcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;text-align:center;min-width:90px}
+.c-hcard strong{display:block;color:var(--p);font-size:1.3rem;font-weight:800}
+.c-hcard span{font-size:.72rem;color:var(--txt2)}
+/* MENU */
+.c-menu{padding:28px 24px}
+.c-menu-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.c-menu-top h2{font-size:1.2rem;font-weight:800}
+.c-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.cat-btn{padding:7px 16px;border-radius:var(--rf);font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--bdr);background:rgba(255,255,255,.03);color:var(--txt2);font-family:inherit;transition:all .15s}
+.cat-btn.active,.cat-btn:hover{background:rgba(255,107,0,.14);border-color:rgba(255,107,0,.3);color:var(--p)}
+.c-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:var(--r);padding:8px 14px;color:var(--txt2);font-size:.85rem;width:200px}
+.c-search input{background:none;border:none;outline:none;color:var(--txt);font-family:inherit;font-size:.85rem;width:100%}
+.c-search input::placeholder{color:var(--txt2)}
+/* PRODUCTS */
+.c-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-bottom:28px}
+.c-item{background:var(--bgc);border:1px solid rgba(255,255,255,.06);border-radius:var(--rm);overflow:hidden;transition:transform .2s,border-color .2s}
+.c-item:hover{transform:translateY(-3px);border-color:rgba(255,107,0,.2)}
+.c-item-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;background:linear-gradient(135deg,rgba(255,107,0,.08),rgba(255,107,0,.04))}
+.c-item-body{padding:14px}
+.c-item-name{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.c-item-desc{font-size:.8rem;color:var(--txt2);margin-bottom:12px;line-height:1.5}
+.c-item-foot{display:flex;align-items:center;justify-content:space-between}
+.c-item-price{font-size:1.05rem;font-weight:800;color:var(--p)}
+.c-add{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));border:none;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.c-add:hover{transform:scale(1.1)}
+.c-item-tag{display:inline-block;padding:3px 8px;border-radius:var(--rf);font-size:.68rem;font-weight:700;margin-bottom:6px}
+.c-tag-destaque{background:rgba(255,107,0,.14);color:var(--pl)}
+.c-tag-novo{background:rgba(34,197,94,.12);color:#4ade80}
+.c-tag-popular{background:rgba(245,158,11,.12);color:#fbbf24}
+.c-cart-float{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;padding:14px 20px;border-radius:var(--rm);box-shadow:0 10px 36px rgba(255,107,0,.38);cursor:pointer;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:10px;z-index:150;transition:transform .2s;border:none;font-family:inherit}
+.c-cart-float:hover{transform:translateY(-3px)}
+.c-footer{background:#070707;border-top:1px solid rgba(255,255,255,.05);padding:24px;text-align:center;color:var(--txt2);font-size:.82rem}
+/* ADMIN */
+#view-admin{display:flex;min-height:calc(100vh - 38px)}
+.sidebar{width:var(--sw);background:#000;border-right:1px solid rgba(255,255,255,.05);position:fixed;top:38px;height:calc(100vh - 38px);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sidebar::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 160px 240px at 20% 90%,rgba(255,107,0,.12),transparent);pointer-events:none}
+.sidebar>*{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.05)}
+.brand-ico{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;flex-shrink:0}
+.brand-txt strong{display:block;font-size:.95rem;font-weight:800}
+.brand-txt small{color:var(--txt2);font-size:.72rem}
+.sidebar nav{padding:12px 8px;flex:1;display:flex;flex-direction:column;gap:2px}
+.nsec{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.25);padding:10px 10px 5px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:.875rem;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .18s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.ni:hover{background:rgba(255,107,0,.1);color:var(--txt)}
+.ni.active{background:linear-gradient(90deg,rgba(255,107,0,.18),rgba(255,107,0,.06));color:var(--p);font-weight:700}
+.ni.active::before{content:"";display:block;width:3px;height:16px;background:var(--p);border-radius:2px;margin-right:-6px;flex-shrink:0}
+.ni i{width:17px;text-align:center;font-size:.88rem}
+.nbadge{background:var(--p);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--rf);margin-left:auto}
+.s-foot{padding:14px 16px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto}
+.urow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.uav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;flex-shrink:0}
+.uname{font-size:.85rem;font-weight:700}.urole{font-size:.72rem;color:var(--txt2)}
+.adm-main{margin-left:var(--sw);flex:1;min-height:100%;background:var(--bg)}
+.adm-topbar{padding:12px 24px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.8);backdrop-filter:blur(20px);position:sticky;top:38px;z-index:90}
+.adm-topbar h1{font-size:1.05rem;font-weight:700}
+.adm-topbar p{font-size:.78rem;color:var(--txt2);margin-top:1px}
+.demo-bar{background:rgba(255,107,0,.08);border:1px solid rgba(255,107,0,.18);border-radius:var(--rs);padding:5px 12px;font-size:11px;color:#ff8c33;display:flex;align-items:center;gap:6px}
+.adm-content{padding:20px 24px}
+/* TABS */
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.03);border-radius:var(--r);padding:4px;margin-bottom:18px;flex-wrap:wrap;border:1px solid var(--bdr)}
+.tab{padding:8px 16px;border-radius:6px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--txt2);border:none;background:none;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:7px}
+.tab.active{background:rgba(255,107,0,.14);color:var(--p)}
+.tab:hover:not(.active){background:rgba(255,255,255,.04);color:var(--txt)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+/* METRICS */
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.mc{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:var(--rm);padding:18px}
+.mc-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mc-lbl i{color:var(--p);font-size:.85rem}
+.mc-val{font-size:1.6rem;font-weight:800;color:var(--txt)}.mc-val.ok{color:#4ade80}.mc-val.warn{color:#fbbf24}.mc-val.acc{color:var(--p)}
+.mc-sub{font-size:.75rem;color:var(--txt2);margin-top:4px}
+.quick{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.qchip{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:var(--rm);padding:12px 16px;min-width:130px;cursor:pointer;transition:border-color .15s}
+.qchip:hover{border-color:rgba(255,107,0,.3)}
+.ql{font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--txt2);letter-spacing:.04em;margin-bottom:4px}
+.qv{font-size:1rem;font-weight:700}
+/* CARD TABLE */
+.card{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:var(--rm);overflow:hidden;margin-bottom:16px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr)}
+.card-hd h3{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-hd h3 i{color:var(--p)}
+.btn-sm{background:rgba(255,107,0,.12);color:var(--pl);border:1px solid rgba(255,107,0,.2);border-radius:var(--rs);padding:5px 12px;font-size:.75rem;cursor:pointer;font-family:inherit;font-weight:600}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:rgba(255,255,255,.02);padding:10px 14px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt2);text-align:left;border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:rgba(255,107,0,.04)}
+tbody td{padding:12px 14px;font-size:.85rem}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--rf);font-size:.7rem;font-weight:700}
+.b-g{background:rgba(34,197,94,.15);color:#4ade80}.b-y{background:rgba(245,158,11,.15);color:#fbbf24}
+.b-r{background:rgba(239,68,68,.15);color:#f87171}.b-b{background:rgba(56,189,248,.15);color:#38bdf8}
+.b-o{background:rgba(255,107,0,.15);color:#ff8c33}.b-m{background:rgba(168,85,247,.15);color:#c084fc}
+/* MESAS */
+.mesa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:16px 18px}
+.mesa-card{border-radius:14px;padding:16px;text-align:center;border:1px solid transparent;cursor:pointer;transition:transform .15s}
+.mesa-card:hover{transform:translateY(-2px)}
+.mesa-card strong{display:block;font-size:1rem;font-weight:800;margin-bottom:3px}
+.mesa-card span{display:block;font-size:.72rem;margin-bottom:6px}
+.mesa-card small{font-size:.7rem;opacity:.7}
+.m-livre{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.2);color:#4ade80}
+.m-ocup{background:rgba(255,107,0,.1);border-color:rgba(255,107,0,.22);color:#ff8c33}
+.m-pag{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.2);color:#fbbf24}
+/* KDS */
+.kds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 18px}
+.kds-ticket{border-radius:14px;padding:16px;border:1px solid}
+.kds-ticket.prep{background:rgba(56,189,248,.07);border-color:rgba(56,189,248,.2)}
+.kds-ticket.ready{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2)}
+.kds-ticket.late{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.2)}
+.kds-num{font-size:1.4rem;font-weight:800;margin-bottom:6px}
+.kds-ticket.prep .kds-num{color:#38bdf8}.kds-ticket.ready .kds-num{color:#4ade80}.kds-ticket.late .kds-num{color:#f87171}
+.kds-items{font-size:.82rem;color:var(--txt2);margin-bottom:10px;line-height:1.6}
+.kds-foot{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;border-top:1px solid rgba(255,255,255,.06);padding-top:8px}
+/* PAGER */
+.pager{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--bdr);font-size:.82rem;color:var(--txt2)}
+.pager-btns{display:flex;gap:4px}
+.pg-btn{padding:4px 10px;border-radius:var(--rs);background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt2);cursor:pointer;font-size:.78rem;font-family:inherit}
+.pg-btn.active{background:rgba(255,107,0,.14);color:var(--p);border-color:rgba(255,107,0,.28)}
+/* TOAST */
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(8,8,8,.97);border:1px solid rgba(255,107,0,.28);border-radius:12px;padding:9px 18px;font-size:12.5px;font-family:"Inter",sans-serif;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:all .28s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:var(--p);flex-shrink:0}
+@media(max-width:860px){
+  .sidebar{display:none}.adm-main{margin-left:0}
+  .mg{grid-template-columns:1fr 1fr}.kds-grid{grid-template-columns:1fr 1fr}
+  .c-hero{flex-direction:column}.c-nav{display:none}
+  #view-admin{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">
+  <div class="demo-banner-left"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong> — QuickOrder · GrillZone Lanchonete</div>
+  <div class="view-toggle">
+    <button class="vbtn active" onclick="switchView('cliente',this)"><i class="fa-solid fa-user"></i> Visao do Cliente</button>
+    <button class="vbtn" onclick="switchView('admin',this)"><i class="fa-solid fa-gauge-high"></i> Painel Admin</button>
+  </div>
+  <span style="font-size:11px;color:rgba(255,140,51,.5)">visualizacao demo</span>
+</div>
+
+<!-- ============================================================
+     VISAO DO CLIENTE
+     ============================================================ -->
+<div id="view-cliente">
+  <header class="c-header">
+    <div class="c-logo"><div class="c-logo-ico"><i class="fa-solid fa-fire-burner"></i></div><div class="c-logo-txt">Grill<span>Zone</span></div></div>
+    <nav class="c-nav"><a href="#">Inicio</a><a href="#">Cardapio</a><a href="#">Combos</a><a href="#">Delivery</a><a href="#">Sobre</a></nav>
+    <button class="c-cart-btn" id="cCartBtn"><i class="fa-solid fa-basket-shopping"></i> Meu pedido <span class="c-cart-badge" id="cCartCount">3</span></button>
+  </header>
+  <div class="c-hero">
+    <div class="c-hero-text">
+      <div class="c-badge"><i class="fa-solid fa-fire"></i> Aberto agora · Delivery e Retirada</div>
+      <h1>Sabor de verdade,<br>na sua <span>porta</span>.</h1>
+      <p>Hambur gueres artesanais, combos especiais e bebidas geladas. Peca agora pelo site ou WhatsApp e receba onde voce estiver.</p>
+      <div class="c-hero-actions">
+        <button class="c-btn c-btn-p" id="cHeroPedido"><i class="fa-solid fa-fire-burner"></i> Fazer pedido</button>
+        <button class="c-btn c-btn-g" id="cHeroWhats"><i class="fa-brands fa-whatsapp"></i> Pedir no WhatsApp</button>
+      </div>
+    </div>
+    <div class="c-hero-cards">
+      <div class="c-hcard"><strong>4.9*</strong><span>Avaliacao</span></div>
+      <div class="c-hcard"><strong>28min</strong><span>Entrega</span></div>
+      <div class="c-hcard"><strong>R$ 0</strong><span>Frete Centro</span></div>
+    </div>
+  </div>
+  <div class="c-menu">
+    <div class="c-menu-top">
+      <h2>Cardapio</h2>
+      <div class="c-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar item..."></div>
+    </div>
+    <div class="c-cats">
+      <button class="cat-btn active" data-cat="todos">Todos</button>
+      <button class="cat-btn" data-cat="hamburguer">Hambur gueres</button>
+      <button class="cat-btn" data-cat="combo">Combos</button>
+      <button class="cat-btn" data-cat="bebida">Bebidas</button>
+      <button class="cat-btn" data-cat="acomp">Acompanhamentos</button>
+      <button class="cat-btn" data-cat="sobremesa">Sobremesas</button>
+    </div>
+    <div class="c-grid">
+      <div class="c-item" data-cat="hamburguer"><div class="c-item-img">&#x1F354;</div><div class="c-item-body"><span class="c-item-tag c-tag-popular">Popular</span><div class="c-item-name">X-Bacon Artesanal</div><div class="c-item-desc">Blend 200g, queijo cheddar, bacon crocante, alface e tomate</div><div class="c-item-foot"><span class="c-item-price">R$ 28,90</span><button class="c-add" data-item="X-Bacon Artesanal">+</button></div></div></div>
+      <div class="c-item" data-cat="hamburguer"><div class="c-item-img">&#x1F969;</div><div class="c-item-body"><span class="c-item-tag c-tag-destaque">Destaque</span><div class="c-item-name">Double Smash</div><div class="c-item-desc">Duplo blend 120g, queijo americano, pickles e molho especial</div><div class="c-item-foot"><span class="c-item-price">R$ 34,90</span><button class="c-add" data-item="Double Smash">+</button></div></div></div>
+      <div class="c-item" data-cat="hamburguer"><div class="c-item-img">&#x1F414;</div><div class="c-item-body"><div class="c-item-name">Frango Crispy</div><div class="c-item-desc">File de frango crocante, maionese de alho, parmesao e rucula</div><div class="c-item-foot"><span class="c-item-price">R$ 24,90</span><button class="c-add" data-item="Frango Crispy">+</button></div></div></div>
+      <div class="c-item" data-cat="combo"><div class="c-item-img">&#x1F381;</div><div class="c-item-body"><span class="c-item-tag c-tag-destaque">Combo</span><div class="c-item-name">Combo Familia</div><div class="c-item-desc">2 X-Bacon + 2 batatas grandes + 2 refrigerantes 600ml</div><div class="c-item-foot"><span class="c-item-price">R$ 89,90</span><button class="c-add" data-item="Combo Familia">+</button></div></div></div>
+      <div class="c-item" data-cat="combo"><div class="c-item-img">&#x1F35F;</div><div class="c-item-body"><span class="c-item-tag c-tag-popular">Popular</span><div class="c-item-name">Combo Individual</div><div class="c-item-desc">Qualquer hamburguer + batata media + bebida 350ml</div><div class="c-item-foot"><span class="c-item-price">R$ 39,90</span><button class="c-add" data-item="Combo Individual">+</button></div></div></div>
+      <div class="c-item" data-cat="acomp"><div class="c-item-img">&#x1F35F;</div><div class="c-item-body"><span class="c-item-tag c-tag-novo">Novo</span><div class="c-item-name">Batata Frita Cheddar</div><div class="c-item-desc">Batata crocante com molho cheddar e bacon em pedacos</div><div class="c-item-foot"><span class="c-item-price">R$ 19,90</span><button class="c-add" data-item="Batata Frita Cheddar">+</button></div></div></div>
+      <div class="c-item" data-cat="bebida"><div class="c-item-img">&#x1F964;</div><div class="c-item-body"><div class="c-item-name">Refrigerante Lata</div><div class="c-item-desc">Coca-Cola, Guarana, Fanta laranja ou Sprite - 350ml</div><div class="c-item-foot"><span class="c-item-price">R$ 7,00</span><button class="c-add" data-item="Refrigerante Lata">+</button></div></div></div>
+      <div class="c-item" data-cat="sobremesa"><div class="c-item-img">&#x1F366;</div><div class="c-item-body"><span class="c-item-tag c-tag-novo">Novo</span><div class="c-item-name">Sundae GrillZone</div><div class="c-item-desc">Sorvete de creme com calda de caramelo e granola crocante</div><div class="c-item-foot"><span class="c-item-price">R$ 12,90</span><button class="c-add" data-item="Sundae GrillZone">+</button></div></div></div>
+    </div>
+  </div>
+  <div class="c-footer"><strong>GrillZone Lanchonete</strong> - Demo - Porto Velho, RO - (69) 99999-9999</div>
+  <button class="c-cart-float" id="cCartFloat"><i class="fa-solid fa-basket-shopping"></i> Ver carrinho (3 itens) - <strong>R$ 72,70</strong></button>
+</div>
+
+<!-- ============================================================
+     PAINEL ADMIN
+     ============================================================ -->
+<div id="view-admin" class="hidden">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-ico"><i class="fa-solid fa-fire-burner"></i></div><div class="brand-txt"><strong>GrillZone</strong><small>Painel Administrativo</small></div></div>
+    <nav>
+      <span class="nsec">Operacao</span>
+      <button class="ni active" onclick="admNav('dashboard',this)"><i class="fa-solid fa-gauge-high"></i>Dashboard</button>
+      <button class="ni" onclick="admNav('pedidos',this)"><i class="fa-solid fa-receipt"></i>Pedidos<span class="nbadge">6</span></button>
+      <button class="ni" onclick="admNav('mesas',this)"><i class="fa-solid fa-table-cells-large"></i>Mesas</button>
+      <button class="ni" onclick="admNav('kds',this)"><i class="fa-solid fa-bell-concierge"></i>Cozinha (KDS)</button>
+      <span class="nsec">Gestao</span>
+      <button class="ni" onclick="admNav('cardapio',this)"><i class="fa-solid fa-burger"></i>Cardapio</button>
+      <button class="ni"><i class="fa-solid fa-users"></i>Clientes</button>
+      <button class="ni"><i class="fa-solid fa-motorcycle"></i>Entregadores</button>
+      <span class="nsec">Financeiro</span>
+      <button class="ni" onclick="admNav('caixa',this)"><i class="fa-solid fa-cash-register"></i>Caixa do Dia</button>
+      <button class="ni"><i class="fa-solid fa-chart-column"></i>Relatorios</button>
+      <span class="nsec">Sistema</span>
+      <button class="ni"><i class="fa-brands fa-whatsapp"></i>WhatsApp integrado</button>
+      <button class="ni"><i class="fa-solid fa-gear"></i>Configuracoes</button>
+    </nav>
+    <div class="s-foot">
+      <div class="urow"><div class="uav">Z</div><div><div class="uname">Ze do Grill</div><div class="urole">Administrador</div></div></div>
+      <button class="ni" style="color:#f87171"><i class="fa-solid fa-right-from-bracket"></i>Sair</button>
+    </div>
+  </aside>
+  <main class="adm-main">
+    <div class="adm-topbar">
+      <div><h1>Dashboard</h1><p>GrillZone Lanchonete - Segunda, 06 de abril de 2026</p></div>
+      <div class="demo-bar"><i class="fa-solid fa-eye"></i> Modo Demo</div>
+    </div>
+    <div class="adm-content">
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('t-dashboard',this)"><i class="fa-solid fa-gauge-high"></i>Dashboard</button>
+        <button class="tab" onclick="showTab('t-pedidos',this)"><i class="fa-solid fa-receipt"></i>Pedidos</button>
+        <button class="tab" onclick="showTab('t-mesas',this)"><i class="fa-solid fa-table-cells-large"></i>Mesas</button>
+        <button class="tab" onclick="showTab('t-kds',this)"><i class="fa-solid fa-bell-concierge"></i>KDS</button>
+        <button class="tab" onclick="showTab('t-cardapio',this)"><i class="fa-solid fa-burger"></i>Cardapio</button>
+        <button class="tab" onclick="showTab('t-caixa',this)"><i class="fa-solid fa-cash-register"></i>Caixa</button>
+      </div>
+      <!-- DASHBOARD -->
+      <div id="t-dashboard" class="tab-pane active">
+        <div class="mg">
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-circle-dollar-to-slot"></i>Faturamento Hoje</div><div class="mc-val ok">R$ 2.340,00</div><div class="mc-sub">&#x2191; 18% vs ontem</div></div>
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-receipt"></i>Pedidos Hoje</div><div class="mc-val acc">47</div><div class="mc-sub">6 em aberto</div></div>
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-table-cells-large"></i>Mesas Ocupadas</div><div class="mc-val warn">7/12</div><div class="mc-sub">3 aguardando conta</div></div>
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-motorcycle"></i>Delivery em Rota</div><div class="mc-val ok">4</div><div class="mc-sub">2 a entregar</div></div>
+        </div>
+        <div class="quick">
+          <div class="qchip"><div class="ql">Ticket Medio</div><div class="qv">R$ 49,80</div></div>
+          <div class="qchip"><div class="ql">Clientes Cadastrados</div><div class="qv">312</div></div>
+          <div class="qchip"><div class="ql">Itens no Cardapio</div><div class="qv">28</div></div>
+          <div class="qchip"><div class="ql">Caixa</div><div class="qv" style="color:#4ade80">Aberto</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-clock-rotate-left"></i>Ultimos Pedidos</h3><button class="btn-sm">Ver todos</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>Num</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Canal</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><b style="color:var(--p)">#047</b></td><td>Ana Carvalho</td><td>Combo Familia</td><td>R$ 89,90</td><td><span class="badge b-g">Delivery</span></td><td><span class="badge b-b">Em rota</span></td><td><button class="btn-sm">Ver</button></td></tr>
+              <tr><td><b style="color:var(--p)">#046</b></td><td>Carlos Lima</td><td>2x X-Bacon + Batata</td><td>R$ 77,70</td><td><span class="badge b-o">Mesa 04</span></td><td><span class="badge b-y">Preparando</span></td><td><button class="btn-sm">Ver</button></td></tr>
+              <tr><td><b style="color:var(--p)">#045</b></td><td>Fernanda Mota</td><td>Double Smash + Suco</td><td>R$ 41,90</td><td><span class="badge b-g">Delivery</span></td><td><span class="badge b-g">Entregue</span></td><td><button class="btn-sm">Ver</button></td></tr>
+              <tr><td><b style="color:var(--p)">#044</b></td><td>Rodrigo Souza</td><td>Combo Individual</td><td>R$ 39,90</td><td><span class="badge b-o">Mesa 02</span></td><td><span class="badge b-g">Entregue</span></td><td><button class="btn-sm">Ver</button></td></tr>
+              <tr><td><b style="color:var(--p)">#043</b></td><td>Beto Ferreira</td><td>Frango Crispy + Batata</td><td>R$ 44,80</td><td><span class="badge b-b">Retirada</span></td><td><span class="badge b-g">Entregue</span></td><td><button class="btn-sm">Ver</button></td></tr>
+            </tbody>
+          </table></div>
+          <div class="pager"><span>Mostrando 5 de 47</span><div class="pager-btns"><button class="pg-btn active">1</button><button class="pg-btn">2</button><button class="pg-btn">3</button></div></div>
+        </div>
+      </div>
+      <!-- PEDIDOS -->
+      <div id="t-pedidos" class="tab-pane">
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-receipt"></i>Pedidos do Dia</h3><button class="btn-sm">+ Novo pedido</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>Num</th><th>Hora</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Canal</th><th>Pgto</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><b style="color:var(--p)">#047</b></td><td>13:42</td><td>Ana Carvalho</td><td>Combo Familia</td><td>R$ 89,90</td><td><span class="badge b-g">Delivery</span></td><td>Pix</td><td><span class="badge b-b">Em rota</span></td></tr>
+              <tr><td><b style="color:var(--p)">#046</b></td><td>13:38</td><td>Carlos Lima</td><td>2x X-Bacon + Batata</td><td>R$ 77,70</td><td><span class="badge b-o">Mesa 04</span></td><td>Pendente</td><td><span class="badge b-y">Preparando</span></td></tr>
+              <tr><td><b style="color:var(--p)">#045</b></td><td>13:10</td><td>Fernanda Mota</td><td>Double Smash + Suco</td><td>R$ 41,90</td><td><span class="badge b-g">Delivery</span></td><td>Cartao</td><td><span class="badge b-g">Entregue</span></td></tr>
+              <tr><td><b style="color:var(--p)">#044</b></td><td>12:55</td><td>Rodrigo Souza</td><td>Combo Individual</td><td>R$ 39,90</td><td><span class="badge b-o">Mesa 02</span></td><td>Dinheiro</td><td><span class="badge b-g">Entregue</span></td></tr>
+              <tr><td><b style="color:var(--p)">#043</b></td><td>12:40</td><td>Beto Ferreira</td><td>Frango Crispy + Batata</td><td>R$ 44,80</td><td><span class="badge b-b">Retirada</span></td><td>Pix</td><td><span class="badge b-g">Entregue</span></td></tr>
+              <tr><td><b style="color:var(--p)">#042</b></td><td>12:22</td><td>Simone Castro</td><td>Sundae + Refrigerante</td><td>R$ 19,90</td><td><span class="badge b-o">Mesa 07</span></td><td>Pix</td><td><span class="badge b-g">Entregue</span></td></tr>
+            </tbody>
+          </table></div>
+          <div class="pager"><span>6 de 47 pedidos</span><div class="pager-btns"><button class="pg-btn active">1</button><button class="pg-btn">2</button><button class="pg-btn">3</button></div></div>
+        </div>
+      </div>
+      <!-- MESAS -->
+      <div id="t-mesas" class="tab-pane">
+        <div class="mg" style="grid-template-columns:repeat(4,1fr)">
+          <div class="mc"><div class="mc-lbl">Livres</div><div class="mc-val ok">5</div></div>
+          <div class="mc"><div class="mc-lbl">Ocupadas</div><div class="mc-val acc">4</div></div>
+          <div class="mc"><div class="mc-lbl">Aguardando Conta</div><div class="mc-val warn">3</div></div>
+          <div class="mc"><div class="mc-lbl">Total</div><div class="mc-val">12</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-table-cells-large"></i>Mapa de Mesas</h3><button class="btn-sm">Legenda</button></div>
+          <div class="mesa-grid">
+            <div class="mesa-card m-livre"><strong>01</strong><span>Livre</span><small>-</small></div>
+            <div class="mesa-card m-ocup"><strong>02</strong><span>Ocupada</span><small>R$ 39,90</small></div>
+            <div class="mesa-card m-pag"><strong>03</strong><span>Ag. Conta</span><small>R$ 54,80</small></div>
+            <div class="mesa-card m-ocup"><strong>04</strong><span>Ocupada</span><small>R$ 77,70</small></div>
+            <div class="mesa-card m-livre"><strong>05</strong><span>Livre</span><small>-</small></div>
+            <div class="mesa-card m-livre"><strong>06</strong><span>Livre</span><small>-</small></div>
+            <div class="mesa-card m-ocup"><strong>07</strong><span>Ocupada</span><small>R$ 19,90</small></div>
+            <div class="mesa-card m-pag"><strong>08</strong><span>Ag. Conta</span><small>R$ 61,00</small></div>
+            <div class="mesa-card m-livre"><strong>09</strong><span>Livre</span><small>-</small></div>
+            <div class="mesa-card m-pag"><strong>10</strong><span>Ag. Conta</span><small>R$ 44,60</small></div>
+            <div class="mesa-card m-ocup"><strong>11</strong><span>Ocupada</span><small>R$ 28,90</small></div>
+            <div class="mesa-card m-livre"><strong>12</strong><span>Livre</span><small>-</small></div>
+          </div>
+        </div>
+      </div>
+      <!-- KDS -->
+      <div id="t-kds" class="tab-pane">
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-bell-concierge"></i>Fila da Cozinha</h3><span style="font-size:.8rem;color:var(--txt2)">Atualizado ha 12s</span></div>
+          <div class="kds-grid">
+            <div class="kds-ticket prep"><div class="kds-num">#046</div><div class="kds-items">2x X-Bacon Artesanal<br>1x Batata Frita Cheddar<br>2x Refrigerante</div><div class="kds-foot"><span class="badge b-b">Em preparo</span><span style="color:var(--txt2)">Mesa 04 - 8min</span></div></div>
+            <div class="kds-ticket ready"><div class="kds-num">#047</div><div class="kds-items">1x Combo Familia<br>(2 X-Bacon + 2 Batatas + 2 Refris)</div><div class="kds-foot"><span class="badge b-g">Pronto</span><span style="color:var(--txt2)">Delivery - Ana</span></div></div>
+            <div class="kds-ticket late"><div class="kds-num">#042</div><div class="kds-items">1x Sundae GrillZone<br>1x Refrigerante Lata</div><div class="kds-foot"><span class="badge b-r">Atrasado</span><span style="color:var(--txt2)">Mesa 07 - 18min</span></div></div>
+            <div class="kds-ticket prep"><div class="kds-num">#048</div><div class="kds-items">1x Double Smash<br>1x Frango Crispy<br>2x Batata Frita Cheddar</div><div class="kds-foot"><span class="badge b-b">Em preparo</span><span style="color:var(--txt2)">Mesa 11 - 3min</span></div></div>
+            <div class="kds-ticket prep"><div class="kds-num">#049</div><div class="kds-items">1x Combo Individual<br>1x Suco de Laranja</div><div class="kds-foot"><span class="badge b-b">Em preparo</span><span style="color:var(--txt2)">Retirada - 2min</span></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- CARDAPIO -->
+      <div id="t-cardapio" class="tab-pane">
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-burger"></i>Itens do Cardapio</h3><button class="btn-sm">+ Novo Item</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>Nome</th><th>Categoria</th><th>Preco</th><th>Status</th><th>Vendidos hoje</th><th>Acao</th></tr></thead>
+            <tbody>
+              <tr><td>X-Bacon Artesanal</td><td>Hamburguer</td><td>R$ 28,90</td><td><span class="badge b-g">Disponivel</span></td><td>14</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Double Smash</td><td>Hamburguer</td><td>R$ 34,90</td><td><span class="badge b-g">Disponivel</span></td><td>9</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Frango Crispy</td><td>Hamburguer</td><td>R$ 24,90</td><td><span class="badge b-g">Disponivel</span></td><td>7</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Combo Familia</td><td>Combo</td><td>R$ 89,90</td><td><span class="badge b-g">Disponivel</span></td><td>6</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Combo Individual</td><td>Combo</td><td>R$ 39,90</td><td><span class="badge b-g">Disponivel</span></td><td>11</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Batata Frita Cheddar</td><td>Acompanhamento</td><td>R$ 19,90</td><td><span class="badge b-y">Pouco estoque</span></td><td>8</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Refrigerante Lata</td><td>Bebida</td><td>R$ 7,00</td><td><span class="badge b-g">Disponivel</span></td><td>31</td><td><button class="btn-sm">Editar</button></td></tr>
+              <tr><td>Sundae GrillZone</td><td>Sobremesa</td><td>R$ 12,90</td><td><span class="badge b-r">Esgotado</span></td><td>4</td><td><button class="btn-sm">Editar</button></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+      <!-- CAIXA -->
+      <div id="t-caixa" class="tab-pane">
+        <div class="mg" style="grid-template-columns:repeat(3,1fr)">
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-money-bill"></i>Dinheiro</div><div class="mc-val">R$ 680,00</div></div>
+          <div class="mc"><div class="mc-lbl"><i class="fa-solid fa-credit-card"></i>Cartao</div><div class="mc-val">R$ 940,00</div></div>
+          <div class="mc"><div class="mc-lbl"><i class="fa-brands fa-pix"></i>Pix</div><div class="mc-val ok">R$ 720,00</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><h3><i class="fa-solid fa-cash-register"></i>Movimentacoes do Caixa</h3><button class="btn-sm">Fechar Caixa</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>Hora</th><th>Pedido</th><th>Cliente</th><th>Valor</th><th>Forma</th><th>Operador</th></tr></thead>
+            <tbody>
+              <tr><td>13:42</td><td>#047</td><td>Ana Carvalho</td><td>R$ 89,90</td><td>Pix</td><td>Ze</td></tr>
+              <tr><td>13:10</td><td>#045</td><td>Fernanda Mota</td><td>R$ 41,90</td><td>Cartao</td><td>Ze</td></tr>
+              <tr><td>12:55</td><td>#044</td><td>Rodrigo Souza</td><td>R$ 39,90</td><td>Dinheiro</td><td>Ze</td></tr>
+              <tr><td>12:40</td><td>#043</td><td>Beto Ferreira</td><td>R$ 44,80</td><td>Pix</td><td>Ze</td></tr>
+              <tr><td>12:22</td><td>#042</td><td>Simone Castro</td><td>R$ 19,90</td><td>Pix</td><td>Ze</td></tr>
+            </tbody>
+          </table></div>
+          <div class="pager"><span>Total do dia: <strong style="color:#4ade80">R$ 2.340,00</strong></span><button class="btn-sm">Exportar</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+
+<script>
+function switchView(view,btn){
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(view==='cliente'){
+    document.getElementById('view-cliente').classList.remove('hidden');
+    document.getElementById('view-admin').classList.add('hidden');
+  }else{
+    document.getElementById('view-cliente').classList.add('hidden');
+    document.getElementById('view-admin').classList.remove('hidden');
+  }
+}
+function showTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+var admMap={dashboard:'t-dashboard',pedidos:'t-pedidos',mesas:'t-mesas',kds:'t-kds',cardapio:'t-cardapio',caixa:'t-caixa'};
+function admNav(section,btn){
+  document.querySelectorAll('.ni').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  var tabId=admMap[section];
+  if(tabId){
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    var p=document.getElementById(tabId);
+    if(p) p.classList.add('active');
+  }
+}
+document.querySelectorAll('.cat-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    var cat=btn.dataset.cat;
+    document.querySelectorAll('.c-item').forEach(function(item){
+      item.style.display=(cat==='todos'||item.dataset.cat===cat)?'block':'none';
+    });
+  });
+});
+function showToast(msg){
+  var t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(function(){t.classList.remove('show');},2600);
+}
+var cartCount=3;
+document.querySelectorAll('.c-add').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    cartCount++;
+    document.getElementById('cCartCount').textContent=cartCount;
+    showToast(btn.dataset.item+' adicionado ao carrinho!');
+  });
+});
+['cCartBtn','cCartFloat','cHeroPedido','cHeroWhats'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el) el.addEventListener('click',function(){showToast('Disponivel no sistema completo - visualizacao demo');});
+});
+document.querySelectorAll('.c-nav a, .c-footer').forEach(function(el){
+  el.addEventListener('click',function(e){e.preventDefault();showToast('Disponivel no sistema completo - visualizacao demo');});
+});
+document.querySelectorAll('.btn-sm,.qchip,.pg-btn,.mesa-card,tbody tr').forEach(function(el){
+  el.addEventListener('click',function(e){
+    if(e.target.closest('.tab')||e.target.closest('.ni')) return;
+    showToast('Disponivel no sistema completo - visualizacao demo');
+  });
+});
+</script>
+</body>
+</html>

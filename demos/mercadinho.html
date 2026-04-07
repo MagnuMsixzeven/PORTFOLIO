@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MagnumAUT — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0b0f19;--bg2:#141926;--bg3:#1c2333;--txt:#e8ecf4;--txt2:#8892a8;--bdr:rgba(255,255,255,.06);--p:#22c55e;--ph:#16a34a;--acc:#f59e0b;--r:8px;--rm:14px;--rf:999px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+/* SIDEBAR */
+.sidebar{width:240px;background:rgba(11,15,25,.97);height:100vh;border-right:1px solid var(--bdr);padding:1.75rem 1.25rem;position:fixed;overflow-y:auto;z-index:50;display:flex;flex-direction:column}
+.s-logo{display:flex;align-items:center;gap:10px;margin-bottom:2.5rem;padding:0 4px}
+.s-ico{color:var(--p);font-size:20px}
+.s-brand{font-size:18px;font-weight:700;letter-spacing:-.3px}.s-brand em{color:var(--p);font-style:normal}
+.nl{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--r);font-size:13.5px;font-weight:500;color:var(--txt2);margin-bottom:4px;cursor:pointer;transition:background .15s,color .15s}
+.nl:hover{background:rgba(34,197,94,.08);color:var(--txt)}.nl.active{background:rgba(34,197,94,.12);color:var(--p);font-weight:600}
+.nl i{width:18px;text-align:center;font-size:14px}
+.nl-out{color:#ef4444!important;margin-top:auto}
+.nl-out:hover{background:rgba(239,68,68,.1)!important;color:#ef4444!important}
+.s-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--bdr)}
+.ucard{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--r);margin-bottom:8px}
+.uav{width:30px;height:30px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.uinfo strong{display:block;font-size:12px;font-weight:600;color:var(--txt)}.uinfo span{font-size:11px;color:var(--txt2)}
+/* MAIN */
+.main{margin-left:240px;flex:1;min-height:100vh}
+.topbar{padding:14px 2rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;background:rgba(11,15,25,.7);backdrop-filter:blur(20px);position:sticky;top:0;z-index:90}
+.topbar h1{font-size:1.1rem;font-weight:700}.topbar p{font-size:.8rem;color:var(--txt2);margin-top:1px}
+.demo-bar{background:linear-gradient(90deg,rgba(34,197,94,.1),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:6px 14px;font-size:11.5px;color:#4ade80;display:flex;align-items:center;gap:7px}
+.ttoggle{background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:6px 12px;font-size:20px;cursor:pointer;color:var(--txt2)}
+.content{padding:1.5rem 2rem}
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--bg2);border-radius:var(--r);padding:4px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;color:var(--txt2);border:none;background:none;font-family:inherit;transition:all .15s}
+.tab.active{background:var(--bg3);color:var(--txt)}
+.tab:hover:not(.active){background:rgba(255,255,255,.04);color:var(--txt)}
+/* METRICS GRID */
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.mc{background:rgba(20,25,38,.6);border:1px solid var(--bdr);border-radius:var(--rm);padding:1.25rem}
+.mc-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--txt2);margin-bottom:.5rem}
+.mc-val{font-size:1.6rem;font-weight:700;color:var(--txt)}.mc-val.warn{color:#f87171}
+.mc-val.ok{color:#4ade80}
+/* CHIPS */
+.quick{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.qchip{background:rgba(20,25,38,.6);border:1px solid var(--bdr);border-radius:var(--rm);padding:14px 18px;cursor:pointer;transition:border-color .15s;min-width:140px}
+.qchip:hover{border-color:rgba(34,197,94,.3)}
+.ql{font-size:11px;font-weight:600;text-transform:uppercase;color:var(--txt2);margin-bottom:4px}
+.qv{font-size:1.05rem;font-weight:700}
+/* TABLES */
+.section{background:rgba(20,25,38,.6);border:1px solid var(--bdr);border-radius:var(--rm);overflow:hidden;margin-bottom:1.5rem}
+.s-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr)}
+.s-hd h3{font-size:14px;font-weight:600}
+.btn-sm{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:rgba(255,255,255,.02);padding:10px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);text-align:left;border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:rgba(34,197,94,.04)}
+tbody td{padding:12px 16px;font-size:13px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--rf);font-size:11px;font-weight:600}
+.b-g{background:rgba(34,197,94,.15);color:#4ade80}.b-y{background:rgba(245,158,11,.15);color:#fbbf24}
+.b-r{background:rgba(239,68,68,.15);color:#f87171}.b-b{background:rgba(59,130,246,.15);color:#60a5fa}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="s-logo">
+    <i class="s-ico fa-solid fa-shopping-cart"></i>
+    <div class="s-brand">Magnum<em>AUT</em></div>
+  </div>
+  <nav>
+    <a class="nl active" href="#"><i class="fas fa-chart-pie"></i>Dashboard</a>
+    <a class="nl" href="#"><i class="fas fa-cash-register"></i>PDV</a>
+    <a class="nl" href="#"><i class="fas fa-boxes"></i>Estoque</a>
+    <a class="nl" href="#"><i class="fas fa-plus-circle"></i>Produtos</a>
+    <a class="nl" href="#"><i class="fas fa-truck"></i>Entregas</a>
+    <a class="nl" href="#"><i class="fas fa-users"></i>Clientes</a>
+    <a class="nl" href="#"><i class="fas fa-receipt"></i>Histórico</a>
+    <a class="nl" href="#"><i class="fas fa-user-shield"></i>Usuários</a>
+    <a class="nl" href="#"><i class="fas fa-user-circle"></i>Meu Perfil</a>
+  </nav>
+  <div class="s-footer">
+    <div class="ucard">
+      <div class="uav">A</div>
+      <div class="uinfo"><strong>Admin</strong><span>Administrador</span></div>
+    </div>
+    <a class="nl nl-out"><i class="fas fa-sign-out-alt"></i>Sair</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div><h1>Dashboard</h1><p>Bem-vindo ao sistema de gestão MagnumAUT</p></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="demo-bar"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong></div>
+      <button class="ttoggle">🌙</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('metricas',this)">Métricas</button>
+      <button class="tab" onclick="showTab('cadastros',this)">Cadastros</button>
+      <button class="tab" onclick="showTab('reposicao',this)">Reposição</button>
+      <button class="tab" onclick="showTab('caixas',this)">Caixas</button>
+      <button class="tab" onclick="showTab('entregas',this)">Entregas</button>
+      <button class="tab" onclick="showTab('relatorio',this)">Relatório</button>
+      <button class="tab" onclick="showTab('fiados',this)">Fiados</button>
+    </div>
+
+    <!-- ABA MÉTRICAS -->
+    <div id="metricas" class="tab-pane">
+      <div class="mg">
+        <div class="mc"><div class="mc-label">Vendas Hoje</div><div class="mc-val ok">R$ 1.840,00</div></div>
+        <div class="mc"><div class="mc-label">Vendas Realizadas</div><div class="mc-val">34</div></div>
+        <div class="mc"><div class="mc-label">Estoque Baixo</div><div class="mc-val warn">7</div></div>
+        <div class="mc"><div class="mc-label">Caixa</div><div class="mc-val ok" style="font-size:1rem">✅ Aberto — Carla</div></div>
+      </div>
+      <div class="quick">
+        <div class="qchip"><div class="ql">Cadastros</div><div class="qv">218 produto(s)</div></div>
+        <div class="qchip"><div class="ql">Entregas Hoje</div><div class="qv">6 lançamento(s)</div></div>
+        <div class="qchip"><div class="ql">Caixas Hoje</div><div class="qv">1 abertura(s)</div></div>
+        <div class="qchip"><div class="ql">Fiados Pendentes</div><div class="qv">4 (R$ 312,50)</div></div>
+      </div>
+    </div>
+
+    <!-- ABA CADASTROS -->
+    <div id="cadastros" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Produtos Cadastrados</h3><button class="btn-sm"><i class="fas fa-plus"></i> Novo Produto</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Código</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>PRD-001</td><td>Arroz Branco 5kg</td><td>Grãos</td><td>R$ 28,90</td><td>145 un</td><td><span class="badge b-g">OK</span></td></tr>
+              <tr><td>PRD-002</td><td>Feijão Preto 1kg</td><td>Grãos</td><td>R$ 9,50</td><td>3 un</td><td><span class="badge b-y">Baixo</span></td></tr>
+              <tr><td>PRD-003</td><td>Óleo de Soja 900ml</td><td>Óleos</td><td>R$ 7,40</td><td>62 un</td><td><span class="badge b-g">OK</span></td></tr>
+              <tr><td>PRD-004</td><td>Macarrão Espaguete</td><td>Massas</td><td>R$ 3,80</td><td>0 un</td><td><span class="badge b-r">Zerado</span></td></tr>
+              <tr><td>PRD-005</td><td>Açúcar Cristal 1kg</td><td>Açúcares</td><td>R$ 4,90</td><td>88 un</td><td><span class="badge b-g">OK</span></td></tr>
+              <tr><td>PRD-006</td><td>Sal Refinado 1kg</td><td>Condimentos</td><td>R$ 2,30</td><td>5 un</td><td><span class="badge b-y">Baixo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA REPOSIÇÃO -->
+    <div id="reposicao" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Produtos para Repor</h3></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Nome</th><th>Atual</th><th>Mínimo</th><th>Situação</th></tr></thead>
+            <tbody>
+              <tr><td>Feijão Preto 1kg</td><td>3</td><td>10</td><td><span class="badge b-y">Baixo</span></td></tr>
+              <tr><td>Macarrão Espaguete</td><td>0</td><td>15</td><td><span class="badge b-r">Zerado</span></td></tr>
+              <tr><td>Sal Refinado 1kg</td><td>5</td><td>20</td><td><span class="badge b-y">Baixo</span></td></tr>
+              <tr><td>Extrato de Tomate 340g</td><td>2</td><td>8</td><td><span class="badge b-y">Baixo</span></td></tr>
+              <tr><td>Farinha de Trigo 1kg</td><td>0</td><td>12</td><td><span class="badge b-r">Zerado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA CAIXAS -->
+    <div id="caixas" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Histórico de Caixas</h3><button class="btn-sm"><i class="fas fa-lock-open"></i> Abrir Caixa</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Data</th><th>Funcionário</th><th>Abertura</th><th>Fechamento</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>06/04/2026</td><td>Carla</td><td>07:30</td><td>—</td><td><span class="badge b-b">Em aberto</span></td><td><span class="badge b-g">Aberto</span></td></tr>
+              <tr><td>05/04/2026</td><td>Jonas</td><td>07:25</td><td>18:00</td><td>R$ 2.140,00</td><td><span class="badge b-g">Fechado</span></td></tr>
+              <tr><td>04/04/2026</td><td>Carla</td><td>07:30</td><td>18:05</td><td>R$ 1.890,00</td><td><span class="badge b-g">Fechado</span></td></tr>
+              <tr><td>03/04/2026</td><td>Jonas</td><td>07:20</td><td>17:55</td><td>R$ 2.340,00</td><td><span class="badge b-g">Fechado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA ENTREGAS -->
+    <div id="entregas" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Entregas de Hoje</h3><button class="btn-sm"><i class="fas fa-plus"></i> Nova Entrega</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Cliente</th><th>Endereço</th><th>Valor</th><th>Hora</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Ana Paula</td><td>Rua das Flores, 42</td><td>R$ 87,50</td><td>09:15</td><td><span class="badge b-g">Entregue</span></td></tr>
+              <tr><td>Carlos Silva</td><td>Av. Brasil, 150</td><td>R$ 124,30</td><td>10:40</td><td><span class="badge b-b">A caminho</span></td></tr>
+              <tr><td>Maria Souza</td><td>Rua Palmeiras, 8</td><td>R$ 56,00</td><td>13:00</td><td><span class="badge b-y">Aguardando</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA RELATÓRIO -->
+    <div id="relatorio" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Relatório de Vendas</h3></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Data</th><th>Produto</th><th>Qtd</th><th>Valor Unit.</th><th>Total</th><th>Forma Pgto</th></tr></thead>
+            <tbody>
+              <tr><td>06/04</td><td>Arroz Branco 5kg</td><td>3</td><td>R$ 28,90</td><td>R$ 86,70</td><td>Pix</td></tr>
+              <tr><td>06/04</td><td>Feijão Preto 1kg</td><td>5</td><td>R$ 9,50</td><td>R$ 47,50</td><td>Dinheiro</td></tr>
+              <tr><td>06/04</td><td>Óleo de Soja 900ml</td><td>8</td><td>R$ 7,40</td><td>R$ 59,20</td><td>Cartão</td></tr>
+              <tr><td>06/04</td><td>Açúcar Cristal 1kg</td><td>10</td><td>R$ 4,90</td><td>R$ 49,00</td><td>Pix</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA FIADOS -->
+    <div id="fiados" class="tab-pane hidden">
+      <div class="section">
+        <div class="s-hd"><h3>Fiados Pendentes</h3></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Cliente</th><th>Valor</th><th>Data</th><th>Obs.</th><th>Ação</th></tr></thead>
+            <tbody>
+              <tr><td>João Batista</td><td>R$ 45,00</td><td>03/04</td><td>Mercado</td><td><button class="btn-sm">Marcar pago</button></td></tr>
+              <tr><td>Rita de Cássia</td><td>R$ 120,00</td><td>01/04</td><td>Conta mensal</td><td><button class="btn-sm">Marcar pago</button></td></tr>
+              <tr><td>Toninho do Bar</td><td>R$ 85,50</td><td>28/03</td><td>Bebidas</td><td><button class="btn-sm">Marcar pago</button></td></tr>
+              <tr><td>Dona Floripes</td><td>R$ 62,00</td><td>25/03</td><td>Grãos</td><td><button class="btn-sm">Marcar pago</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+function showTab(id, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden');
+  btn.classList.add('active');
+}
+</script>
+<style>
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(11,15,25,.97);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:10px 20px;font-size:13px;font-family:'Inter',sans-serif;color:#e8ecf4;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0}
+</style>
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+<script>
+document.querySelectorAll('a[href="#"],.qchip,.btn-sm').forEach(el=>{
+  el.addEventListener('click',e=>{
+    if(e.target.closest('.tab')) return;
+    e.preventDefault();
+    showToast('Disponível no sistema completo — visualização demo');
+  });
+});
+function showToast(msg){
+  const t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>

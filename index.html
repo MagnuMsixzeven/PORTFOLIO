@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>magnoDSG — Portfólio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & TOKENS
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font: 'Inter', sans-serif;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: #080808;
+  color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  padding: 1.4rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+#header.scrolled {
+  background: rgba(248, 247, 244, 0.97);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+
+.logo {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  transition: color 0.4s;
+}
+
+.logo em {
+  font-style: normal;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.4s;
+}
+
+#header.scrolled .logo  { color: #111; }
+#header.scrolled .logo em { color: #aaa; }
+
+nav { display: flex; gap: 2rem; align-items: center; }
+
+nav a {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.25s;
+  position: relative;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1px;
+  background: currentColor;
+  transition: width 0.25s;
+}
+
+nav a:hover { color: rgba(255,255,255,0.95); }
+nav a:hover::after { width: 100%; }
+
+#header.scrolled nav a       { color: rgba(0,0,0,0.45); }
+#header.scrolled nav a:hover { color: #000; }
+
+/* ============================================================
+   HERO
+============================================================ */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ── Mesh Gradient Background ── */
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  transition: background 1.4s var(--ease-out), transform 1.4s var(--ease-out);
+  will-change: transform, background;
+}
+
+.b1 { width: 650px; height: 650px; top: -150px; left: -180px; opacity: 0.75; animation: b1f 9s ease-in-out infinite; }
+.b2 { width: 550px; height: 550px; top: 15%; right: -100px; opacity: 0.65; animation: b2f 11s ease-in-out infinite; }
+.b3 { width: 450px; height: 450px; bottom: -120px; left: 25%; opacity: 0.6; animation: b3f 13s ease-in-out infinite; }
+
+.mesh-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%);
+}
+
+@keyframes b1f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(45px,35px) scale(1.06)} }
+@keyframes b2f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,45px) scale(0.96)} }
+@keyframes b3f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(25px,-30px) scale(1.04)} }
+
+/* ── Hero Layout ── */
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 72px;
+}
+
+/* ── Left: Text content ── */
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.05);
+  width: fit-content;
+  backdrop-filter: blur(6px);
+  transition: all 0.4s ease;
+}
+
+.hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 2s ease infinite; }
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.hero-title {
+  font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+  font-weight: 850;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.hero-title .outline {
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+  color: transparent;
+}
+
+.hero-desc {
+  font-size: 0.93rem;
+  line-height: 1.72;
+  color: rgba(255,255,255,0.5);
+  max-width: 400px;
+  font-weight: 400;
+}
+
+/* Palette */
+.palette-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.palette-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+}
+
+.palette-dots {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.pdot-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.pdot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  animation: lev 3s ease-in-out infinite;
+  transition: background 0.9s ease, transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.pdot-wrap:nth-child(2) .pdot { animation-delay: .25s }
+.pdot-wrap:nth-child(3) .pdot { animation-delay: .5s }
+.pdot-wrap:nth-child(4) .pdot { animation-delay: .75s }
+.pdot-wrap:hover .pdot { transform: scale(1.2); box-shadow: 0 8px 24px rgba(0,0,0,0.55); }
+
+.pdot-hex {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(8,8,8,0.92);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-family: monospace;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(6px);
+  letter-spacing: 0.06em;
+  z-index: 10;
+}
+.pdot-wrap:hover .pdot-hex {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes lev { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+.palette-tags {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ptag {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.3);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.4s;
+}
+
+/* CTA row */
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 11px 22px;
+  background: rgba(255,255,255,0.95);
+  color: #0a0a0a;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: all 0.3s var(--ease-out);
+}
+
+.btn-live:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(255,255,255,0.18);
+}
+
+.counter {
+  font-size: 0.73rem;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.counter strong { color: rgba(255,255,255,0.75); font-weight: 700; }
+
+/* ── Right: Mockup ── */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.mockup-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+
+.mockup-card {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.07),
+    0 25px 50px rgba(0,0,0,0.55),
+    0 60px 100px rgba(0,0,0,0.3);
+  transform: perspective(1200px) rotateY(-14deg) rotateX(3deg);
+  animation: mockupFloat 7s ease-in-out infinite;
+  will-change: transform;
+  transition: filter 0.5s ease;
+}
+
+@keyframes mockupFloat {
+  0%,100% { transform: perspective(1200px) rotateY(-14deg) rotateX(3deg) translateY(0px); }
+  50%      { transform: perspective(1200px) rotateY(-14deg) rotateX(3deg) translateY(-14px); }
+}
+
+/* Browser chrome bar */
+.chrome {
+  background: rgba(0,0,0,0.5);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chrome-btns { display: flex; gap: 5px; }
+.cb { width: 9px; height: 9px; border-radius: 50%; }
+.cb-r { background: #ff5f57; }
+.cb-y { background: #febc2e; }
+.cb-g { background: #28c840; }
+
+.chrome-bar {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border-radius: 5px;
+  height: 20px;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.chrome-url {
+  font-size: 10px;
+  color: rgba(255,255,255,0.28);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.4s;
+}
+
+/* Screen */
+.screen {
+  aspect-ratio: 16/10;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Slides ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(50px);
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Nav arrows */
+.nav-arrows {
+  position: absolute;
+  bottom: -3.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.nav-btn {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  backdrop-filter: blur(8px);
+}
+
+.nav-btn:hover {
+  border-color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  animation: scrollAnim 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollAnim {
+  0%,100% { opacity: 0.25; transform: scaleY(1); }
+  50%      { opacity: 0.7;  transform: scaleY(1.15); }
+}
+
+/* ============================================================
+/* ============================================================
+   SECTION — SOBRE (LIGHT)
+============================================================ */
+.light-section {
+  background: #f5f4f1;
+  color: #111;
+  padding: 9rem 3rem;
+}
+
+.white-section {
+  background: #ffffff;
+  color: #111;
+  padding: 9rem 3rem;
+}
+
+.s-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.s-label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 1.5rem;
+}
+
+.s-title {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.07;
+  color: #111;
+  margin-bottom: 2.25rem;
+}
+
+.s-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #555;
+  max-width: 600px;
+  margin-bottom: 1.25rem;
+}
+
+.s-text strong { color: #111; font-weight: 600; }
+
+/* Sobre — layout foto + texto */
+.sobre-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 3.5rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.sobre-foto {
+  width: 200px;
+  height: 240px;
+  border-radius: 16px;
+  background: #e2e0db;
+  border: 2px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #bbb;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sobre-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 14px;
+}
+
+.sobre-foto svg { opacity: 0.35; }
+
+.sobre-txt { flex: 1; }
+
+@media (max-width: 640px) {
+  .sobre-grid {
+    grid-template-columns: 1fr;
+  }
+  .sobre-foto {
+    width: 140px;
+    height: 170px;
+  }
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.skill {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 100px;
+  font-size: 0.77rem;
+  color: #555;
+  font-weight: 500;
+  cursor: default;
+  transition: all 0.22s;
+}
+
+.skill:hover {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   SECTION — CURRÍCULO
+============================================================ */
+.work-list { list-style: none; }
+
+.work-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #ebebeb;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.22s;
+}
+
+.work-item:first-child { border-top: 1px solid #ebebeb; }
+
+.work-item:hover .wname { color: #000; }
+.work-item:hover .wlink { opacity: 1; transform: translateX(5px); }
+.work-item:hover { padding-left: 6px; }
+
+.wleft { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.wname {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #222;
+  transition: color 0.2s;
+}
+
+.wtype {
+  font-size: 0.78rem;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.wlink {
+  font-size: 0.75rem;
+  color: #ccc;
+  opacity: 0.6;
+  font-family: monospace;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.25s;
+}
+
+/* ============================================================
+   SECTION — CONTATO (DARK)
+============================================================ */
+#contato {
+  background: #060606;
+  color: #fff;
+  padding: 9rem 3rem;
+}
+
+#contato .s-inner { text-align: center; }
+
+#contato .s-label { color: rgba(255,255,255,0.25); }
+
+#contato .s-title {
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+#contato .s-text {
+  color: rgba(255,255,255,0.38);
+  max-width: 440px;
+  margin: 0 auto 3rem;
+}
+
+.contact-btns {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 13px 26px;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  letter-spacing: 0.02em;
+}
+
+.cbtn-primary { background: #fff; color: #000; }
+.cbtn-primary:hover { background: #f0f0f0; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,255,255,0.1); }
+
+.cbtn-ghost {
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.65);
+  background: transparent;
+}
+
+.cbtn-ghost:hover {
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer {
+  margin-top: 7rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.18);
+}
+
+/* ============================================================
+   SCROLL ANIMATIONS
+============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+.work-item.reveal { transition-duration: 0.5s; }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 900px) {
+  #header { padding: 1.1rem 1.5rem; }
+  nav { gap: 1.25rem; }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    padding: 5.5rem 1.5rem 2rem;
+    gap: 2.5rem;
+  }
+
+  .hero-right { order: -1; }
+
+  .mockup-card {
+    transform: perspective(800px) rotateY(-8deg) rotateX(2deg);
+    animation: mockupFloatSm 7s ease-in-out infinite;
+  }
+
+  @keyframes mockupFloatSm {
+    0%,100% { transform: perspective(800px) rotateY(-8deg) rotateX(2deg) translateY(0px); }
+    50%      { transform: perspective(800px) rotateY(-8deg) rotateX(2deg) translateY(-8px); }
+  }
+
+  .hero-title { font-size: 2.2rem; }
+  .hero-text { gap: 1.1rem; }
+
+  .light-section, .white-section, #contato { padding: 6rem 1.5rem; }
+
+  nav a { font-size: 0.65rem; gap: 0.8rem; }
+}
+
+/* ============================================================
+   DEMO OVERLAY
+============================================================ */
+#demoOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0a0a0a;
+  flex-direction: column;
+}
+#demoOverlay.open {
+  display: flex;
+  animation: demoFadeIn 0.25s ease;
+}
+@keyframes demoFadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+#demoTopBar {
+  height: 52px;
+  flex-shrink: 0;
+  background: rgba(8,8,8,0.98);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  backdrop-filter: blur(12px);
+  z-index: 2;
+}
+.demo-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  color: rgba(255,255,255,0.8);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+.demo-back-btn:hover {
+  background: rgba(255,255,255,0.13);
+  color: #fff;
+  transform: translateX(-2px);
+}
+.demo-name-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.04em;
+  font-family: var(--font);
+}
+.demo-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#demoFrame {
+  flex: 1;
+  border: none;
+  width: 100%;
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header id="header">
+  <a href="#" class="logo">magno<em>DSG</em></a>
+  <nav>
+    <a href="#hero">Portfólio</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#curriculo">Trabalhos</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+  <div class="mesh">
+    <div class="blob b1" id="b1"></div>
+    <div class="blob b2" id="b2"></div>
+    <div class="blob b3" id="b3"></div>
+    <div class="mesh-overlay"></div>
+  </div>
+
+  <div class="hero-grid">
+    <!-- Texto -->
+    <div class="hero-text" id="heroText">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span id="hBadge">Sistema de Gestão</span>
+      </div>
+
+      <h1 class="hero-title" id="hTitle">Tech<span class="outline">OS</span></h1>
+
+      <p class="hero-desc" id="hDesc">
+        Plataforma completa para assistências técnicas. Controle de OS, timeline, mensagens internas e dashboard em tempo real.
+      </p>
+
+      <div class="palette-row">
+        <span class="palette-lbl">Paleta de Cores</span>
+        <div class="palette-dots" id="hDots"></div>
+        <div class="palette-tags" id="hTags"></div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#" class="btn-live" id="hLink">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Ver Site Live
+        </a>
+        <span class="counter"><strong id="cCur">01</strong> / <span id="cTot">07</span></span>
+      </div>
+    </div>
+
+    <!-- Mockup -->
+    <div class="hero-right">
+      <div class="mockup-wrap">
+        <div class="mockup-card" id="mockupCard">
+          <div class="chrome">
+            <div class="chrome-btns">
+              <div class="cb cb-r"></div>
+              <div class="cb cb-y"></div>
+              <div class="cb cb-g"></div>
+            </div>
+            <div class="chrome-bar">
+              <span class="chrome-url" id="hUrl">techos.app</span>
+            </div>
+          </div>
+          <div class="screen" id="screen">
+            <!-- slides injetados via JS -->
+          </div>
+        </div>
+
+        <div class="nav-arrows">
+          <button class="nav-btn" id="btnPrev" aria-label="Anterior">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="nav-btn" id="btnNext" aria-label="Próximo">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll to explore</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SOBRE MIM
+============================================================ -->
+<section id="sobre" class="light-section">
+  <div class="s-inner">
+    <div class="s-label reveal">// 01 — Sobre Mim</div>
+    <h2 class="s-title reveal">Dev/Junior<br>Botando em prática</h2>
+
+    <div class="sobre-grid reveal">
+      <div class="sobre-foto">
+        <!-- Foto em breve -->
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>Foto em breve</span>
+      </div>
+
+      <div class="sobre-txt">
+        <p class="s-text">
+          Sou <strong>Carlos Magno</strong>, acadêmico de Engenharia da Computação e desenvolvedor full-stack com foco em sistemas web reais. Crio desde landing pages até plataformas completas — com banco de dados, autenticação, painéis administrativos e deploy.
+        </p>
+        <p class="s-text">
+          Faço Sistemas de organização empresarial e venda de Engajamento online (ADS) para fins de enriquerecer seu publico e melhorar sua presença digital. Os projetos aqui são prova de que dá pra construir coisas sérias sem esperar ter anos de experiência. <strong>Python, Flask, HTML, CSS, JS e SQLite</strong> são meu dia a dia — e cada sistema entregue foi um problema real resolvido.
+        </p>
+        <p class="s-text">
+          Tenho experiência prática em suporte técnico e automação, passagem por assistência técnica e setor de TI institucional. Proativo, autodidata e com o hábito de ir até o final do problema.
+        </p>
+      </div>
+    </div>
+
+    <div class="skills">
+      <span class="skill reveal">Python · Flask</span>
+      <span class="skill reveal">HTML · CSS · JS</span>
+      <span class="skill reveal">SQLite</span>
+      <span class="skill reveal">Sistemas Web</span>
+      <span class="skill reveal">UI Design</span>
+      <span class="skill reveal">Suporte Técnico</span>
+      <span class="skill reveal">Banco de Dados</span>
+      <span class="skill reveal">Redes (Cisco)</span>
+      <span class="skill reveal">Eng. Computação</span>
+      <span class="skill reveal">Autodidata</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CURRÍCULO / TRABALHOS
+============================================================ -->
+<section id="curriculo" class="white-section">
+  <div class="s-inner">
+    <div class="s-label reveal">// 02 — Trabalhos Entregues</div>
+    <h2 class="s-title reveal">Projetos<br>realizados.</h2>
+
+    <ul class="work-list">
+      <li>
+        <a class="work-item reveal" href="#" target="_blank">
+          <div class="wleft">
+            <span class="wname">TechOS</span>
+            <span class="wtype">Sistema de Gestão — Assistência Técnica</span>
+          </div>
+          <span class="wlink">techos.magno.dev ↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="work-item reveal" href="#" target="_blank">
+          <div class="wleft">
+            <span class="wname">BarberBook</span>
+            <span class="wtype">Agendamento Online — Barbearia</span>
+          </div>
+          <span class="wlink">barberbook.magno.dev ↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="work-item reveal" href="#" target="_blank">
+          <div class="wleft">
+            <span class="wname">Mercadinho PDV</span>
+            <span class="wtype">Ponto de Venda — Varejo de Bairro</span>
+          </div>
+          <span class="wlink">pdv.magno.dev ↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="work-item reveal" href="#" target="_blank">
+          <div class="wleft">
+            <span class="wname">MedAgenda</span>
+            <span class="wtype">Plataforma de Agendamento — Clínica Médica</span>
+          </div>
+          <span class="wlink">medagenda.magno.dev ↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="work-item reveal" href="demos/quickorder.html" target="_blank">
+          <div class="wleft">
+            <span class="wname">QuickOrder</span>
+            <span class="wtype">Sistema de Pedidos — Lanchonete / Food Service</span>
+          </div>
+          <span class="wlink">quickorder.magno.dev ↗</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTATO
+============================================================ -->
+<section id="contato">
+  <div class="s-inner">
+    <div class="s-label">// 03 — Contato</div>
+    <h2 class="s-title reveal">Vamos criar<br>algo juntos?</h2>
+    <p class="s-text reveal">Aberto a projetos freelance, parcerias e novas oportunidades.</p>
+
+    <div class="contact-btns">
+      <a href="https://wa.me/556994185766" class="cbtn cbtn-primary reveal" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+      <a href="mailto:magno@magno.dev" class="cbtn cbtn-ghost reveal">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        E-mail
+      </a>
+      <a href="https://github.com/MagnuMsixzeven" class="cbtn cbtn-ghost reveal" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 magnoDSG — Todos os direitos reservados.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+// ──────────────────────────────────────────────────────────────
+// PROJECTS DATA
+// ──────────────────────────────────────────────────────────────
+const PROJECTS = [
+  {
+    badge:   'Sistema de Gestão',
+    title:   'Tech<span class="outline">OS</span>',
+    desc:    'Plataforma completa para assistências técnicas. Controle de OS, timeline, mensagens internas e dashboard em tempo real.',
+    tags:    ['#sistema', '#flask', '#ui/ux'],
+    palette: ['#6366f1', '#818cf8', '#c4b5fd', '#312e81'],
+    blobs:   ['#4338ca', '#6d28d9', '#1e1b4b'],
+    url:     'techos.magno.dev',
+    live:    'demos/techos.html',
+    screenshot: 'screenshots/techos_login.png', cssUI: 0,
+  },
+  {
+    badge:   'Sistema de Gestão — Painel',
+    title:   'Tech<span class="outline">Admin</span>',
+    desc:    'Dashboard interno do TechOS. Visão completa das OS, gráficos de status, OS recentes e filtros rápidos por categoria.',
+    tags:    ['#dashboard', '#flask', '#dark-ui'],
+    palette: ['#6366f1', '#818cf8', '#c4b5fd', '#312e81'],
+    blobs:   ['#4338ca', '#6d28d9', '#1e1b4b'],
+    url:     'techos.magno.dev',
+    live:    'demos/techadmin.html',
+    screenshot: 'screenshots/techos_dashboard.png', cssUI: 0,
+  },
+  {
+    badge:   'Agendamento Online',
+    title:   'Barber<span class="outline">Book</span>',
+    desc:    'Plataforma de agendamento digital para barbearias. Interface moderna, gestão de horários e notificações ao cliente.',
+    tags:    ['#barbearia', '#booking', '#webapp'],
+    palette: ['#ff6b00', '#ff8c33', '#fff0e0', '#1a0800'],
+    blobs:   ['#d95a00', '#ff6b00', '#1a0800'],
+    url:     'barberbook.magno.dev',
+    live:    'demos/barberbook.html',
+    screenshot: 'screenshots/barberbook_landing.png', cssUI: 3,
+  },
+  {
+    badge:   'PDV & Varejo',
+    title:   'Mercad<span class="outline">inho</span>',
+    desc:    'Sistema de ponto de venda completo para pequenos mercados. Controle de estoque, vendas, entregas e clientes em um único lugar.',
+    tags:    ['#pdv', '#varejo', '#python'],
+    palette: ['#f59e0b', '#fbbf24', '#fde68a', '#78350f'],
+    blobs:   ['#d97706', '#f59e0b', '#92400e'],
+    url:     'pdv.magno.dev',
+    live:    'demos/mercadinho.html',
+    screenshot: 'screenshots/mercadinho_dashboard.png', cssUI: 2,
+  },
+  {
+    badge:   'Saúde Digital — Landing',
+    title:   'Med<span class="outline">Agenda</span>',
+    desc:    'Clínica digital com agendamento online, especialidades, equipe médica e sistema de convênios. Landing pública responsiva.',
+    tags:    ['#saude', '#landing', '#flask'],
+    palette: ['#10b981', '#34d399', '#a7f3d0', '#064e3b'],
+    blobs:   ['#059669', '#10b981', '#064e3b'],
+    url:     'medagenda.magno.dev',
+    live:    'demos/medagenda.html',
+    screenshot: 'screenshots/clinica_landing.png', cssUI: 1,
+  },
+  {
+    badge:   'Saúde Digital — Painel',
+    title:   'Med<span class="outline">Admin</span>',
+    desc:    'Painel administrativo da clínica. Gestão de agendamentos, profissionais, usuários, relatórios e logs do sistema.',
+    tags:    ['#saude', '#dashboard', '#admin'],
+    palette: ['#10b981', '#34d399', '#a7f3d0', '#064e3b'],
+    blobs:   ['#059669', '#10b981', '#064e3b'],
+    url:     'medagenda.magno.dev',
+    live:    'demos/medadmin.html',
+    screenshot: 'screenshots/clinica_admin.png', cssUI: 1,
+  },
+  {
+    badge:   'Food Tech',
+    title:   'Quick<span class="outline">Order</span>',
+    desc:    'Sistema de pedidos e cardápio digital para lanchonetes. Interface escura e rápida com painel de controle para o caixa.',
+    tags:    ['#foodtech', '#cardapio', '#dark-ui'],
+    palette: ['#ff6b00', '#ff9142', '#222222', '#060606'],
+    blobs:   ['#d95a00', '#ff6b00', '#111111'],
+    url:     'quickorder.magno.dev',
+    live:    'demos/quickorder.html',
+    iframe:  'demos/quickorder.html', cssUI: null,
+  },
+];
+
+// ──────────────────────────────────────────────────────────────
+// MOCKUP UI BUILDERS
+// ──────────────────────────────────────────────────────────────
+function uiTechOS(p) {
+  const [c1,,, bg] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#0c0b18">
+    <div style="width:48px;background:#0a091a;border-right:1px solid rgba(255,255,255,0.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4,5].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.45:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:10px;overflow:hidden">
+      <div style="display:flex;gap:5px;margin-bottom:9px">
+        ${['','','',''].map((_,i)=>`<div style="flex:1;background:rgba(${i===0?'99,102,241':'255,255,255'},${i===0?.18:.05});border-radius:7px;padding:7px">
+          <div style="font-size:11px;font-weight:700;color:${i===0?c1:'rgba(255,255,255,.35)'};margin-bottom:3px">${['12','5','3','8'][i]}</div>
+          <div style="height:3px;background:rgba(255,255,255,.07);border-radius:2px;width:55%"></div>
+        </div>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:8px">
+        ${[0,1,2].map(i=>`<div style="display:flex;gap:6px;margin-bottom:${i<2?7:0}px;align-items:center">
+          <div style="width:22px;height:22px;background:rgba(255,255,255,.06);border-radius:5px;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="height:5px;background:rgba(255,255,255,.12);border-radius:2px;width:${[72,60,55][i]}%;margin-bottom:3px"></div>
+            <div style="height:3px;background:rgba(255,255,255,.05);border-radius:2px;width:40%"></div>
+          </div>
+          <div style="width:30px;height:13px;background:${c1};border-radius:4px;opacity:.75"></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function uiMedAgenda(p) {
+  const [c1] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#020f07">
+    <div style="width:48px;background:#031209;border-right:1px solid rgba(255,255,255,.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.4:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px">
+        ${[0,1,2].map(i=>`<div style="background:rgba(16,185,129,${i===0?.14:.06});border-radius:6px;padding:7px">
+          <div style="font-size:11px;font-weight:700;color:${c1};margin-bottom:2px">${['08','03','12'][i]}</div>
+          <div style="height:3px;background:rgba(255,255,255,.07);border-radius:2px;width:55%"></div>
+        </div>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,.03);border-radius:8px;overflow:hidden">
+        <div style="display:flex;padding:5px 7px;background:rgba(16,185,129,.08);gap:3px">
+          ${['S','T','Q','Q','S'].map((d,i)=>`<div style="flex:1;text-align:center;padding:3px 1px;border-radius:4px;background:${i===2?c1:'transparent'}">
+            <div style="font-size:7px;color:${i===2?'#fff':'rgba(255,255,255,.28)'};">${d}</div>
+          </div>`).join('')}
+        </div>
+        ${[0,1,2].map(()=>`<div style="padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:5px;align-items:center">
+          <div style="width:20px;height:20px;background:rgba(16,185,129,.12);border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="height:4px;background:rgba(255,255,255,.1);border-radius:2px;width:65%;margin-bottom:3px"></div>
+            <div style="height:3px;background:rgba(255,255,255,.05);border-radius:2px;width:40%"></div>
+          </div>
+          <div style="width:26px;height:12px;background:rgba(16,185,129,.28);border-radius:4px"></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function uiMercadinho(p) {
+  const [c1] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#0b0800">
+    <div style="width:48px;background:#0e0a00;border-right:1px solid rgba(255,255,255,.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4,5].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.4:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:9px;overflow:hidden">
+      <div style="background:rgba(245,158,11,.12);border-radius:8px;padding:8px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="height:3px;background:rgba(255,255,255,.18);border-radius:2px;width:70px;margin-bottom:4px"></div>
+          <div style="font-size:12px;font-weight:700;color:${c1}">R$ 1.247,00</div>
+        </div>
+        <div style="width:30px;height:30px;background:${c1};border-radius:8px;opacity:.8"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+        ${[.3,.18,.22,.12,.18,.1].map(op=>`<div style="background:rgba(245,158,11,${op});border-radius:6px;padding:6px;aspect-ratio:1.1">
+          <div style="width:14px;height:14px;background:rgba(245,158,11,.5);border-radius:4px;margin-bottom:4px"></div>
+          <div style="height:3px;background:rgba(255,255,255,.12);border-radius:2px;width:65%"></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function uiBarberBook(p) {
+  const [c1] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#02080f">
+    <div style="width:48px;background:#020a14;border-right:1px solid rgba(255,255,255,.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.4:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:9px;overflow:hidden">
+      <div style="display:flex;gap:3px;margin-bottom:7px">
+        ${['Seg','Ter','Qua','Qui','Sex','Sab'].map((d,i)=>`<div style="flex:1;text-align:center;padding:4px 2px;border-radius:5px;background:${i===3?c1:'rgba(255,255,255,.05)'}">
+          <div style="font-size:6px;color:${i===3?'rgba(255,255,255,.8)':'rgba(255,255,255,.3)'};margin-bottom:2px">${d}</div>
+          <div style="font-size:8px;font-weight:${i===3?700:400};color:${i===3?'#fff':'rgba(255,255,255,.35)'}">${[7,8,9,10,11,12][i]}</div>
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${['09:00','10:30','11:00','14:00'].map((h,i)=>`<div style="display:flex;gap:5px;align-items:center;padding:5px 6px;background:rgba(59,130,246,${i===1?.15:.05});border-radius:6px;border-left:2px solid ${i===1?c1:'transparent'}">
+          <div style="font-size:8px;color:rgba(255,255,255,.35);width:26px;flex-shrink:0">${h}</div>
+          <div style="flex:1">
+            <div style="height:4px;background:rgba(255,255,255,${i===1?.2:.08});border-radius:2px;width:${[65,80,50,60][i]}%"></div>
+          </div>
+          ${i===1?`<div style="width:18px;height:10px;background:${c1};border-radius:3px"></div>`:''}
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function uiQuickOrder(p) {
+  const [c1] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#0e0303">
+    <div style="width:48px;background:#110404;border-right:1px solid rgba(255,255,255,.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.4:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:9px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+        ${['Mesa 01','Mesa 02','Mesa 03','Balcão'].map((m,i)=>`<div style="background:rgba(239,68,68,${i===0?.16:i===1?.08:.04});border-radius:6px;padding:6px;border:1px solid rgba(239,68,68,${i===0?.3:.07})">
+          <div style="font-size:8px;color:rgba(255,255,255,.38);margin-bottom:2px">${m}</div>
+          <div style="font-size:9px;font-weight:600;color:${i===0?c1:i===1?'rgba(255,255,255,.4)':'rgba(255,255,255,.18)'};">${i===0?'3 pedidos':i===1?'2 itens':i===2?'Livre':'1 item'}</div>
+        </div>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,.03);border-radius:7px;padding:7px">
+        <div style="height:4px;background:rgba(239,68,68,.28);border-radius:2px;width:40%;margin-bottom:7px"></div>
+        ${[0,1,2].map(()=>`<div style="display:flex;gap:5px;margin-bottom:5px;align-items:center">
+          <div style="width:14px;height:14px;background:rgba(255,255,255,.05);border-radius:3px;flex-shrink:0"></div>
+          <div style="flex:1"><div style="height:4px;background:rgba(255,255,255,.1);border-radius:2px;width:60%"></div></div>
+          <div style="font-size:8px;color:rgba(239,68,68,.7)">R$12</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function uiInventario(p) {
+  const [c1] = p.palette;
+  return `<div style="display:flex;height:100%;font-family:sans-serif;background:#070312">
+    <div style="width:48px;background:#090416;border-right:1px solid rgba(255,255,255,.05);padding:10px 6px;display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:26px;height:26px;background:${c1};border-radius:7px;margin-bottom:4px"></div>
+      ${[1,2,3,4,5].map(i=>`<div style="height:5px;background:rgba(255,255,255,${i===1?.4:.1});border-radius:3px;width:${i===1?'80%':'60%'}"></div>`).join('')}
+    </div>
+    <div style="flex:1;padding:10px;overflow:hidden">
+      <div style="display:flex;gap:5px;margin-bottom:8px">
+        <div style="flex:2;background:rgba(139,92,246,.12);border-radius:7px;padding:8px">
+          <div style="font-size:13px;font-weight:700;color:${c1};margin-bottom:3px">247</div>
+          <div style="height:3px;background:rgba(255,255,255,.07);border-radius:2px;width:55%"></div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.04);border-radius:7px;padding:8px;display:flex;align-items:center;justify-content:center">
+          <div style="width:20px;height:20px;background:rgba(139,92,246,.3);border-radius:5px"></div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,.03);border-radius:7px;overflow:hidden">
+        <div style="padding:5px 7px;background:rgba(139,92,246,.08)">
+          <div style="height:3px;background:rgba(255,255,255,.15);border-radius:2px;width:45%"></div>
+        </div>
+        ${[0,1,2,3].map(()=>`<div style="padding:5px 7px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:7px;align-items:center">
+          <div style="width:6px;height:6px;background:${c1};border-radius:50%;opacity:.5;flex-shrink:0"></div>
+          <div style="flex:1"><div style="height:4px;background:rgba(255,255,255,.1);border-radius:2px;width:65%"></div></div>
+          <div style="width:12px;height:12px;background:rgba(255,255,255,.06);border-radius:3px"></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+const UI_BUILDERS = [uiTechOS, uiMedAgenda, uiMercadinho, uiBarberBook];
+
+function uiIframe(src) {
+  return `<div style="position:absolute;inset:0;overflow:hidden;background:#0a0a0a">
+    <iframe src="${src}"
+      style="position:absolute;top:0;left:0;width:280%;height:3000px;
+             transform:scale(0.357);transform-origin:top left;
+             border:none;"
+      loading="lazy"></iframe>
+  </div>`;
+}
+
+function uiScreenshot(src) {
+  return `<div style="position:absolute;inset:0;overflow:hidden;background:#0a0a0a">
+    <img src="${src}" loading="lazy"
+      style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;">
+  </div>`;
+}
+
+// ──────────────────────────────────────────────────────────────
+// SLIDER STATE
+// ──────────────────────────────────────────────────────────────
+let cur = 0;
+let busy = false;
+
+function buildSlides() {
+  const screen = document.getElementById('screen');
+  screen.innerHTML = '';
+  PROJECTS.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'slide' + (i === 0 ? ' active' : '');
+    el.style.cssText = `
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    `;
+    if (p.iframe)      { el.innerHTML = uiIframe(p.iframe); }
+    else if (p.screenshot) { el.innerHTML = uiScreenshot(p.screenshot); }
+    else               { el.innerHTML = UI_BUILDERS[p.cssUI](p); }
+    screen.appendChild(el);
+  });
+}
+
+function goTo(idx, dir) {
+  if (busy || idx === cur) return;
+  busy = true;
+
+  const slides = document.querySelectorAll('.slide');
+  const oldSlide = slides[cur];
+  const newSlide = slides[idx];
+
+  // Old slide exits
+  oldSlide.style.opacity = '0';
+  oldSlide.style.transform = `translateX(${dir > 0 ? '-50px' : '50px'})`;
+
+  // New slide enters
+  newSlide.style.transition = 'none';
+  newSlide.style.opacity = '0';
+  newSlide.style.transform = `translateX(${dir > 0 ? '50px' : '-50px'})`;
+  newSlide.classList.add('active');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      newSlide.style.transition = `
+        opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+        transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)
+      `;
+      newSlide.style.opacity = '1';
+      newSlide.style.transform = 'translateX(0)';
+    });
+  });
+
+  setTimeout(() => {
+    oldSlide.classList.remove('active');
+    oldSlide.style.opacity = '';
+    oldSlide.style.transform = '';
+    busy = false;
+  }, 750);
+
+  cur = idx;
+  updateText();
+  updateGradient();
+}
+
+function next() { goTo((cur + 1) % PROJECTS.length,  1); }
+function prev() { goTo((cur - 1 + PROJECTS.length) % PROJECTS.length, -1); }
+
+// ──────────────────────────────────────────────────────────────
+// UPDATE HERO TEXT
+// ──────────────────────────────────────────────────────────────
+function updateText() {
+  const p = PROJECTS[cur];
+  const textEl = document.getElementById('heroText');
+
+  // Fade out
+  textEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  textEl.style.opacity = '0';
+  textEl.style.transform = 'translateY(10px)';
+
+  setTimeout(() => {
+    document.getElementById('hBadge').textContent  = p.badge;
+    document.getElementById('hTitle').innerHTML    = p.title;
+    document.getElementById('hDesc').textContent   = p.desc;
+    document.getElementById('hLink').href          = p.live;
+    document.getElementById('hUrl').textContent    = p.url;
+    document.getElementById('cCur').textContent    = String(cur + 1).padStart(2, '0');
+
+    // Palette dots
+    document.getElementById('hDots').innerHTML =
+      p.palette.map(c => `<div class="pdot-wrap"><div class="pdot" style="background:${c}"></div><span class="pdot-hex">${c}</span></div>`).join('');
+
+    // Tags
+    document.getElementById('hTags').innerHTML =
+      p.tags.map(t => `<span class="ptag">${t}</span>`).join('');
+
+    // Fade in
+    textEl.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'translateY(0)';
+  }, 280);
+}
+
+// ──────────────────────────────────────────────────────────────
+// UPDATE MESH GRADIENT
+// ──────────────────────────────────────────────────────────────
+function updateGradient() {
+  const p = PROJECTS[cur];
+  document.getElementById('b1').style.background = p.blobs[0];
+  document.getElementById('b2').style.background = p.blobs[1];
+  document.getElementById('b3').style.background = p.blobs[2];
+}
+
+// ──────────────────────────────────────────────────────────────
+// HEADER SCROLL TRANSITION
+// ──────────────────────────────────────────────────────────────
+const header = document.getElementById('header');
+const heroEl = document.getElementById('hero');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > heroEl.offsetHeight * 0.75) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+}, { passive: true });
+
+// ──────────────────────────────────────────────────────────────
+// SCROLL REVEAL
+// ──────────────────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('in'), i * 55);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ──────────────────────────────────────────────────────────────
+// KEYBOARD + TOUCH
+// ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prev();
+});
+
+let tx = 0;
+heroEl.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+heroEl.addEventListener('touchend',   e => {
+  const d = tx - e.changedTouches[0].clientX;
+  if (Math.abs(d) > 55) { d > 0 ? next() : prev(); }
+}, { passive: true });
+
+// ──────────────────────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────────────────────
+buildSlides();
+updateGradient();
+
+document.getElementById('btnNext').addEventListener('click', next);
+document.getElementById('btnPrev').addEventListener('click', prev);
+document.getElementById('cTot').textContent = String(PROJECTS.length).padStart(2, '0');
+
+// ──────────────────────────────────────────────────────────────
+// DEMO OVERLAY
+// ──────────────────────────────────────────────────────────────
+function openDemo(url, label) {
+  document.getElementById('demoFrame').src = url;
+  document.getElementById('demoNameLabel').textContent = label;
+  document.getElementById('demoOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDemo() {
+  document.getElementById('demoOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { document.getElementById('demoFrame').src = ''; }, 300);
+}
+
+document.getElementById('hLink').addEventListener('click', function(e) {
+  e.preventDefault();
+  const p = PROJECTS[cur];
+  const label = p.badge + '  ·  ' + p.title.replace(/<[^>]+>/g, '');
+  openDemo(p.live, label);
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeDemo();
+});
+</script>
+
+<!-- ============================================================
+     DEMO OVERLAY
+============================================================ -->
+<div id="demoOverlay">
+  <div id="demoTopBar">
+    <button class="demo-back-btn" onclick="closeDemo()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar ao Portfólio
+    </button>
+    <span class="demo-name-label" id="demoNameLabel"></span>
+    <span class="demo-badge-pill">
+      <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#4ade80"/></svg>
+      Modo Demo
+    </span>
+  </div>
+  <iframe id="demoFrame" src="" allowfullscreen></iframe>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BarberBook PRO — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--p:#ff6b00;--pl:#ff8c33;--pd:#d95a00;--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--bg:#0a0a0a;--bgc:#111111;--bgm:#1a1a1a;--sb:#000000;--txt:#ffffff;--txt2:#aaaaaa;--bdr:#2a2a2a;--r:16px;--rs:10px;--sw:260px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--sb);display:flex;flex-direction:column;z-index:100;border-right:1px solid rgba(255,255,255,.04);overflow-y:auto}
+.sidebar::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 180px 260px at 20% 85%,rgba(255,107,0,.14),transparent),radial-gradient(ellipse 130px 130px at 80% 15%,rgba(255,140,51,.07),transparent);pointer-events:none}
+.sidebar>*{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px;padding:26px 20px 22px;border-bottom:1px solid rgba(255,255,255,.06)}
+.brand-ico{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 4px 18px rgba(255,107,0,.35)}
+.brand-txt{color:rgba(255,255,255,.7);font-size:1.05rem;font-weight:500}.brand-txt b{color:#fff;font-weight:800}
+.brand-sub{display:block;font-size:.65rem;color:rgba(255,255,255,.3);font-weight:400;letter-spacing:.04em}
+nav{padding:16px 10px;flex:1;display:flex;flex-direction:column;gap:2px}
+.n-sec{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.3);padding:12px 12px 6px}
+.ni{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;font-size:.9rem;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .2s}
+.ni:hover{background:rgba(255,107,0,.1);color:var(--txt)}
+.ni.active{background:linear-gradient(90deg,rgba(255,107,0,.18),rgba(255,107,0,.06));color:var(--p);font-weight:700}
+.ni.active::before{content:'';display:block;width:3px;height:18px;background:var(--p);border-radius:2px;margin-right:-8px;margin-left:-6px}
+.ni i{width:18px;text-align:center;font-size:.95rem}
+.s-footer{padding:16px 20px;border-top:1px solid var(--bdr);margin-top:auto}
+.urow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.uav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff}
+.uname{font-size:.9rem;font-weight:700}.urole{font-size:.75rem;color:var(--txt2)}
+/* MAIN */
+.main{margin-left:var(--sw);min-height:100vh;background:var(--bg)}
+.topbar{padding:14px 28px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.7);backdrop-filter:blur(20px);position:sticky;top:0;z-index:90}
+.page-ttl{font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.page-ttl i{color:var(--p)}
+.demo-bar{background:linear-gradient(90deg,rgba(255,107,0,.1),rgba(255,107,0,.04));border:1px solid rgba(255,107,0,.2);border-radius:var(--rs);padding:6px 14px;font-size:11.5px;color:#ff8c33;display:flex;align-items:center;gap:7px}
+.content{padding:24px 28px}
+/* GREETING */
+.greet{margin-bottom:20px}
+.greet h1{font-size:1.35rem;font-weight:800}
+.greet p{color:var(--txt2);font-size:.88rem;margin-top:2px}
+/* MENSALIDADE BANNER */
+.banner{background:linear-gradient(135deg,rgba(255,107,0,.12),rgba(255,140,51,.06));border:1px solid rgba(255,107,0,.2);border-radius:var(--r);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.ban-l{display:flex;align-items:center;gap:14px}
+.ban-ico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;box-shadow:0 4px 16px rgba(255,107,0,.3)}
+.ban-ttl{font-weight:700;font-size:.95rem}.ban-sub{font-size:.8rem;color:var(--txt2)}
+.ban-r{text-align:right}.ban-timer{font-size:1.35rem;font-weight:800;color:var(--p)}
+.ban-date{font-size:.78rem;color:var(--txt2)}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sc{background:var(--bgc);border-radius:var(--r);padding:22px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.sc::before{content:'';position:absolute;inset:0;opacity:.04;background:radial-gradient(circle at top right,var(--ico-clr,#fff),transparent 60%)}
+.si{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:14px}
+.si.sp{background:rgba(255,107,0,.15);color:var(--p)}
+.si.sa{background:rgba(255,140,51,.15);color:var(--pl)}
+.si.ss{background:rgba(16,185,129,.15);color:var(--ok)}
+.si.sw{background:rgba(245,158,11,.15);color:var(--warn)}
+.sn{font-size:1.8rem;font-weight:800}.sl{font-size:.82rem;color:var(--txt2);margin-top:2px}.ss2{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:4px}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--bgc);border-radius:var(--r);padding:22px;border:1px solid rgba(255,255,255,.04)}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-hd h2{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-hd h2 i{color:var(--p)}
+.card-link{font-size:.8rem;color:var(--txt2);cursor:pointer;transition:color .15s}.card-link:hover{color:var(--p)}
+/* SEMANA */
+.semana{display:flex;gap:6px;margin-bottom:14px}
+.dia{flex:1;text-align:center;padding:10px 4px;border-radius:10px;background:var(--bgm);cursor:pointer;transition:all .15s}
+.dia.hoje{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff}
+.dia-nome{font-size:.6rem;font-weight:700;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+.dia-num{font-size:.78rem;margin-bottom:5px}
+.dia-tot{font-size:1.1rem;font-weight:800}
+/* SLOTS */
+.slot{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:.82rem}
+.slot:last-child{border-bottom:none}
+.sl-time{font-weight:700;width:44px;flex-shrink:0;color:var(--p)}
+.sl-cli{font-weight:600;flex:1}
+.sl-svc{color:var(--txt2);margin-right:8px}
+.badge{padding:3px 9px;border-radius:var(--rf,999px);font-size:10px;font-weight:700}
+.rf{border-radius:999px}
+.bg-ok{background:rgba(16,185,129,.15);color:#34d399}
+.bg-wa{background:rgba(245,158,11,.15);color:#fbbf24}
+.bg-mu{background:rgba(100,100,100,.15);color:#9ca3af}
+/* RECENTES */
+.ag-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:.82rem}
+.ag-item:last-child{border-bottom:none}
+.ag-av{width:34px;height:34px;border-radius:10px;background:var(--bgm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0}
+.ag-info{flex:1}.ag-name{font-weight:600;margin-bottom:1px}.ag-svc{color:var(--txt2)}
+.ag-time{font-size:.78rem;color:rgba(255,255,255,.4);text-align:right}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-ico"><i class="fa-solid fa-scissors"></i></div>
+    <div class="brand-txt">Barber<b>Book</b><span class="brand-sub">PRO</span></div>
+  </div>
+  <nav>
+    <span class="n-sec">Principal</span>
+    <a class="ni active" href="#"><i class="fa-solid fa-gauge-high"></i>Dashboard</a>
+    <a class="ni" href="#"><i class="fa-solid fa-calendar-check"></i>Agendamentos</a>
+    <a class="ni" href="#"><i class="fa-solid fa-users"></i>Clientes</a>
+    <span class="n-sec">Gestão</span>
+    <a class="ni" href="#"><i class="fa-solid fa-star"></i>Serviços</a>
+    <a class="ni" href="#"><i class="fa-solid fa-person-scissors"></i>Barbeiros</a>
+    <a class="ni" href="#"><i class="fa-solid fa-wallet"></i>Financeiro</a>
+    <span class="n-sec">Relatórios</span>
+    <a class="ni" href="#"><i class="fa-solid fa-chart-line"></i>Relatórios</a>
+    <span class="n-sec">Sistema</span>
+    <a class="ni" href="#"><i class="fa-brands fa-whatsapp"></i>WhatsApp</a>
+    <a class="ni" href="#"><i class="fa-solid fa-gear"></i>Configurações</a>
+  </nav>
+  <div class="s-footer">
+    <div class="urow">
+      <div class="uav">A</div>
+      <div><div class="uname">Admin</div><div class="urole">Gerente</div></div>
+    </div>
+    <a class="ni" style="color:var(--err)" href="#"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="page-ttl"><i class="fa-solid fa-gauge-high"></i>Dashboard</div>
+    <div class="demo-bar"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong> — BarberBook PRO</div>
+  </div>
+  <div class="content">
+    <div class="greet">
+      <h1>Olá, Admin! 👋</h1>
+      <p>Seg, 06 abr 2026 · Barbearia <strong>Corte &amp; Estilo</strong></p>
+    </div>
+    <div class="banner">
+      <div class="ban-l">
+        <div class="ban-ico"><i class="fa-solid fa-crown"></i></div>
+        <div><div class="ban-ttl">Assinatura BarberBook PRO</div><div class="ban-sub">Plano ativo · Próxima cobrança automática</div></div>
+      </div>
+      <div class="ban-r">
+        <div class="ban-timer">24d 07h 42m</div>
+        <div class="ban-date">Vence em 30/04/2026</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="sc"><div class="si sp"><i class="fa-solid fa-calendar-check"></i></div><div class="sn">18</div><div class="sl">Agendamentos Hoje</div><div class="ss2">5 pendentes</div></div>
+      <div class="sc"><div class="si sa"><i class="fa-solid fa-calendar-days"></i></div><div class="sn">142</div><div class="sl">Agendamentos no Mês</div><div class="ss2">Abril 2026</div></div>
+      <div class="sc"><div class="si ss"><i class="fa-solid fa-users"></i></div><div class="sn">384</div><div class="sl">Clientes Cadastrados</div><div class="ss2">12 novos este mês</div></div>
+      <div class="sc"><div class="si sw"><i class="fa-solid fa-brazilian-real-sign"></i></div><div class="sn">R$ 4.280</div><div class="sl">Receita no Mês</div><div class="ss2">3 barbeiros ativos</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-hd">
+          <h2><i class="fa-solid fa-calendar-week"></i>Agenda da Semana</h2>
+          <a class="card-link" href="#">Ver tudo →</a>
+        </div>
+        <div class="semana">
+          <div class="dia"><div class="dia-nome">Seg</div><div class="dia-num">06</div><div class="dia-tot">18</div></div>
+          <div class="dia"><div class="dia-nome">Ter</div><div class="dia-num">07</div><div class="dia-tot">14</div></div>
+          <div class="dia hoje"><div class="dia-nome">Qua</div><div class="dia-num">08</div><div class="dia-tot">21</div></div>
+          <div class="dia"><div class="dia-nome">Qui</div><div class="dia-num">09</div><div class="dia-tot">17</div></div>
+          <div class="dia"><div class="dia-nome">Sex</div><div class="dia-num">10</div><div class="dia-tot">22</div></div>
+          <div class="dia"><div class="dia-nome">Sáb</div><div class="dia-num">11</div><div class="dia-tot">28</div></div>
+        </div>
+        <div class="slot"><span class="sl-time">09:00</span><span class="sl-cli">Lucas Ferreira</span><span class="sl-svc">Corte + Barba</span><span class="badge rf bg-ok">Confirmado</span></div>
+        <div class="slot"><span class="sl-time">09:45</span><span class="sl-cli">Rafael Souza</span><span class="sl-svc">Corte Social</span><span class="badge rf bg-ok">Confirmado</span></div>
+        <div class="slot"><span class="sl-time">10:30</span><span class="sl-cli">Carlos Mendes</span><span class="sl-svc">Barba Tradicional</span><span class="badge rf bg-wa">Pendente</span></div>
+        <div class="slot"><span class="sl-time">11:15</span><span class="sl-cli">Pedro Alves</span><span class="sl-svc">Corte + Barba</span><span class="badge rf bg-ok">Confirmado</span></div>
+        <div class="slot"><span class="sl-time">14:00</span><span class="sl-cli">Marcos Lima</span><span class="sl-svc">Corte Degradê</span><span class="badge rf bg-wa">Pendente</span></div>
+      </div>
+      <div class="card">
+        <div class="card-hd">
+          <h2><i class="fa-solid fa-list"></i>Agendamentos Recentes</h2>
+          <a class="card-link" href="#">Ver todos →</a>
+        </div>
+        <div class="ag-item"><div class="ag-av" style="color:var(--p)">LF</div><div class="ag-info"><div class="ag-name">Lucas Ferreira</div><div class="ag-svc">Corte + Barba · Pedro (barbeiro)</div></div><div class="ag-time"><div>Hoje</div><div>09:00</div></div></div>
+        <div class="ag-item"><div class="ag-av" style="color:#22d3ee">RS</div><div class="ag-info"><div class="ag-name">Rafael Souza</div><div class="ag-svc">Corte Social · João (barbeiro)</div></div><div class="ag-time"><div>Hoje</div><div>09:45</div></div></div>
+        <div class="ag-item"><div class="ag-av" style="color:#c084fc">CM</div><div class="ag-info"><div class="ag-name">Carlos Mendes</div><div class="ag-svc">Barba Tradicional · Pedro (barbeiro)</div></div><div class="ag-time"><div>Hoje</div><div>10:30</div></div></div>
+        <div class="ag-item"><div class="ag-av" style="color:#4ade80">PA</div><div class="ag-info"><div class="ag-name">Pedro Alves</div><div class="ag-svc">Corte + Barba · João (barbeiro)</div></div><div class="ag-time"><div>Hoje</div><div>11:15</div></div></div>
+        <div class="ag-item"><div class="ag-av" style="color:#fbbf24">ML</div><div class="ag-info"><div class="ag-name">Marcos Lima</div><div class="ag-svc">Corte Degradê · Pedro (barbeiro)</div></div><div class="ag-time"><div>Hoje</div><div>14:00</div></div></div>
+        <div class="ag-item"><div class="ag-av" style="color:var(--p)">BM</div><div class="ag-info"><div class="ag-name">Bruno Martins</div><div class="ag-svc">Corte Clássico · João (barbeiro)</div></div><div class="ag-time"><div>Amanhã</div><div>09:00</div></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+<style>
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(17,17,17,.97);border:1px solid rgba(255,107,0,.3);border-radius:12px;padding:10px 20px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:#ff6b00;flex-shrink:0}
+</style>
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+<script>
+document.querySelectorAll('a[href="#"],.card-link').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    showToast('Disponível no sistema completo — visualização demo');
+  });
+});
+function showToast(msg){
+  const t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</html>

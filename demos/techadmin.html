@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TechAdmin — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0b0f19;--bg2:#141926;--bg3:#1c2333;--txt:#e8ecf4;--txt2:#8892a8;--bdr:rgba(255,255,255,.06);--p:#3b82f6;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--info:#06b6d4;--purple:#a855f7;--r:8px;--rm:14px;--rf:999px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.sidebar{width:240px;background:rgba(11,15,25,.97);height:100vh;border-right:1px solid var(--bdr);padding:1.75rem 1.25rem;position:fixed;overflow-y:auto;z-index:50;display:flex;flex-direction:column}
+.s-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem;padding:0 4px}
+.s-icon{width:34px;height:34px;background:var(--p);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff}
+.s-brand{font-size:17px;font-weight:700;letter-spacing:-.3px}.s-brand em{color:var(--p);font-style:normal}
+.nav-sec{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);padding:0 8px;margin:1rem 0 .35rem}
+.nl{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:13.5px;font-weight:500;color:var(--txt2);margin-bottom:2px;cursor:pointer;transition:background .15s,color .15s}
+.nl:hover{background:rgba(59,130,246,.08);color:var(--txt)}.nl.active{background:rgba(59,130,246,.15);color:var(--p);font-weight:600}
+.nl i{width:18px;text-align:center;font-size:14px}
+.nbadge{background:var(--err);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:var(--rf);margin-left:auto}
+.s-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--bdr)}
+.ucard{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--r);margin-bottom:8px}
+.uav{width:30px;height:30px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.uinfo strong{display:block;font-size:12px;font-weight:600;color:var(--txt)}.uinfo span{font-size:11px;color:var(--txt2)}
+/* MAIN */
+.main{margin-left:240px;flex:1;padding:2rem;min-height:100vh}
+.demo-bar{background:linear-gradient(90deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border:1px solid rgba(59,130,246,.22);border-radius:var(--r);padding:8px 16px;font-size:12px;color:#60a5fa;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem}
+.ptitle{font-size:22px;font-weight:700}.psub{font-size:13px;color:var(--txt2);margin-top:2px}
+.btn-p{background:var(--p);color:#fff;border:none;border-radius:var(--r);padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit}
+/* METRICS */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:1rem;margin-bottom:2rem}
+.mc{background:rgba(20,25,38,.7);border:1px solid var(--bdr);border-radius:var(--rm);padding:1.25rem;display:flex;align-items:center;gap:14px;backdrop-filter:blur(10px)}
+.mi{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mi.bl{background:rgba(59,130,246,.12);color:#60a5fa}
+.mi.ye{background:rgba(245,158,11,.12);color:#fbbf24}
+.mi.cy{background:rgba(6,182,212,.12);color:#22d3ee}
+.mi.pu{background:rgba(168,85,247,.12);color:#c084fc}
+.mi.gr{background:rgba(34,197,94,.12);color:#4ade80}
+.mi.re{background:rgba(239,68,68,.12);color:#f87171}
+.mv{font-size:24px;font-weight:700;line-height:1.1;color:var(--txt)}
+.ml{font-size:12px;color:var(--txt2);margin-top:2px}
+/* GRID */
+.grid2{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start}
+.card{background:rgba(20,25,38,.7);border:1px solid var(--bdr);border-radius:var(--rm);padding:1.5rem;backdrop-filter:blur(10px)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
+.card-title i{color:var(--p)}
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:rgba(255,255,255,.02);padding:10px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--txt2);text-align:left;border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:rgba(59,130,246,.05)}
+tbody td{padding:12px 14px;font-size:13px}
+.osn{font-family:monospace;font-weight:700;color:var(--p);font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--rf);font-size:11px;font-weight:600}
+.b-b{background:rgba(59,130,246,.15);color:#60a5fa}.b-y{background:rgba(245,158,11,.15);color:#fbbf24}
+.b-c{background:rgba(6,182,212,.15);color:#22d3ee}.b-v{background:rgba(168,85,247,.15);color:#c084fc}
+.b-g{background:rgba(34,197,94,.15);color:#4ade80}.b-r{background:rgba(239,68,68,.15);color:#f87171}
+/* CHART LEGEND */
+.legend{display:flex;flex-direction:column;gap:8px;margin-top:1rem}
+.lg-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px}
+.lg-dot{width:9px;height:9px;border-radius:50%;margin-right:7px;display:inline-block;flex-shrink:0}
+.lg-label{color:var(--txt2);display:flex;align-items:center}.lg-val{font-weight:600;color:var(--txt)}
+/* HEADER CARD */
+.cth{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.link-all{font-size:12.5px;color:var(--p);cursor:pointer;font-weight:500}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-icon"><i class="fa-solid fa-microchip"></i></div>
+    <div class="s-brand">Tech<em>OS</em></div>
+  </div>
+  <nav>
+    <a class="nl active" href="#"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+    <a class="nl" href="techos.html"><i class="fa-solid fa-clipboard-list"></i>Ordens<span class="nbadge">12</span></a>
+    <a class="nl" href="#"><i class="fa-solid fa-envelope"></i>Mensagens<span class="nbadge">3</span></a>
+    <span class="nav-sec">Sistema</span>
+    <a class="nl" href="#"><i class="fa-solid fa-users"></i>Usuários</a>
+    <a class="nl" href="#"><i class="fa-solid fa-gear"></i>Configurações</a>
+  </nav>
+  <div class="s-footer">
+    <div class="ucard">
+      <div class="uav">A</div>
+      <div class="uinfo"><strong>Admin</strong><span>Administrador</span></div>
+    </div>
+    <a class="nl" style="color:#ef4444" href="#"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="demo-bar"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong> — TechAdmin · Dashboard Administrativo</div>
+
+  <div class="ph">
+    <div><div class="ptitle">Dashboard</div><div class="psub">Visão geral das Ordens de Serviço</div></div>
+    <button class="btn-p"><i class="fa-solid fa-plus"></i> Nova OS</button>
+  </div>
+
+  <div class="metric-grid">
+    <div class="mc"><div class="mi bl"><i class="fa-solid fa-clipboard-list"></i></div><div><div class="mv">47</div><div class="ml">Total de OS</div></div></div>
+    <div class="mc"><div class="mi ye"><i class="fa-solid fa-tools"></i></div><div><div class="mv">12</div><div class="ml">Em Bancada</div></div></div>
+    <div class="mc"><div class="mi cy"><i class="fa-solid fa-clock"></i></div><div><div class="mv">8</div><div class="ml">Ag. Peça</div></div></div>
+    <div class="mc"><div class="mi pu"><i class="fa-solid fa-user-clock"></i></div><div><div class="mv">5</div><div class="ml">Ag. Cliente</div></div></div>
+    <div class="mc"><div class="mi gr"><i class="fa-solid fa-check-circle"></i></div><div><div class="mv">18</div><div class="ml">Finalizadas</div></div></div>
+    <div class="mc"><div class="mi re"><i class="fa-solid fa-fire"></i></div><div><div class="mv">4</div><div class="ml">Prioridades</div></div></div>
+    <div class="mc"><div class="mi re"><i class="fa-solid fa-ban"></i></div><div><div class="mv">2</div><div class="ml">Canceladas</div></div></div>
+    <div class="mc"><div class="mi bl"><i class="fa-solid fa-calendar-day"></i></div><div><div class="mv">7</div><div class="ml">Abertas Hoje</div></div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Status das OS</div>
+      <canvas id="ch" height="220"></canvas>
+      <div class="legend">
+        <div class="lg-row"><span class="lg-label"><span class="lg-dot" style="background:#60a5fa"></span>Em Bancada</span><span class="lg-val">12</span></div>
+        <div class="lg-row"><span class="lg-label"><span class="lg-dot" style="background:#22d3ee"></span>Ag. Peça</span><span class="lg-val">8</span></div>
+        <div class="lg-row"><span class="lg-label"><span class="lg-dot" style="background:#c084fc"></span>Ag. Cliente</span><span class="lg-val">5</span></div>
+        <div class="lg-row"><span class="lg-label"><span class="lg-dot" style="background:#4ade80"></span>Finalizadas</span><span class="lg-val">18</span></div>
+        <div class="lg-row"><span class="lg-label"><span class="lg-dot" style="background:#f87171"></span>Prioridade</span><span class="lg-val">4</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cth">
+        <div class="card-title" style="margin:0"><i class="fa-solid fa-list-check"></i> OS Recentes</div>
+        <a class="link-all" href="techos.html">Ver todas →</a>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Nº OS</th><th>Cliente</th><th>Aparelho</th><th>Status</th><th>Prior.</th></tr></thead>
+          <tbody>
+            <tr><td><span class="osn">OS‑0047</span></td><td>João da Silva</td><td>iPhone 14 Pro</td><td><span class="badge b-y">Em Bancada</span></td><td style="color:#f87171;font-size:12px;font-weight:600">Alta</td></tr>
+            <tr><td><span class="osn">OS‑0046</span></td><td>Maria Gonçalves</td><td>Samsung S23</td><td><span class="badge b-y">Em Bancada</span></td><td style="color:var(--txt2);font-size:12px">Normal</td></tr>
+            <tr><td><span class="osn">OS‑0045</span></td><td>Carlos Menezes</td><td>Notebook Dell</td><td><span class="badge b-c">Ag. Peça</span></td><td style="color:#f87171;font-size:12px;font-weight:600">Alta</td></tr>
+            <tr><td><span class="osn">OS‑0044</span></td><td>Ana Paula Rocha</td><td>iPad Air 2022</td><td><span class="badge b-v">Ag. Cliente</span></td><td style="color:var(--txt2);font-size:12px">Normal</td></tr>
+            <tr><td><span class="osn">OS‑0043</span></td><td>Rodrigo Batista</td><td>iPhone 13</td><td><span class="badge b-g">Finalizada</span></td><td style="color:var(--txt2);font-size:12px">Normal</td></tr>
+            <tr><td><span class="osn">OS‑0042</span></td><td>Fernanda Lima</td><td>Motorola Edge 40</td><td><span class="badge b-b">Aberta</span></td><td style="color:#f87171;font-size:12px;font-weight:600">Alta</td></tr>
+            <tr><td><span class="osn">OS‑0041</span></td><td>Pedro Henrique</td><td>MacBook Air M2</td><td><span class="badge b-c">Ag. Peça</span></td><td style="color:var(--txt2);font-size:12px">Normal</td></tr>
+            <tr><td><span class="osn">OS‑0040</span></td><td>Juliana Costa</td><td>Samsung A54</td><td><span class="badge b-g">Finalizada</span></td><td style="color:var(--txt2);font-size:12px">Normal</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const ctx = document.getElementById('ch').getContext('2d');
+new Chart(ctx, {
+  type:'doughnut',
+  data:{
+    labels:['Em Bancada','Ag. Peça','Ag. Cliente','Finalizadas','Prioridade'],
+    datasets:[{data:[12,8,5,18,4],backgroundColor:['#3b82f6','#06b6d4','#a855f7','#22c55e','#ef4444'],borderWidth:0,hoverOffset:6}]
+  },
+  options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+ctx.raw}}},cutout:'68%'}
+});
+</script>
+</body>
+<style>
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,25,38,.97);border:1px solid rgba(59,130,246,.3);border-radius:12px;padding:10px 20px;font-size:13px;font-family:'Inter',sans-serif;color:#e8ecf4;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:#3b82f6;flex-shrink:0}
+</style>
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+<script>
+document.querySelectorAll('a[href="#"],button.btn-p,.link-all').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    showToast('Disponível no sistema completo — visualização demo');
+  });
+});
+function showToast(msg){
+  const t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</html>

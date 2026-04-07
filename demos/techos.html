@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TechOS — Ordens de Serviço</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0b0f19;--bg2:#141926;--bg3:#1c2333;--txt:#e8ecf4;--txt2:#8892a8;--bdr:rgba(255,255,255,.06);--p:#3b82f6;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--info:#06b6d4;--purple:#a855f7;--r:8px;--rm:14px;--rf:999px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+/* SIDEBAR */
+.sidebar{width:240px;background:rgba(11,15,25,.97);height:100vh;border-right:1px solid var(--bdr);padding:1.75rem 1.25rem;position:fixed;overflow-y:auto;z-index:50;display:flex;flex-direction:column;gap:0}
+.s-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem;padding:0 4px}
+.s-icon{width:34px;height:34px;background:var(--p);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff}
+.s-brand{font-size:17px;font-weight:700;letter-spacing:-.3px}.s-brand em{color:var(--p);font-style:normal}
+.nav-sec{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);padding:0 8px;margin:1rem 0 .35rem}
+.nl{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:13.5px;font-weight:500;color:var(--txt2);margin-bottom:2px;cursor:pointer;transition:background .15s,color .15s}
+.nl:hover{background:rgba(59,130,246,.08);color:var(--txt)}
+.nl.active{background:rgba(59,130,246,.15);color:var(--p);font-weight:600}
+.nl i{width:18px;text-align:center;font-size:14px}
+.nbadge{background:var(--err);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:var(--rf);margin-left:auto}
+.s-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--bdr)}
+.ucard{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--r);margin-bottom:8px}
+.uav{width:30px;height:30px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.uinfo strong{display:block;font-size:12px;font-weight:600;color:var(--txt)}
+.uinfo span{font-size:11px;color:var(--txt2)}
+/* MAIN */
+.main{margin-left:240px;flex:1;padding:2rem;min-height:100vh}
+.demo-bar{background:linear-gradient(90deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border:1px solid rgba(59,130,246,.22);border-radius:var(--r);padding:8px 16px;font-size:12px;color:#60a5fa;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap}
+.ptitle{font-size:22px;font-weight:700}.psub{font-size:13px;color:var(--txt2);margin-top:2px}
+.btn-p{background:var(--p);color:#fff;border:none;border-radius:var(--r);padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit}
+/* FILTERS */
+.fbar{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.chip{padding:6px 14px;border-radius:var(--rf);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--txt2);border:1px solid var(--bdr);transition:all .15s}
+.chip.active{background:rgba(59,130,246,.15);color:var(--p);border-color:rgba(59,130,246,.3)}
+.chip:hover:not(.active){background:var(--bg3);color:var(--txt)}
+.swrap{position:relative}.swrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--txt2);font-size:13px;pointer-events:none}
+.sinput{background:var(--bg2);border:1px solid var(--bdr);color:var(--txt);padding:8px 14px 8px 34px;border-radius:var(--r);font-size:13px;font-family:inherit;width:220px;outline:none}
+.sinput::placeholder{color:var(--txt2)}
+/* TABLE */
+.card{background:rgba(20,25,38,.7);border:1px solid var(--bdr);border-radius:var(--rm);overflow:hidden}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:rgba(255,255,255,.02);padding:11px 15px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--txt2);text-align:left;border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:rgba(59,130,246,.05)}
+tbody td{padding:13px 15px;font-size:13.5px}
+.osn{font-family:monospace;font-weight:700;color:var(--p);font-size:13px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--rf);font-size:11px;font-weight:600;white-space:nowrap}
+.b-b{background:rgba(59,130,246,.15);color:#60a5fa}
+.b-y{background:rgba(245,158,11,.15);color:#fbbf24}
+.b-c{background:rgba(6,182,212,.15);color:#22d3ee}
+.b-v{background:rgba(168,85,247,.15);color:#c084fc}
+.b-g{background:rgba(34,197,94,.15);color:#4ade80}
+.b-r{background:rgba(239,68,68,.15);color:#f87171}
+.b-m{background:rgba(107,114,128,.15);color:#9ca3af}
+.p-hi{color:#f87171;font-size:12px;font-weight:600}
+.p-no{color:var(--txt2);font-size:12px}
+.btn-d{padding:5px 11px;background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2);border-radius:var(--r);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500}
+.btn-d:hover{background:rgba(59,130,246,.18)}
+/* PAGINATION */
+.pager{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px solid var(--bdr);font-size:13px;color:var(--txt2)}
+.pager-btns{display:flex;gap:4px}
+.pg-btn{padding:5px 10px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--bdr);color:var(--txt2);cursor:pointer;font-size:12px;font-family:inherit}
+.pg-btn.active{background:rgba(59,130,246,.15);color:var(--p);border-color:rgba(59,130,246,.3)}
+.pg-btn:hover:not(.active){background:var(--bg3);color:var(--txt)}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-icon"><i class="fa-solid fa-microchip"></i></div>
+    <div class="s-brand">Tech<em>OS</em></div>
+  </div>
+  <nav>
+    <a class="nl" href="techadmin.html"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+    <a class="nl active" href="#"><i class="fa-solid fa-clipboard-list"></i>Ordens<span class="nbadge">12</span></a>
+    <a class="nl" href="#"><i class="fa-solid fa-envelope"></i>Mensagens<span class="nbadge">3</span></a>
+    <span class="nav-sec">Sistema</span>
+    <a class="nl" href="#"><i class="fa-solid fa-users"></i>Usuários</a>
+    <a class="nl" href="#"><i class="fa-solid fa-gear"></i>Configurações</a>
+  </nav>
+  <div class="s-footer">
+    <div class="ucard">
+      <div class="uav">A</div>
+      <div class="uinfo"><strong>Admin</strong><span>Administrador</span></div>
+    </div>
+    <a class="nl" style="color:#ef4444" href="#"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="demo-bar"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong> — TechOS · Sistema de Gestão de Assistência Técnica</div>
+
+  <div class="ph">
+    <div><div class="ptitle">Ordens de Serviço</div><div class="psub">47 ordens registradas · 7 abertas hoje</div></div>
+    <button class="btn-p"><i class="fa-solid fa-plus"></i> Nova OS</button>
+  </div>
+
+  <div class="fbar">
+    <span class="chip active">Todas (47)</span>
+    <span class="chip">Em Bancada (12)</span>
+    <span class="chip">Ag. Peça (8)</span>
+    <span class="chip">Ag. Cliente (5)</span>
+    <span class="chip">Finalizadas (18)</span>
+    <span class="chip">Prioridade (4)</span>
+    <div class="swrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input class="sinput" type="text" placeholder="Buscar OS, cliente…">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Nº OS</th><th>Cliente</th><th>Aparelho</th><th>Problema</th><th>Status</th><th>Prior.</th><th>Técnico</th><th>Aberto</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><span class="osn">OS‑0047</span></td><td>João da Silva</td><td>iPhone 14 Pro</td><td>Tela quebrada</td><td><span class="badge b-y"><i class="fa-solid fa-circle fa-2xs"></i> Em Bancada</span></td><td><span class="p-hi"><i class="fa-solid fa-fire fa-xs"></i> Alta</span></td><td>Lucas M.</td><td>Hoje 09:12</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0046</span></td><td>Maria Gonçalves</td><td>Samsung S23</td><td>Não liga</td><td><span class="badge b-y"><i class="fa-solid fa-circle fa-2xs"></i> Em Bancada</span></td><td><span class="p-no">Normal</span></td><td>Rafael T.</td><td>Hoje 08:35</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0045</span></td><td>Carlos Menezes</td><td>Notebook Dell</td><td>HD com defeito</td><td><span class="badge b-c"><i class="fa-solid fa-circle fa-2xs"></i> Ag. Peça</span></td><td><span class="p-hi"><i class="fa-solid fa-fire fa-xs"></i> Alta</span></td><td>Lucas M.</td><td>Ontem 14:20</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0044</span></td><td>Ana Paula Rocha</td><td>iPad Air 2022</td><td>Bateria fraca</td><td><span class="badge b-v"><i class="fa-solid fa-circle fa-2xs"></i> Ag. Cliente</span></td><td><span class="p-no">Normal</span></td><td>Rafael T.</td><td>02/04 10:00</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0043</span></td><td>Rodrigo Batista</td><td>iPhone 13</td><td>Câmera sem foco</td><td><span class="badge b-g"><i class="fa-solid fa-circle fa-2xs"></i> Finalizada</span></td><td><span class="p-no">Normal</span></td><td>Lucas M.</td><td>01/04 11:45</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0042</span></td><td>Fernanda Lima</td><td>Motorola Edge 40</td><td>Touch não responde</td><td><span class="badge b-b"><i class="fa-solid fa-circle fa-2xs"></i> Aberta</span></td><td><span class="p-hi"><i class="fa-solid fa-fire fa-xs"></i> Alta</span></td><td>—</td><td>01/04 09:30</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0041</span></td><td>Pedro Henrique</td><td>MacBook Air M2</td><td>Não conecta Wi-Fi</td><td><span class="badge b-c"><i class="fa-solid fa-circle fa-2xs"></i> Ag. Peça</span></td><td><span class="p-no">Normal</span></td><td>Lucas M.</td><td>31/03 15:00</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0040</span></td><td>Juliana Costa</td><td>Samsung A54</td><td>Alto-falante com ruído</td><td><span class="badge b-g"><i class="fa-solid fa-circle fa-2xs"></i> Finalizada</span></td><td><span class="p-no">Normal</span></td><td>Rafael T.</td><td>30/03 08:00</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0039</span></td><td>Marcos Vieira</td><td>Xbox Series S</td><td>Travando no início</td><td><span class="badge b-y"><i class="fa-solid fa-circle fa-2xs"></i> Em Bancada</span></td><td><span class="p-hi"><i class="fa-solid fa-fire fa-xs"></i> Alta</span></td><td>Luis O.</td><td>29/03 16:10</td><td><button class="btn-d">Detalhes</button></td></tr>
+          <tr><td><span class="osn">OS‑0038</span></td><td>Beatriz Alves</td><td>iPhone 15</td><td>Face ID não funciona</td><td><span class="badge b-r"><i class="fa-solid fa-ban fa-2xs"></i> Cancelada</span></td><td><span class="p-no">Normal</span></td><td>Rafael T.</td><td>28/03 12:30</td><td><button class="btn-d">Detalhes</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <span>Exibindo 1–10 de 47 ordens</span>
+      <div class="pager-btns">
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <button class="pg-btn">3</button>
+        <button class="pg-btn">…</button>
+        <button class="pg-btn">5</button>
+        <button class="pg-btn">›</button>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+<style>
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,25,38,.97);border:1px solid rgba(59,130,246,.3);border-radius:12px;padding:10px 20px;font-size:13px;font-family:'Inter',sans-serif;color:#e8ecf4;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:#3b82f6;flex-shrink:0}
+</style>
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+<script>
+document.querySelectorAll('a[href="#"],button.btn-p,.btn-d,.pg-btn:not(.active),.chip:not(.active)').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    showToast('Disponível no sistema completo — visualização demo');
+  });
+});
+function showToast(msg){
+  const t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</html>

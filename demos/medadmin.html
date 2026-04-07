@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OdontoAgenda — Painel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--p:#0891b2;--pl:#22d3ee;--pd:#0e7490;--pg:rgba(8,145,178,.2);--acc:#10b981;--acl:#34d399;--ag:rgba(16,185,129,.2);--bg:#0c1222;--bgc:rgba(255,255,255,.06);--bgm:rgba(255,255,255,.03);--txt:#f1f5f9;--txt2:#94a3b8;--bdr:rgba(255,255,255,.08);--r:14px;--rs:10px;--sh:0 4px 24px rgba(0,0,0,.3)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;color:var(--txt);background:var(--bg);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+/* SIDEBAR */
+.sidebar{width:260px;background:rgba(8,12,28,.95);height:100vh;border-right:1px solid var(--bdr);padding:1.75rem 1.25rem;position:fixed;overflow-y:auto;z-index:50;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:2rem;padding:0 4px}
+.bico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;box-shadow:0 4px 16px var(--pg)}
+.btxt{font-size:1.15rem;font-weight:800;letter-spacing:-.02em}.btxt span{color:var(--pl)}
+.nav-sec{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.3);padding:0 10px;margin:1rem 0 .35rem}
+.ni{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--rs);font-size:.88rem;font-weight:600;color:var(--txt2);margin-bottom:2px;cursor:pointer;transition:all .15s}
+.ni:hover{background:rgba(8,145,178,.1);color:var(--txt)}.ni.active{background:rgba(8,145,178,.15);color:var(--pl);font-weight:700}
+.ni i{width:18px;text-align:center;font-size:.95rem}
+.s-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--bdr)}
+.ublock{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bgc);border-radius:var(--rs);margin-bottom:8px}
+.uav{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
+.uname{font-size:.88rem;font-weight:700}.urole{font-size:.72rem;color:var(--txt2)}
+/* MAIN */
+.main{margin-left:260px;flex:1;padding:2rem;min-height:100vh}
+.demo-bar{background:linear-gradient(90deg,rgba(8,145,178,.12),rgba(16,185,129,.06));border:1px solid rgba(8,145,178,.2);border-radius:var(--rs);padding:8px 16px;font-size:12px;color:var(--pl);margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap}
+.ptitle{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}.psub{font-size:.82rem;color:var(--txt2);margin-top:2px}
+.btn-p{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border:none;border-radius:var(--rs);padding:10px 20px;font-size:.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;box-shadow:0 4px 14px var(--pg)}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:1.75rem}
+.sc{background:var(--bgc);border-radius:var(--r);padding:20px;border:1px solid var(--bdr)}
+.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:12px}
+.st-p{background:rgba(8,145,178,.15);color:var(--pl)}
+.st-a{background:rgba(34,211,238,.15);color:#67e8f9}
+.st-d{background:rgba(239,68,68,.15);color:#f87171}
+.st-w{background:rgba(245,158,11,.15);color:#fbbf24}
+.st-g{background:rgba(16,185,129,.15);color:var(--acl)}
+.sn{font-size:1.6rem;font-weight:800}.sl{font-size:.78rem;color:var(--txt2);margin-top:2px}
+/* CARDS */
+.card{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.ch h2{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.ch h2 i{color:var(--pl)}
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:rgba(255,255,255,.02);padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);text-align:left;border-bottom:1px solid var(--bdr)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:rgba(8,145,178,.06)}
+tbody td{padding:13px 14px;font-size:.85rem}
+.mini-av{width:30px;height:30px;border-radius:8px;object-fit:cover;margin-right:10px;vertical-align:middle;background:var(--bgm)}
+.name-cell{display:flex;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:700}
+.bp{background:rgba(8,145,178,.15);color:var(--pl)}
+.ba{background:rgba(34,211,238,.15);color:#67e8f9}
+.bg{background:rgba(16,185,129,.15);color:var(--acl)}
+.bm{background:rgba(100,116,139,.15);color:#94a3b8}
+.bw{background:rgba(245,158,11,.15);color:#fbbf24}
+.link{font-size:.82rem;color:var(--pl);cursor:pointer;font-weight:600}
+/* SEMANA */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.semana{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.dia{flex:1;min-width:60px;text-align:center;padding:12px 6px;border-radius:12px;background:var(--bgm);border:1px solid var(--bdr)}
+.dia.hoje{background:linear-gradient(135deg,var(--p),var(--pd));border-color:transparent}
+.dn{font-size:.62rem;font-weight:700;text-transform:uppercase;opacity:.65;margin-bottom:2px}
+.dd{font-size:.75rem;margin-bottom:6px}
+.dt{font-size:1.25rem;font-weight:800}
+.ag-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:.82rem}
+.ag-row:last-child{border-bottom:none}
+.ag-time{font-weight:700;width:44px;flex-shrink:0;color:var(--pl)}
+.ag-name{font-weight:600;flex:1}
+.ag-spec{color:var(--txt2)}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand">
+    <div class="bico"><i class="fas fa-shield-halved"></i></div>
+    <div class="btxt">Odonto<span>Admin</span></div>
+  </div>
+  <nav>
+    <span class="nav-sec">Principal</span>
+    <a class="ni active" href="#"><i class="fas fa-gauge"></i>Dashboard</a>
+    <a class="ni" href="#"><i class="fas fa-calendar-check"></i>Agendamentos</a>
+    <a class="ni" href="#"><i class="fas fa-user-doctor"></i>Profissionais</a>
+    <a class="ni" href="#"><i class="fas fa-hospital-user"></i>Recepção</a>
+    <span class="nav-sec">Gestão</span>
+    <a class="ni" href="#"><i class="fas fa-heart-pulse"></i>Convênios</a>
+    <a class="ni" href="#"><i class="fas fa-tooth"></i>Procedimentos</a>
+    <a class="ni" href="#"><i class="fas fa-users"></i>Usuários</a>
+    <span class="nav-sec">Relatórios</span>
+    <a class="ni" href="#"><i class="fas fa-chart-bar"></i>Relatórios</a>
+    <a class="ni" href="#"><i class="fas fa-clock-rotate-left"></i>Logs</a>
+  </nav>
+  <div class="s-footer">
+    <div class="ublock">
+      <div class="uav"><i class="fas fa-shield-halved"></i></div>
+      <div><div class="uname">Admin</div><div class="urole">Administrador</div></div>
+    </div>
+    <a class="ni" style="color:#ef4444" href="#"><i class="fas fa-right-from-bracket"></i>Sair</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="demo-bar"><i class="fa-solid fa-eye"></i><strong>Modo Demo</strong> — OdontoAdmin · Painel Administrativo da Clínica</div>
+
+  <div class="ph">
+    <div><div class="ptitle">Dashboard</div><div class="psub">Painel de controle administrativo</div></div>
+    <button class="btn-p"><i class="fas fa-plus"></i> Novo Agendamento</button>
+  </div>
+
+  <div class="stats">
+    <div class="sc"><div class="si st-p"><i class="fas fa-calendar-day"></i></div><div class="sn">23</div><div class="sl">Hoje</div></div>
+    <div class="sc"><div class="si st-a"><i class="fas fa-calendar-check"></i></div><div class="sn">187</div><div class="sl">Este mês</div></div>
+    <div class="sc"><div class="si st-d"><i class="fas fa-calendar-xmark"></i></div><div class="sn">8</div><div class="sl">Cancelados</div></div>
+    <div class="sc"><div class="si st-w"><i class="fas fa-clock"></i></div><div class="sn">5</div><div class="sl">Pendentes</div></div>
+    <div class="sc"><div class="si st-g"><i class="fas fa-brazilian-real-sign"></i></div><div class="sn">R$ 18.420</div><div class="sl">Receita mês</div></div>
+  </div>
+
+  <div class="card">
+    <div class="ch">
+      <h2><i class="fas fa-user-doctor"></i>Médicos Atendendo Hoje</h2>
+      <a class="link" href="#">Ver todos →</a>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Profissional</th><th>CRO</th><th>Agend. hoje</th><th>Próximo</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="name-cell"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--acc));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;margin-right:10px">CM</div><strong>Dra. Carla Medeiros</strong></div></td><td>CRO-SP 41283</td><td><span class="badge bp">8</span></td><td>09:00</td><td><span class="badge ba"><i class="fas fa-circle" style="font-size:.45rem"></i> Atendendo</span></td></tr>
+          <tr><td><div class="name-cell"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;margin-right:10px">PA</div><strong>Dr. Paulo Andrade</strong></div></td><td>CRO-SP 38712</td><td><span class="badge bp">7</span></td><td>09:15</td><td><span class="badge ba"><i class="fas fa-circle" style="font-size:.45rem"></i> Atendendo</span></td></tr>
+          <tr><td><div class="name-cell"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0d9488,#34d399);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;margin-right:10px">AF</div><strong>Dra. Ana Ferreira</strong></div></td><td>CRO-SP 52941</td><td><span class="badge bp">5</span></td><td>10:00</td><td><span class="badge ba"><i class="fas fa-circle" style="font-size:.45rem"></i> Atendendo</span></td></tr>
+          <tr><td><div class="name-cell"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#b45309,#fbbf24);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;margin-right:10px">MO</div><strong>Dr. Miguel Oliveira</strong></div></td><td>CRO-SP 29473</td><td><span class="badge bm">0</span></td><td>—</td><td><span class="badge bm">Sem agenda</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><h2><i class="fas fa-calendar-week"></i>Ocupação da Semana</h2></div>
+      <div class="semana">
+        <div class="dia"><div class="dn">Seg</div><div class="dd">06</div><div class="dt">18</div></div>
+        <div class="dia"><div class="dn">Ter</div><div class="dd">07</div><div class="dt">21</div></div>
+        <div class="dia hoje"><div class="dn">Qua</div><div class="dd">08</div><div class="dt">23</div></div>
+        <div class="dia"><div class="dn">Qui</div><div class="dd">09</div><div class="dt">19</div></div>
+        <div class="dia"><div class="dn">Sex</div><div class="dd">10</div><div class="dt">25</div></div>
+        <div class="dia"><div class="dn">Sáb</div><div class="dd">11</div><div class="dt">12</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><h2><i class="fas fa-list-ul"></i>Próximos Agendamentos</h2><a class="link" href="#">Ver todos →</a></div>
+      <div class="ag-row"><span class="ag-time">09:00</span><span class="ag-name">Marcos Oliveira</span><span class="ag-spec">Ortodontia · Dra. Carla</span></div>
+      <div class="ag-row"><span class="ag-time">09:15</span><span class="ag-name">Letícia Campos</span><span class="ag-spec">Implante · Dr. Paulo</span></div>
+      <div class="ag-row"><span class="ag-time">09:30</span><span class="ag-name">Bruno Santos</span><span class="ag-spec">Clínica Geral · Dra. Ana</span></div>
+      <div class="ag-row"><span class="ag-time">10:00</span><span class="ag-name">Rafaela Moura</span><span class="ag-spec">Endodontia · Dra. Carla</span></div>
+      <div class="ag-row"><span class="ag-time">10:30</span><span class="ag-name">Gabriel Lima</span><span class="ag-spec">Clareamento · Dr. Paulo</span></div>
+    </div>
+  </div>
+</main>
+</body>
+<style>
+#dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(12,18,34,.97);border:1px solid rgba(8,145,178,.3);border-radius:12px;padding:10px 20px;font-size:13px;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#f1f5f9;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:9999;white-space:nowrap}
+#dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#dmToast .dot{width:7px;height:7px;border-radius:50%;background:#0891b2;flex-shrink:0}
+</style>
+<div id="dmToast"><span class="dot"></span><span id="dmMsg"></span></div>
+<script>
+document.querySelectorAll('a[href="#"],.link,.btn-p').forEach(el=>{
+  el.addEventListener('click',e=>{
+    e.preventDefault();
+    showToast('Disponível no sistema completo — visualização demo');
+  });
+});
+function showToast(msg){
+  const t=document.getElementById('dmToast');
+  document.getElementById('dmMsg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</html>
