@@ -159,11 +159,19 @@ tbody td{padding:12px 14px;font-size:.85rem}
 #dmToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(8,8,8,.97);border:1px solid rgba(255,107,0,.28);border-radius:12px;padding:9px 18px;font-size:12.5px;font-family:"Inter",sans-serif;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:all .28s;z-index:9999;white-space:nowrap}
 #dmToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #dmToast .dot{width:7px;height:7px;border-radius:50%;background:var(--p);flex-shrink:0}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:#000;border-top:1px solid #1a1a1a}.mob-nav-inner{display:flex;justify-content:space-around;align-items:center;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}.mn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;color:rgba(255,255,255,.3);cursor:pointer;text-decoration:none;background:none;border:none;font-family:inherit;flex:1;transition:color .15s}.mn i{font-size:20px;line-height:1.3}.mn span{font-size:10px;font-weight:600}.mn.active{color:#ff6b00}
+#view-admin.hidden ~ .mob-nav{display:none!important}
 @media(max-width:860px){
-  .sidebar{display:none}.adm-main{margin-left:0}
+  .sidebar{display:none}.adm-main{margin-left:0;padding-bottom:80px}
   .mg{grid-template-columns:1fr 1fr}.kds-grid{grid-template-columns:1fr 1fr}
-  .c-hero{flex-direction:column}.c-nav{display:none}
+  .c-hero{flex-direction:column;padding:24px 16px}.c-nav{display:none}
   #view-admin{flex-direction:column}
+  .c-hero-cards{flex-wrap:wrap;justify-content:center}
+  .c-hero h1{font-size:1.55rem}
+  .c-grid{grid-template-columns:1fr 1fr!important}
+  .mob-nav{display:block}
+  #view-admin.hidden ~ .mob-nav{display:none!important}
+  #dmToast{bottom:92px!important}
 }
 </style>
 </head>
@@ -472,10 +480,11 @@ document.querySelectorAll('.c-nav a, .c-footer').forEach(function(el){
 });
 document.querySelectorAll('.btn-sm,.qchip,.pg-btn,.mesa-card,tbody tr').forEach(function(el){
   el.addEventListener('click',function(e){
-    if(e.target.closest('.tab')||e.target.closest('.ni')) return;
+    if(e.target.closest('.tab')||e.target.closest('.ni')||e.target.closest('.mn')) return;
     showToast('Disponivel no sistema completo - visualizacao demo');
   });
 });
 </script>
+<nav class="mob-nav" id="admMobNav"><div class="mob-nav-inner"><button class="mn active" onclick="document.querySelectorAll('#admMobNav .mn').forEach(e=>e.classList.remove('active'));this.classList.add('active');admNav('dashboard',this)"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></button><button class="mn" onclick="document.querySelectorAll('#admMobNav .mn').forEach(e=>e.classList.remove('active'));this.classList.add('active');admNav('pedidos',this)"><i class="fa-solid fa-receipt"></i><span>Pedidos</span></button><button class="mn" onclick="document.querySelectorAll('#admMobNav .mn').forEach(e=>e.classList.remove('active'));this.classList.add('active');admNav('mesas',this)"><i class="fa-solid fa-table-cells-large"></i><span>Mesas</span></button><button class="mn" onclick="document.querySelectorAll('#admMobNav .mn').forEach(e=>e.classList.remove('active'));this.classList.add('active');admNav('caixa',this)"><i class="fa-solid fa-cash-register"></i><span>Caixa</span></button><button class="mn" onclick="document.querySelectorAll('#admMobNav .mn').forEach(e=>e.classList.remove('active'));this.classList.add('active');admNav('cardapio',this)"><i class="fa-solid fa-burger"></i><span>Cardápio</span></button></div></nav>
 </body>
 </html>
