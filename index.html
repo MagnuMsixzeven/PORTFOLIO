@@ -8,9 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   RESET & TOKENS
-============================================================ */
+/* RESET & TOKENS */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -28,10 +26,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ============================================================
-   HEADER
-============================================================ */
+/* HEADER */
 #header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -94,10 +89,7 @@ nav a:hover::after { width: 100%; }
 
 #header.scrolled nav a       { color: rgba(0,0,0,0.45); }
 #header.scrolled nav a:hover { color: #000; }
-
-/* ============================================================
-   HERO
-============================================================ */
+/* HERO */
 #hero {
   position: relative;
   min-height: 100vh;
@@ -106,19 +98,21 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
 }
 
-/* ── Mesh Gradient Background ── */
+/* Mesh Gradient Background */
 .mesh {
   position: absolute;
   inset: 0;
   z-index: 0;
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(50px);
   transition: background 1.4s var(--ease-out), transform 1.4s var(--ease-out);
-  will-change: transform, background;
+  will-change: transform;
 }
 
 .b1 { width: 650px; height: 650px; top: -150px; left: -180px; opacity: 0.75; animation: b1f 9s ease-in-out infinite; }
@@ -134,7 +128,7 @@ nav a:hover::after { width: 100%; }
 @keyframes b2f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,45px) scale(0.96)} }
 @keyframes b3f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(25px,-30px) scale(1.04)} }
 
-/* ── Hero Layout ── */
+/* Hero Layout */
 .hero-grid {
   position: relative;
   z-index: 2;
@@ -150,7 +144,7 @@ nav a:hover::after { width: 100%; }
   padding-top: 72px;
 }
 
-/* ── Left: Text content ── */
+/* Left: Text content */
 .hero-text {
   display: flex;
   flex-direction: column;
@@ -169,10 +163,9 @@ nav a:hover::after { width: 100%; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.09);
   width: fit-content;
-  backdrop-filter: blur(6px);
-  transition: all 0.4s ease;
+  transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
 }
 
 .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 2s ease infinite; }
@@ -236,6 +229,7 @@ nav a:hover::after { width: 100%; }
   animation: lev 3s ease-in-out infinite;
   transition: background 0.9s ease, transform 0.2s, box-shadow 0.2s;
   flex-shrink: 0;
+  will-change: transform;
 }
 .pdot-wrap:nth-child(2) .pdot { animation-delay: .25s }
 .pdot-wrap:nth-child(3) .pdot { animation-delay: .5s }
@@ -303,7 +297,7 @@ nav a:hover::after { width: 100%; }
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.03em;
-  transition: all 0.3s var(--ease-out);
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
 
 .btn-live:hover {
@@ -322,7 +316,7 @@ nav a:hover::after { width: 100%; }
 
 .counter strong { color: rgba(255,255,255,0.75); font-weight: 700; }
 
-/* ── Right: Mockup ── */
+/* Right: Mockup */
 .hero-right {
   display: flex;
   justify-content: center;
@@ -341,12 +335,12 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.07),
-    0 25px 50px rgba(0,0,0,0.55),
-    0 60px 100px rgba(0,0,0,0.3);
+    0 16px 38px rgba(0,0,0,0.46),
+    0 36px 70px rgba(0,0,0,0.24);
   transform: perspective(1200px) rotateY(-14deg) rotateX(3deg);
   animation: mockupFloat 7s ease-in-out infinite;
-  will-change: transform;
   transition: filter 0.5s ease;
+  will-change: transform;
 }
 
 @keyframes mockupFloat {
@@ -398,7 +392,7 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
 }
 
-/* ── Slides ── */
+/* Slides */
 .slide {
   position: absolute;
   inset: 0;
@@ -427,14 +421,13 @@ nav a:hover::after { width: 100%; }
   width: 42px; height: 42px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.65);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.25s;
-  backdrop-filter: blur(8px);
+  transition: border-color 0.25s, background 0.25s, color 0.25s, transform 0.25s;
 }
 
 .nav-btn:hover {
@@ -466,27 +459,28 @@ nav a:hover::after { width: 100%; }
   height: 36px;
   background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
   animation: scrollAnim 2.2s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes scrollAnim {
   0%,100% { opacity: 0.25; transform: scaleY(1); }
   50%      { opacity: 0.7;  transform: scaleY(1.15); }
 }
-
-/* ============================================================
-/* ============================================================
-   SECTION — SOBRE (LIGHT)
-============================================================ */
+/* SECTION — SOBRE (LIGHT) */
 .light-section {
   background: #f5f4f1;
   color: #111;
   padding: 9rem 3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
 
 .white-section {
   background: #ffffff;
   color: #111;
   padding: 9rem 3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
 
 .s-inner {
@@ -559,6 +553,17 @@ nav a:hover::after { width: 100%; }
   border-radius: 14px;
 }
 
+.sobre-fallback {
+  display: none;
+  text-align: center;
+  color: #9f9f9f;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0 12px;
+}
+
 .sobre-foto svg { opacity: 0.35; }
 
 .sobre-txt { flex: 1; }
@@ -597,10 +602,7 @@ nav a:hover::after { width: 100%; }
   border-color: #111;
   transform: translateY(-1px);
 }
-
-/* ============================================================
-   SECTION — CURRÍCULO
-============================================================ */
+/* SECTION — CURRÍCULO */
 .work-list { list-style: none; }
 
 .work-item {
@@ -647,14 +649,13 @@ nav a:hover::after { width: 100%; }
   gap: 0.35rem;
   transition: all 0.25s;
 }
-
-/* ============================================================
-   SECTION — CONTATO (DARK)
-============================================================ */
+/* SECTION — CONTATO (DARK) */
 #contato {
   background: #060606;
   color: #fff;
   padding: 9rem 3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 760px;
 }
 
 #contato .s-inner { text-align: center; }
@@ -715,10 +716,7 @@ nav a:hover::after { width: 100%; }
   font-size: 0.72rem;
   color: rgba(255,255,255,0.18);
 }
-
-/* ============================================================
-   SCROLL ANIMATIONS
-============================================================ */
+/* SCROLL ANIMATIONS */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -727,10 +725,7 @@ nav a:hover::after { width: 100%; }
 .reveal.in { opacity: 1; transform: translateY(0); }
 
 .work-item.reveal { transition-duration: 0.5s; }
-
-/* ============================================================
-   RESPONSIVE
-============================================================ */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   #header { padding: 1.1rem 1.5rem; }
   nav { gap: 1.25rem; }
@@ -761,9 +756,88 @@ nav a:hover::after { width: 100%; }
   nav a { font-size: 0.65rem; gap: 0.8rem; }
 }
 
-/* ============================================================
-   DEMO OVERLAY
-============================================================ */
+/* MOBILE MENU */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 300;
+}
+.mobile-menu-btn span {
+  width: 22px;
+  height: 2px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+#header.scrolled .mobile-menu-btn span { background: #111; }
+.mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+.mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mobile-drawer {
+  position: fixed;
+  top: 0; right: 0;
+  width: 280px;
+  height: 100vh;
+  background: rgba(8,8,8,0.97);
+  backdrop-filter: blur(20px);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index: 250;
+  padding: 6rem 2rem 2rem;
+}
+.mobile-drawer.open { transform: translateX(0); }
+.mobile-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.mobile-drawer-nav a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: color 0.2s;
+}
+.mobile-drawer-nav a:hover { color: #fff; }
+
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+}
+.mobile-overlay.open { display: block; }
+
+@media (max-width: 640px) {
+  #mainNav { display: none; }
+  .mobile-menu-btn { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .mockup-card,
+  .scroll-line,
+  .pdot,
+  .hero-badge .dot {
+    animation: none !important;
+  }
+  .slide,
+  .reveal,
+  .mockup-card,
+  .blob {
+    transition: none !important;
+  }
+}
+/* DEMO OVERLAY */
 #demoOverlay {
   display: none;
   position: fixed;
@@ -842,22 +916,32 @@ nav a:hover::after { width: 100%; }
 </head>
 <body>
 
-<!-- ============================================================
-     HEADER
-============================================================ -->
+<!-- HEADER -->
 <header id="header">
   <a href="#" class="logo">magno<em>DSG</em></a>
-  <nav>
+  <nav id="mainNav">
     <a href="#hero">Portfólio</a>
     <a href="#sobre">Sobre</a>
     <a href="#curriculo">Trabalhos</a>
     <a href="#contato">Contato</a>
   </nav>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
-<!-- ============================================================
-     HERO
-============================================================ -->
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <nav class="mobile-drawer-nav">
+    <a href="#hero">Portfólio</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#curriculo">Trabalhos</a>
+    <a href="#contato">Contato</a>
+  </nav>
+</div>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<!-- HERO -->
 <section id="hero">
   <div class="mesh">
     <div class="blob b1" id="b1"></div>
@@ -936,9 +1020,7 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- ============================================================
-     SOBRE MIM
-============================================================ -->
+<!-- SOBRE MIM -->
 <section id="sobre" class="light-section">
   <div class="s-inner">
     <div class="s-label reveal">// 01 — Sobre Mim</div>
@@ -946,9 +1028,8 @@ nav a:hover::after { width: 100%; }
 
     <div class="sobre-grid reveal">
       <div class="sobre-foto">
-        <!-- Foto em breve -->
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        <span>Foto em breve</span>
+        <img src="screenshots/foto-carlos.jpg" alt="Foto de Carlos Magno" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="sobre-fallback">Foto de perfil</span>
       </div>
 
       <div class="sobre-txt">
@@ -979,9 +1060,7 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- ============================================================
-     CURRÍCULO / TRABALHOS
-============================================================ -->
+<!-- CURRÍCULO / TRABALHOS -->
 <section id="curriculo" class="white-section">
   <div class="s-inner">
     <div class="s-label reveal">// 02 — Trabalhos Entregues</div>
@@ -1037,9 +1116,7 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- ============================================================
-     CONTATO
-============================================================ -->
+<!-- CONTATO -->
 <section id="contato">
   <div class="s-inner">
     <div class="s-label">// 03 — Contato</div>
@@ -1067,13 +1144,9 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
+<!-- JAVASCRIPT -->
 <script>
-// ──────────────────────────────────────────────────────────────
 // PROJECTS DATA
-// ──────────────────────────────────────────────────────────────
 const PROJECTS = [
   {
     badge:   'Sistema de Gestão',
@@ -1154,9 +1227,7 @@ const PROJECTS = [
   },
 ];
 
-// ──────────────────────────────────────────────────────────────
 // MOCKUP UI BUILDERS
-// ──────────────────────────────────────────────────────────────
 function uiTechOS(p) {
   const [c1,,, bg] = p.palette;
   return `<div style="display:flex;height:100%;font-family:'Inter',sans-serif;background:#0c0b18">
@@ -1346,9 +1417,7 @@ function uiScreenshot(src) {
   </div>`;
 }
 
-// ──────────────────────────────────────────────────────────────
 // SLIDER STATE
-// ──────────────────────────────────────────────────────────────
 let cur = 0;
 let busy = false;
 
@@ -1413,9 +1482,7 @@ function goTo(idx, dir) {
 function next() { goTo((cur + 1) % PROJECTS.length,  1); }
 function prev() { goTo((cur - 1 + PROJECTS.length) % PROJECTS.length, -1); }
 
-// ──────────────────────────────────────────────────────────────
 // UPDATE HERO TEXT
-// ──────────────────────────────────────────────────────────────
 function updateText() {
   const p = PROJECTS[cur];
   const textEl = document.getElementById('heroText');
@@ -1448,9 +1515,7 @@ function updateText() {
   }, 280);
 }
 
-// ──────────────────────────────────────────────────────────────
 // UPDATE MESH GRADIENT
-// ──────────────────────────────────────────────────────────────
 function updateGradient() {
   const p = PROJECTS[cur];
   document.getElementById('b1').style.background = p.blobs[0];
@@ -1458,23 +1523,48 @@ function updateGradient() {
   document.getElementById('b3').style.background = p.blobs[2];
 }
 
-// ──────────────────────────────────────────────────────────────
 // HEADER SCROLL TRANSITION
-// ──────────────────────────────────────────────────────────────
 const header = document.getElementById('header');
 const heroEl = document.getElementById('hero');
 
+// Cache para evitar forced layout reflow no scroll
+let heroThreshold = heroEl.offsetHeight * 0.75;
+window.addEventListener('resize', () => { heroThreshold = heroEl.offsetHeight * 0.75; }, { passive: true });
+
+let scrollTicking = false;
 window.addEventListener('scroll', () => {
-  if (window.scrollY > heroEl.offsetHeight * 0.75) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    if (window.scrollY > heroThreshold) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    scrollTicking = false;
+  });
 }, { passive: true });
 
-// ──────────────────────────────────────────────────────────────
+// MOBILE MENU
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileDrawer = document.getElementById('mobileDrawer');
+const mobileOverlay = document.getElementById('mobileOverlay');
+
+function toggleMobileMenu() {
+  mobileMenuBtn.classList.toggle('active');
+  mobileDrawer.classList.toggle('open');
+  mobileOverlay.classList.toggle('open');
+}
+
+mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+mobileOverlay.addEventListener('click', toggleMobileMenu);
+document.querySelectorAll('.mobile-drawer-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    if(mobileDrawer.classList.contains('open')) toggleMobileMenu();
+  });
+});
+
 // SCROLL REVEAL
-// ──────────────────────────────────────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
     if (e.isIntersecting) {
@@ -1486,9 +1576,7 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ──────────────────────────────────────────────────────────────
 // KEYBOARD + TOUCH
-// ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prev();
@@ -1501,9 +1589,7 @@ heroEl.addEventListener('touchend',   e => {
   if (Math.abs(d) > 55) { d > 0 ? next() : prev(); }
 }, { passive: true });
 
-// ──────────────────────────────────────────────────────────────
 // INIT
-// ──────────────────────────────────────────────────────────────
 buildSlides();
 updateGradient();
 
@@ -1511,9 +1597,7 @@ document.getElementById('btnNext').addEventListener('click', next);
 document.getElementById('btnPrev').addEventListener('click', prev);
 document.getElementById('cTot').textContent = String(PROJECTS.length).padStart(2, '0');
 
-// ──────────────────────────────────────────────────────────────
 // DEMO OVERLAY
-// ──────────────────────────────────────────────────────────────
 function openDemo(url, label) {
   document.getElementById('demoFrame').src = url;
   document.getElementById('demoNameLabel').textContent = label;
@@ -1539,9 +1623,7 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
-<!-- ============================================================
-     DEMO OVERLAY
-============================================================ -->
+<!-- DEMO OVERLAY -->
 <div id="demoOverlay">
   <div id="demoTopBar">
     <button class="demo-back-btn" onclick="closeDemo()">
