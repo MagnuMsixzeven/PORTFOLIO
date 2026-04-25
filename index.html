@@ -587,51 +587,111 @@ nav a:hover::after { width: 100%; }
 /* Sobre — layout foto + texto */
 .sobre-grid {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 3.5rem;
+  grid-template-columns: 300px 1fr;
+  gap: 4.5rem;
   align-items: flex-start;
   margin-bottom: 2.5rem;
 }
 
 .sobre-foto {
-  width: 200px;
-  height: 240px;
-  border-radius: 16px;
-  background: #e2e0db;
-  border: 2px dashed #ccc;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #bbb;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  overflow: hidden;
+  width: 300px;
+  height: 370px;
+  position: relative;
   flex-shrink: 0;
+  overflow: visible;
 }
 
-.sobre-foto img {
+.foto-inner {
+  width: 100%;
+  height: 100%;
+  padding: 2.5px;
+  background: linear-gradient(145deg, #6366f1 0%, #3b82f6 50%, #10b981 100%);
+  border-radius: 28px;
+  box-shadow:
+    0 24px 64px rgba(99,102,241,0.22),
+    0 8px 28px rgba(0,0,0,0.13);
+}
+
+.foto-inner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  border-radius: 14px;
+  border-radius: 25.5px;
+  display: block;
+  background: #e8e6e3;
 }
 
-.sobre-foto svg { opacity: 0.35; }
+.foto-badge {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: #fff;
+  border: 1.5px solid #efefef;
+  border-radius: 100px;
+  padding: 9px 22px;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #111;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+  animation: pulse 2s ease infinite;
+}
 
 .sobre-txt { flex: 1; }
+
+.sobre-stats {
+  display: flex;
+  gap: 2.5rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid #e5e4e1;
+  margin-top: 1.5rem;
+}
+
+.stat-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #111;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.stat-num span {
+  font-size: 1.5rem;
+  color: #6366f1;
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  color: #999;
+  font-weight: 600;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
 
 @media (max-width: 640px) {
   .sobre-grid {
     grid-template-columns: 1fr;
   }
   .sobre-foto {
-    width: 140px;
-    height: 170px;
+    width: 200px;
+    height: 250px;
   }
 }
 
@@ -1012,13 +1072,16 @@ nav a:hover::after { width: 100%; }
 <section id="sobre" class="light-section">
   <div class="s-inner">
     <div class="s-label reveal">// 01 — Sobre Mim</div>
-    <h2 class="s-title reveal">Dev/Junior<br>Botando em prática</h2>
+    <h2 class="s-title reveal">Desenvolvedor<br>Full-Stack</h2>
 
     <div class="sobre-grid reveal">
       <div class="sobre-foto">
-        <!-- Foto em breve -->
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        <span>Foto em breve</span>
+        <div class="foto-inner">
+          <img src="screenshots/foto.jpg" alt="Carlos Magno">
+        </div>
+        <div class="foto-badge">
+          <span class="badge-dot"></span>Disponível · Freelance
+        </div>
       </div>
 
       <div class="sobre-txt">
@@ -1031,6 +1094,21 @@ nav a:hover::after { width: 100%; }
         <p class="s-text">
           Tenho experiência prática em suporte técnico e automação, passagem por assistência técnica e setor de TI institucional. Proativo, autodidata e com o hábito de ir até o final do problema.
         </p>
+
+        <div class="sobre-stats">
+          <div class="stat-item">
+            <div class="stat-num">7<span>+</span></div>
+            <div class="stat-label">Sistemas Entregues</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Tecnologias</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">2<span>+</span></div>
+            <div class="stat-label">Anos na Prática</div>
+          </div>
+        </div>
       </div>
     </div>
 
