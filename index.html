@@ -8,7 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* RESET & TOKENS */
+/* ============================================================
+   RESET & TOKENS
+============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -26,7 +28,10 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-/* HEADER */
+
+/* ============================================================
+   HEADER
+============================================================ */
 #header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -89,7 +94,10 @@ nav a:hover::after { width: 100%; }
 
 #header.scrolled nav a       { color: rgba(0,0,0,0.45); }
 #header.scrolled nav a:hover { color: #000; }
-/* HERO */
+
+/* ============================================================
+   HERO
+============================================================ */
 #hero {
   position: relative;
   min-height: 100vh;
@@ -98,21 +106,19 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
 }
 
-/* Mesh Gradient Background */
+/* ── Mesh Gradient Background ── */
 .mesh {
   position: absolute;
   inset: 0;
   z-index: 0;
-  contain: layout style paint;
-  transform: translateZ(0);
 }
 
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(90px);
   transition: background 1.4s var(--ease-out), transform 1.4s var(--ease-out);
-  will-change: transform;
+  will-change: transform, background;
 }
 
 .b1 { width: 650px; height: 650px; top: -150px; left: -180px; opacity: 0.75; animation: b1f 9s ease-in-out infinite; }
@@ -128,7 +134,7 @@ nav a:hover::after { width: 100%; }
 @keyframes b2f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,45px) scale(0.96)} }
 @keyframes b3f { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(25px,-30px) scale(1.04)} }
 
-/* Hero Layout */
+/* ── Hero Layout ── */
 .hero-grid {
   position: relative;
   z-index: 2;
@@ -144,7 +150,7 @@ nav a:hover::after { width: 100%; }
   padding-top: 72px;
 }
 
-/* Left: Text content */
+/* ── Left: Text content ── */
 .hero-text {
   display: flex;
   flex-direction: column;
@@ -163,9 +169,10 @@ nav a:hover::after { width: 100%; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
-  background: rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.05);
   width: fit-content;
-  transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
+  backdrop-filter: blur(6px);
+  transition: all 0.4s ease;
 }
 
 .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 2s ease infinite; }
@@ -229,7 +236,6 @@ nav a:hover::after { width: 100%; }
   animation: lev 3s ease-in-out infinite;
   transition: background 0.9s ease, transform 0.2s, box-shadow 0.2s;
   flex-shrink: 0;
-  will-change: transform;
 }
 .pdot-wrap:nth-child(2) .pdot { animation-delay: .25s }
 .pdot-wrap:nth-child(3) .pdot { animation-delay: .5s }
@@ -297,7 +303,7 @@ nav a:hover::after { width: 100%; }
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.03em;
-  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transition: all 0.3s var(--ease-out);
 }
 
 .btn-live:hover {
@@ -316,7 +322,7 @@ nav a:hover::after { width: 100%; }
 
 .counter strong { color: rgba(255,255,255,0.75); font-weight: 700; }
 
-/* Right: Mockup */
+/* ── Right: Mockup ── */
 .hero-right {
   display: flex;
   justify-content: center;
@@ -335,12 +341,12 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.07),
-    0 16px 38px rgba(0,0,0,0.46),
-    0 36px 70px rgba(0,0,0,0.24);
+    0 25px 50px rgba(0,0,0,0.55),
+    0 60px 100px rgba(0,0,0,0.3);
   transform: perspective(1200px) rotateY(-14deg) rotateX(3deg);
   animation: mockupFloat 7s ease-in-out infinite;
-  transition: filter 0.5s ease;
   will-change: transform;
+  transition: filter 0.5s ease;
 }
 
 @keyframes mockupFloat {
@@ -392,7 +398,7 @@ nav a:hover::after { width: 100%; }
   overflow: hidden;
 }
 
-/* Slides */
+/* ── Slides ── */
 .slide {
   position: absolute;
   inset: 0;
@@ -421,13 +427,14 @@ nav a:hover::after { width: 100%; }
   width: 42px; height: 42px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.65);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color 0.25s, background 0.25s, color 0.25s, transform 0.25s;
+  transition: all 0.25s;
+  backdrop-filter: blur(8px);
 }
 
 .nav-btn:hover {
@@ -435,6 +442,68 @@ nav a:hover::after { width: 100%; }
   background: rgba(255,255,255,0.1);
   color: #fff;
   transform: scale(1.05);
+}
+
+/* Phone float — fica FORA do laptop, à direita do mockup-wrap */
+/* ── Phone mockup 3D realista ── */
+/* ── Phone mockup com SVG real ── */
+.phone-outer {
+  position: absolute;
+  right: -16%;
+  top: 8%;
+  height: 76%;
+  aspect-ratio: 390 / 780;
+  z-index: 12;
+  perspective: 900px;
+  perspective-origin: 30% 50%;
+}
+.phone-float {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: rotateY(-26deg) rotateZ(4deg);
+  transform-style: preserve-3d;
+  will-change: transform;
+  filter: drop-shadow(-14px 22px 36px rgba(0,0,0,.75));
+}
+/* SVG frame overlay */
+.phone-frame-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+}
+/* Área da tela (iframe fica aqui, atrás do SVG) */
+.phone-screen-area {
+  position: absolute;
+  left:   4.87%;
+  top:    2.44%;
+  width:  90.26%;
+  height: 95.13%;
+  border-radius: 12.8%;
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 1;
+  transform: translateZ(0);
+  background: #fff;
+}
+/* slides do phone */
+.phone-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(50px);
+  transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.phone-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
 }
 
 /* Scroll hint */
@@ -459,28 +528,27 @@ nav a:hover::after { width: 100%; }
   height: 36px;
   background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
   animation: scrollAnim 2.2s ease-in-out infinite;
-  will-change: transform, opacity;
 }
 
 @keyframes scrollAnim {
   0%,100% { opacity: 0.25; transform: scaleY(1); }
   50%      { opacity: 0.7;  transform: scaleY(1.15); }
 }
-/* SECTION — SOBRE (LIGHT) */
+
+/* ============================================================
+/* ============================================================
+   SECTION — SOBRE (LIGHT)
+============================================================ */
 .light-section {
   background: #f5f4f1;
   color: #111;
   padding: 9rem 3rem;
-  content-visibility: auto;
-  contain-intrinsic-size: 900px;
 }
 
 .white-section {
   background: #ffffff;
   color: #111;
   padding: 9rem 3rem;
-  content-visibility: auto;
-  contain-intrinsic-size: 900px;
 }
 
 .s-inner {
@@ -553,17 +621,6 @@ nav a:hover::after { width: 100%; }
   border-radius: 14px;
 }
 
-.sobre-fallback {
-  display: none;
-  text-align: center;
-  color: #9f9f9f;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 0 12px;
-}
-
 .sobre-foto svg { opacity: 0.35; }
 
 .sobre-txt { flex: 1; }
@@ -602,7 +659,10 @@ nav a:hover::after { width: 100%; }
   border-color: #111;
   transform: translateY(-1px);
 }
-/* SECTION — CURRÍCULO */
+
+/* ============================================================
+   SECTION — CURRÍCULO
+============================================================ */
 .work-list { list-style: none; }
 
 .work-item {
@@ -649,13 +709,14 @@ nav a:hover::after { width: 100%; }
   gap: 0.35rem;
   transition: all 0.25s;
 }
-/* SECTION — CONTATO (DARK) */
+
+/* ============================================================
+   SECTION — CONTATO (DARK)
+============================================================ */
 #contato {
   background: #060606;
   color: #fff;
   padding: 9rem 3rem;
-  content-visibility: auto;
-  contain-intrinsic-size: 760px;
 }
 
 #contato .s-inner { text-align: center; }
@@ -716,7 +777,10 @@ nav a:hover::after { width: 100%; }
   font-size: 0.72rem;
   color: rgba(255,255,255,0.18);
 }
-/* SCROLL ANIMATIONS */
+
+/* ============================================================
+   SCROLL ANIMATIONS
+============================================================ */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -725,7 +789,10 @@ nav a:hover::after { width: 100%; }
 .reveal.in { opacity: 1; transform: translateY(0); }
 
 .work-item.reveal { transition-duration: 0.5s; }
-/* RESPONSIVE */
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
 @media (max-width: 900px) {
   #header { padding: 1.1rem 1.5rem; }
   nav { gap: 1.25rem; }
@@ -756,88 +823,9 @@ nav a:hover::after { width: 100%; }
   nav a { font-size: 0.65rem; gap: 0.8rem; }
 }
 
-/* MOBILE MENU */
-.mobile-menu-btn {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  z-index: 300;
-}
-.mobile-menu-btn span {
-  width: 22px;
-  height: 2px;
-  background: rgba(255,255,255,0.8);
-  border-radius: 2px;
-  transition: all 0.3s;
-}
-#header.scrolled .mobile-menu-btn span { background: #111; }
-.mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-.mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
-.mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-.mobile-drawer {
-  position: fixed;
-  top: 0; right: 0;
-  width: 280px;
-  height: 100vh;
-  background: rgba(8,8,8,0.97);
-  backdrop-filter: blur(20px);
-  transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  z-index: 250;
-  padding: 6rem 2rem 2rem;
-}
-.mobile-drawer.open { transform: translateX(0); }
-.mobile-drawer-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.mobile-drawer-nav a {
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  transition: color 0.2s;
-}
-.mobile-drawer-nav a:hover { color: #fff; }
-
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 200;
-}
-.mobile-overlay.open { display: block; }
-
-@media (max-width: 640px) {
-  #mainNav { display: none; }
-  .mobile-menu-btn { display: flex; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .blob,
-  .mockup-card,
-  .scroll-line,
-  .pdot,
-  .hero-badge .dot {
-    animation: none !important;
-  }
-  .slide,
-  .reveal,
-  .mockup-card,
-  .blob {
-    transition: none !important;
-  }
-}
-/* DEMO OVERLAY */
+/* ============================================================
+   DEMO OVERLAY
+============================================================ */
 #demoOverlay {
   display: none;
   position: fixed;
@@ -916,32 +904,22 @@ nav a:hover::after { width: 100%; }
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ============================================================
+     HEADER
+============================================================ -->
 <header id="header">
   <a href="#" class="logo">magno<em>DSG</em></a>
-  <nav id="mainNav">
+  <nav>
     <a href="#hero">Portfólio</a>
     <a href="#sobre">Sobre</a>
     <a href="#curriculo">Trabalhos</a>
     <a href="#contato">Contato</a>
   </nav>
-  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
 </header>
 
-<!-- Mobile Drawer -->
-<div class="mobile-drawer" id="mobileDrawer">
-  <nav class="mobile-drawer-nav">
-    <a href="#hero">Portfólio</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#curriculo">Trabalhos</a>
-    <a href="#contato">Contato</a>
-  </nav>
-</div>
-<div class="mobile-overlay" id="mobileOverlay"></div>
-
-<!-- HERO -->
+<!-- ============================================================
+     HERO
+============================================================ -->
 <section id="hero">
   <div class="mesh">
     <div class="blob b1" id="b1"></div>
@@ -1002,6 +980,14 @@ nav a:hover::after { width: 100%; }
           </div>
         </div>
 
+        <!-- Celular flutuante FORA do laptop -->
+        <div class="phone-outer">
+          <div class="phone-float" id="phoneFloat">
+            <img class="phone-frame-img" src="screenshots/phone-frame.svg" alt="">
+            <div class="phone-screen-area" id="phoneScreen"></div>
+          </div>
+        </div>
+
         <div class="nav-arrows">
           <button class="nav-btn" id="btnPrev" aria-label="Anterior">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
@@ -1020,7 +1006,9 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- SOBRE MIM -->
+<!-- ============================================================
+     SOBRE MIM
+============================================================ -->
 <section id="sobre" class="light-section">
   <div class="s-inner">
     <div class="s-label reveal">// 01 — Sobre Mim</div>
@@ -1028,8 +1016,9 @@ nav a:hover::after { width: 100%; }
 
     <div class="sobre-grid reveal">
       <div class="sobre-foto">
-        <img src="screenshots/foto-carlos.jpg" alt="Foto de Carlos Magno" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="sobre-fallback">Foto de perfil</span>
+        <!-- Foto em breve -->
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>Foto em breve</span>
       </div>
 
       <div class="sobre-txt">
@@ -1060,7 +1049,9 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- CURRÍCULO / TRABALHOS -->
+<!-- ============================================================
+     CURRÍCULO / TRABALHOS
+============================================================ -->
 <section id="curriculo" class="white-section">
   <div class="s-inner">
     <div class="s-label reveal">// 02 — Trabalhos Entregues</div>
@@ -1088,8 +1079,8 @@ nav a:hover::after { width: 100%; }
       <li>
         <a class="work-item reveal" href="#" target="_blank">
           <div class="wleft">
-            <span class="wname">Mercadinho PDV</span>
-            <span class="wtype">Ponto de Venda — Varejo de Bairro</span>
+            <span class="wname">Comércio PDV</span>
+            <span class="wtype">Sistema Comercial — Gestão de Vendas e Estoque</span>
           </div>
           <span class="wlink">pdv.magno.dev ↗</span>
         </a>
@@ -1106,7 +1097,7 @@ nav a:hover::after { width: 100%; }
       <li>
         <a class="work-item reveal" href="demos/quickorder.html" target="_blank">
           <div class="wleft">
-            <span class="wname">QuickOrder</span>
+            <span class="wname">Pedidos Rápidos</span>
             <span class="wtype">Sistema de Pedidos — Lanchonete / Food Service</span>
           </div>
           <span class="wlink">quickorder.magno.dev ↗</span>
@@ -1116,7 +1107,9 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- CONTATO -->
+<!-- ============================================================
+     CONTATO
+============================================================ -->
 <section id="contato">
   <div class="s-inner">
     <div class="s-label">// 03 — Contato</div>
@@ -1144,9 +1137,13 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-<!-- JAVASCRIPT -->
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
 <script>
+// ──────────────────────────────────────────────────────────────
 // PROJECTS DATA
+// ──────────────────────────────────────────────────────────────
 const PROJECTS = [
   {
     badge:   'Sistema de Gestão',
@@ -1182,12 +1179,12 @@ const PROJECTS = [
     cssUI: 3,
   },
   {
-    badge:   'PDV & Varejo',
-    title:   'Mercad<span class="outline">inho</span>',
-    desc:    'Sistema de ponto de venda completo para pequenos mercados. Controle de estoque, vendas, entregas e clientes em um único lugar.',
-    tags:    ['#pdv', '#varejo', '#python'],
-    palette: ['#f59e0b', '#fbbf24', '#fde68a', '#78350f'],
-    blobs:   ['#d97706', '#f59e0b', '#92400e'],
+    badge:   'Sistema Comercial',
+    title:   'Comércio<span class="outline"> PVH</span>',
+    desc:    'Plataforma profissional para gestão de vendas, estoque e clientes. Ideal para comércios locais que buscam automação, controle e eficiência.',
+    tags:    ['#comercial', '#vendas', '#estoque', '#python'],
+    palette: ['#3b82f6', '#fbbf24', '#fde68a', '#0e7490'],
+    blobs:   ['#2563eb', '#f59e0b', '#0e7490'],
     url:     'pdv.magno.dev',
     live:    'demos/mercadinho.html',
     cssUI: 2,
@@ -1215,10 +1212,10 @@ const PROJECTS = [
     cssUI: 1,
   },
   {
-    badge:   'Food Tech',
-    title:   'Quick<span class="outline">Order</span>',
+    badge:   'Pedidos Rápidos',
+    title:   'Pedidos<span class="outline"> Rápidos</span>',
     desc:    'Sistema de pedidos e cardápio digital para lanchonetes. Interface escura e rápida com painel de controle para o caixa.',
-    tags:    ['#foodtech', '#cardapio', '#dark-ui'],
+    tags:    ['#pedidos', '#cardapio', '#dark-ui'],
     palette: ['#ff6b00', '#ff9142', '#222222', '#060606'],
     blobs:   ['#d95a00', '#ff6b00', '#111111'],
     url:     'quickorder.magno.dev',
@@ -1227,7 +1224,9 @@ const PROJECTS = [
   },
 ];
 
+// ──────────────────────────────────────────────────────────────
 // MOCKUP UI BUILDERS
+// ──────────────────────────────────────────────────────────────
 function uiTechOS(p) {
   const [c1,,, bg] = p.palette;
   return `<div style="display:flex;height:100%;font-family:'Inter',sans-serif;background:#0c0b18">
@@ -1400,41 +1399,59 @@ function uiInventario(p) {
 
 const UI_BUILDERS = [uiTechOS, uiMedAgenda, uiMercadinho, uiBarberBook];
 
-function uiIframe(src) {
-  return `<div style="position:absolute;inset:0;overflow:hidden;background:#0a0a0a">
+function uiIframe(src, scale = 0.357, width = 280, height = 3000) {
+  return `<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#0a0a0a">
     <iframe src="${src}"
-      style="position:absolute;top:0;left:0;width:280%;height:3000px;
-             transform:scale(0.357);transform-origin:top left;
+      style="position:absolute;top:0;left:0;width:${width}%;height:${height}px;
+             transform:scale(${scale});transform-origin:top left;
              border:none;"
       loading="lazy"></iframe>
   </div>`;
 }
 
 function uiScreenshot(src) {
-  return `<div style="position:absolute;inset:0;overflow:hidden;background:#0a0a0a">
+  return `<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#0a0a0a">
     <img src="${src}" loading="lazy"
       style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;">
   </div>`;
 }
 
+// Desktop slide: apenas iframe puro que preenche o .screen
+function uiDesktopSlide(live) {
+  return `<iframe src="${live}" style="position:absolute;top:0;left:0;width:280%;height:3200px;transform:scale(0.357);transform-origin:top left;border:none;" loading="lazy"></iframe>`;
+}
+
+// Phone slide: iframe escalado para caber na largura do phone
+function uiMobileSlide(live) {
+  return `<iframe src="${live}" style="position:absolute;top:0;left:0;width:400%;height:4000px;transform:scale(0.25);transform-origin:top left;border:none;pointer-events:none;" loading="lazy"></iframe>`;
+}
+
+// ──────────────────────────────────────────────────────────────
 // SLIDER STATE
+// ──────────────────────────────────────────────────────────────
 let cur = 0;
 let busy = false;
 
 function buildSlides() {
-  const screen = document.getElementById('screen');
+  const screen      = document.getElementById('screen');
+  const phoneScreen = document.getElementById('phoneScreen');
   screen.innerHTML = '';
+  phoneScreen.innerHTML = '';
+  const t = 'opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)';
+
   PROJECTS.forEach((p, i) => {
+    // slide desktop
     const el = document.createElement('div');
     el.className = 'slide' + (i === 0 ? ' active' : '');
-    el.style.cssText = `
-      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
-                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
-    `;
-    if (p.iframe)      { el.innerHTML = uiIframe(p.iframe); }
-    else if (p.screenshot) { el.innerHTML = uiScreenshot(p.screenshot); }
-    else               { el.innerHTML = UI_BUILDERS[p.cssUI](p); }
+    el.style.transition = t;
+    el.innerHTML = uiDesktopSlide(p.live);
     screen.appendChild(el);
+
+    // slide phone
+    const ph = document.createElement('div');
+    ph.className = 'phone-slide' + (i === 0 ? ' active' : '');
+    ph.innerHTML = uiMobileSlide(p.live);
+    phoneScreen.appendChild(ph);
   });
 }
 
@@ -1442,28 +1459,38 @@ function goTo(idx, dir) {
   if (busy || idx === cur) return;
   busy = true;
 
-  const slides = document.querySelectorAll('.slide');
-  const oldSlide = slides[cur];
-  const newSlide = slides[idx];
+  const slides       = document.querySelectorAll('.slide');
+  const phoneSlides  = document.querySelectorAll('.phone-slide');
+  const oldSlide     = slides[cur];
+  const newSlide     = slides[idx];
+  const oldPhone     = phoneSlides[cur];
+  const newPhone     = phoneSlides[idx];
+  const transition   = 'opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)';
+  const outX         = dir > 0 ? '-50px' : '50px';
+  const inX          = dir > 0 ?  '50px' : '-50px';
 
-  // Old slide exits
+  // Saída
   oldSlide.style.opacity = '0';
-  oldSlide.style.transform = `translateX(${dir > 0 ? '-50px' : '50px'})`;
+  oldSlide.style.transform = `translateX(${outX})`;
+  if (oldPhone) { oldPhone.style.opacity = '0'; oldPhone.style.transform = `translateX(${outX})`; }
 
-  // New slide enters
-  newSlide.style.transition = 'none';
-  newSlide.style.opacity = '0';
-  newSlide.style.transform = `translateX(${dir > 0 ? '50px' : '-50px'})`;
-  newSlide.classList.add('active');
+  // Entrada
+  [newSlide, newPhone].forEach(el => {
+    if (!el) return;
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.style.transform = `translateX(${inX})`;
+    el.classList.add('active');
+  });
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      newSlide.style.transition = `
-        opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
-        transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)
-      `;
-      newSlide.style.opacity = '1';
-      newSlide.style.transform = 'translateX(0)';
+      [newSlide, newPhone].forEach(el => {
+        if (!el) return;
+        el.style.transition = transition;
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+      });
     });
   });
 
@@ -1471,6 +1498,7 @@ function goTo(idx, dir) {
     oldSlide.classList.remove('active');
     oldSlide.style.opacity = '';
     oldSlide.style.transform = '';
+    if (oldPhone) { oldPhone.classList.remove('active'); oldPhone.style.opacity = ''; oldPhone.style.transform = ''; }
     busy = false;
   }, 750);
 
@@ -1482,7 +1510,9 @@ function goTo(idx, dir) {
 function next() { goTo((cur + 1) % PROJECTS.length,  1); }
 function prev() { goTo((cur - 1 + PROJECTS.length) % PROJECTS.length, -1); }
 
+// ──────────────────────────────────────────────────────────────
 // UPDATE HERO TEXT
+// ──────────────────────────────────────────────────────────────
 function updateText() {
   const p = PROJECTS[cur];
   const textEl = document.getElementById('heroText');
@@ -1515,7 +1545,9 @@ function updateText() {
   }, 280);
 }
 
+// ──────────────────────────────────────────────────────────────
 // UPDATE MESH GRADIENT
+// ──────────────────────────────────────────────────────────────
 function updateGradient() {
   const p = PROJECTS[cur];
   document.getElementById('b1').style.background = p.blobs[0];
@@ -1523,48 +1555,23 @@ function updateGradient() {
   document.getElementById('b3').style.background = p.blobs[2];
 }
 
+// ──────────────────────────────────────────────────────────────
 // HEADER SCROLL TRANSITION
+// ──────────────────────────────────────────────────────────────
 const header = document.getElementById('header');
 const heroEl = document.getElementById('hero');
 
-// Cache para evitar forced layout reflow no scroll
-let heroThreshold = heroEl.offsetHeight * 0.75;
-window.addEventListener('resize', () => { heroThreshold = heroEl.offsetHeight * 0.75; }, { passive: true });
-
-let scrollTicking = false;
 window.addEventListener('scroll', () => {
-  if (scrollTicking) return;
-  scrollTicking = true;
-  requestAnimationFrame(() => {
-    if (window.scrollY > heroThreshold) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-    scrollTicking = false;
-  });
+  if (window.scrollY > heroEl.offsetHeight * 0.75) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
 }, { passive: true });
 
-// MOBILE MENU
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-const mobileDrawer = document.getElementById('mobileDrawer');
-const mobileOverlay = document.getElementById('mobileOverlay');
-
-function toggleMobileMenu() {
-  mobileMenuBtn.classList.toggle('active');
-  mobileDrawer.classList.toggle('open');
-  mobileOverlay.classList.toggle('open');
-}
-
-mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-mobileOverlay.addEventListener('click', toggleMobileMenu);
-document.querySelectorAll('.mobile-drawer-nav a').forEach(a => {
-  a.addEventListener('click', () => {
-    if(mobileDrawer.classList.contains('open')) toggleMobileMenu();
-  });
-});
-
+// ──────────────────────────────────────────────────────────────
 // SCROLL REVEAL
+// ──────────────────────────────────────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
     if (e.isIntersecting) {
@@ -1576,7 +1583,9 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// ──────────────────────────────────────────────────────────────
 // KEYBOARD + TOUCH
+// ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prev();
@@ -1589,7 +1598,9 @@ heroEl.addEventListener('touchend',   e => {
   if (Math.abs(d) > 55) { d > 0 ? next() : prev(); }
 }, { passive: true });
 
+// ──────────────────────────────────────────────────────────────
 // INIT
+// ──────────────────────────────────────────────────────────────
 buildSlides();
 updateGradient();
 
@@ -1597,7 +1608,9 @@ document.getElementById('btnNext').addEventListener('click', next);
 document.getElementById('btnPrev').addEventListener('click', prev);
 document.getElementById('cTot').textContent = String(PROJECTS.length).padStart(2, '0');
 
+// ──────────────────────────────────────────────────────────────
 // DEMO OVERLAY
+// ──────────────────────────────────────────────────────────────
 function openDemo(url, label) {
   document.getElementById('demoFrame').src = url;
   document.getElementById('demoNameLabel').textContent = label;
@@ -1623,7 +1636,9 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
-<!-- DEMO OVERLAY -->
+<!-- ============================================================
+     DEMO OVERLAY
+============================================================ -->
 <div id="demoOverlay">
   <div id="demoTopBar">
     <button class="demo-back-btn" onclick="closeDemo()">
