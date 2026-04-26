@@ -191,7 +191,7 @@ tbody td{padding:12px 14px;font-size:.85rem}
     <button class="vbtn active" onclick="switchView('cliente',this)"><i class="fa-solid fa-user"></i> Visao do Cliente</button>
     <button class="vbtn" onclick="switchView('admin',this)"><i class="fa-solid fa-gauge-high"></i> Painel Admin</button>
   </div>
-  <span style="font-size:11px;color:rgba(255,140,51,.5)">visualizacao demo</span>
+  <span style="font-size:11px;color:rgba(255,140,51,.5)">visualização demo</span>
 </div>
 
 <!-- ============================================================
@@ -207,14 +207,14 @@ tbody td{padding:12px 14px;font-size:.85rem}
     <div class="c-hero-text">
       <div class="c-badge"><i class="fa-solid fa-fire"></i> Aberto agora · Delivery e Retirada</div>
       <h1>Sabor de verdade,<br>na sua <span>porta</span>.</h1>
-      <p>Hambur gueres artesanais, combos especiais e bebidas geladas. Peca agora pelo site ou WhatsApp e receba onde voce estiver.</p>
+      <p>Hambúrgueres artesanais, combos especiais e bebidas geladas. Peça agora pelo site ou WhatsApp e receba onde você estiver.</p>
       <div class="c-hero-actions">
         <button class="c-btn c-btn-p" id="cHeroPedido"><i class="fa-solid fa-fire-burner"></i> Fazer pedido</button>
         <button class="c-btn c-btn-g" id="cHeroWhats"><i class="fa-brands fa-whatsapp"></i> Pedir no WhatsApp</button>
       </div>
     </div>
     <div class="c-hero-cards">
-      <div class="c-hcard"><strong>4.9*</strong><span>Avaliacao</span></div>
+      <div class="c-hcard"><strong>4.9*</strong><span>Avaliação</span></div>
       <div class="c-hcard"><strong>28min</strong><span>Entrega</span></div>
       <div class="c-hcard"><strong>R$ 0</strong><span>Frete Centro</span></div>
     </div>
@@ -226,7 +226,7 @@ tbody td{padding:12px 14px;font-size:.85rem}
     </div>
     <div class="c-cats">
       <button class="cat-btn active" data-cat="todos">Todos</button>
-      <button class="cat-btn" data-cat="hamburguer">Hambur gueres</button>
+      <button class="cat-btn" data-cat="hamburguer">Hambúrgueres</button>
       <button class="cat-btn" data-cat="combo">Combos</button>
       <button class="cat-btn" data-cat="bebida">Bebidas</button>
       <button class="cat-btn" data-cat="acomp">Acompanhamentos</button>
@@ -254,12 +254,12 @@ tbody td{padding:12px 14px;font-size:.85rem}
   <aside class="sidebar">
     <div class="brand"><div class="brand-ico"><i class="fa-solid fa-fire-burner"></i></div><div class="brand-txt"><strong>GrillZone</strong><small>Painel Administrativo</small></div></div>
     <nav>
-      <span class="nsec">Operacao</span>
+      <span class="nsec">Operação</span>
       <button class="ni active" onclick="admNav('dashboard',this)"><i class="fa-solid fa-gauge-high"></i>Dashboard</button>
       <button class="ni" onclick="admNav('pedidos',this)"><i class="fa-solid fa-receipt"></i>Pedidos<span class="nbadge">6</span></button>
       <button class="ni" onclick="admNav('mesas',this)"><i class="fa-solid fa-table-cells-large"></i>Mesas</button>
       <button class="ni" onclick="admNav('kds',this)"><i class="fa-solid fa-bell-concierge"></i>Cozinha (KDS)</button>
-      <span class="nsec">Gestao</span>
+      <span class="nsec">Gestão</span>
       <button class="ni" onclick="admNav('cardapio',this)"><i class="fa-solid fa-burger"></i>Cardapio</button>
       <button class="ni"><i class="fa-solid fa-users"></i>Clientes</button>
       <button class="ni"><i class="fa-solid fa-motorcycle"></i>Entregadores</button>
@@ -380,7 +380,7 @@ tbody td{padding:12px 14px;font-size:.85rem}
         <div class="card">
           <div class="card-hd"><h3><i class="fa-solid fa-burger"></i>Itens do Cardapio</h3><button class="btn-sm">+ Novo Item</button></div>
           <div class="tw"><table>
-            <thead><tr><th>Nome</th><th>Categoria</th><th>Preco</th><th>Status</th><th>Vendidos hoje</th><th>Acao</th></tr></thead>
+            <thead><tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Status</th><th>Vendidos hoje</th><th>Ação</th></tr></thead>
             <tbody>
               <tr><td>X-Bacon Artesanal</td><td>Hamburguer</td><td>R$ 28,90</td><td><span class="badge b-g">Disponivel</span></td><td>14</td><td><button class="btn-sm">Editar</button></td></tr>
               <tr><td>Double Smash</td><td>Hamburguer</td><td>R$ 34,90</td><td><span class="badge b-g">Disponivel</span></td><td>9</td><td><button class="btn-sm">Editar</button></td></tr>
@@ -480,15 +480,15 @@ document.querySelectorAll('.c-add').forEach(function(btn){
 });
 ['cCartBtn','cCartFloat','cHeroPedido','cHeroWhats'].forEach(function(id){
   var el=document.getElementById(id);
-  if(el) el.addEventListener('click',function(){showToast('Disponivel no sistema completo - visualizacao demo');});
+  if(el) el.addEventListener('click',function(){showToast('Disponível no sistema completo - visualização demo');});
 });
 document.querySelectorAll('.c-nav a, .c-footer').forEach(function(el){
-  el.addEventListener('click',function(e){e.preventDefault();showToast('Disponivel no sistema completo - visualizacao demo');});
+  el.addEventListener('click',function(e){e.preventDefault();showToast('Disponível no sistema completo - visualização demo');});
 });
 document.querySelectorAll('.btn-sm,.qchip,.pg-btn,.mesa-card,tbody tr').forEach(function(el){
   el.addEventListener('click',function(e){
     if(e.target.closest('.tab')||e.target.closest('.ni')||e.target.closest('.mn')) return;
-    showToast('Disponivel no sistema completo - visualizacao demo');
+    showToast('Disponível no sistema completo - visualização demo');
   });
 });
 </script>
