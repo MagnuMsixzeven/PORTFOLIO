@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>magnoDSG — Sistemas Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & TOKENS
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font: 'Inter', sans-serif;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --bg: #080808;
+  --card: rgba(255,255,255,0.035);
+  --card-hover: rgba(255,255,255,0.055);
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #fff;
+  --text-dim: rgba(255,255,255,0.38);
+  --text-mid: rgba(255,255,255,0.62);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8,8,8,0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+}
+.logo em { font-style: normal; color: rgba(255,255,255,0.38); }
+
+.header-nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 7px 16px;
+  border-radius: 100px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: all 0.22s;
+}
+
+.nav-pill-ghost {
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  background: transparent;
+}
+.nav-pill-ghost:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-pill-solid {
+  background: rgba(255,255,255,0.94);
+  color: #0a0a0a;
+  border: 1px solid transparent;
+}
+.nav-pill-solid:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255,255,255,0.12);
+}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero {
+  position: relative;
+  padding: 11rem 2.5rem 5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* background radial glow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+  margin-bottom: 1.8rem;
+}
+
+.hero-label .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #6366f1;
+  animation: blink 2s ease infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero-title {
+  font-size: clamp(2.6rem, 5.5vw, 5rem);
+  font-weight: 860;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.3rem;
+}
+
+.hero-title .grad {
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.5) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 440px;
+  margin: 0 auto 3rem;
+  font-weight: 400;
+}
+
+.hero-stats {
+  display: inline-flex;
+  gap: 2rem;
+  padding: 0.9rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+}
+
+.hstat {
+  text-align: center;
+}
+
+.hstat-num {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.hstat-lbl {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* ============================================================
+   FILTER PILLS
+============================================================ */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  padding: 0 2.5rem 3.5rem;
+}
+
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+  background: rgba(255,255,255,0.07);
+}
+
+/* ============================================================
+   GRID
+============================================================ */
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2.5rem 7rem;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SYSTEM CARD
+============================================================ */
+.sys-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.35s var(--ease);
+  cursor: pointer;
+  position: relative;
+}
+
+.sys-card:hover {
+  background: var(--card-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+}
+
+/* glow on hover from accent color */
+.sys-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Card Preview (phone mockup area) ── */
+.card-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/11;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.preview-bg {
+  position: absolute;
+  inset: 0;
+  background: #050505;
+  transition: background 0.5s ease;
+}
+
+/* ── Browser Mockup (card preview) ── */
+.bmock {
+  position: relative;
+  width: 74%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 18px 44px rgba(0,0,0,0.65);
+  transform: perspective(900px) rotateY(7deg) rotateX(2deg);
+  animation: bmockFloat 7s ease-in-out infinite;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+@keyframes bmockFloat {
+  0%,100% { transform: perspective(900px) rotateY(7deg) rotateX(2deg) translateY(0); }
+  50%      { transform: perspective(900px) rotateY(7deg) rotateX(2deg) translateY(-7px); }
+}
+
+.bmock-chrome {
+  background: #18181b;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.bmock-dots { display: flex; gap: 4px; align-items: center; }
+.bd { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.bd-r { background: #ff5f57; }
+.bd-y { background: #febc2e; }
+.bd-g { background: #28c840; }
+
+.bmock-bar {
+  flex: 1;
+  height: 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  overflow: hidden;
+}
+
+.bmock-url {
+  font-size: 8px;
+  color: rgba(255,255,255,0.25);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bmock-screen {
+  position: relative;
+  background: #050505;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+}
+
+.bmock-screen iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 400%;
+  height: 3000px;
+  transform: scale(0.25);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+}
+
+/* ── Phone (floating over browser in card) ── */
+.phone-float-card {
+  position: absolute;
+  right: 6%;
+  bottom: -2%;
+  z-index: 5;
+  width: 66px;
+  height: 136px;
+  animation: phoneCardFloat 6s ease-in-out infinite;
+  animation-delay: 0.5s;
+  filter: drop-shadow(-8px 14px 22px rgba(0,0,0,0.75));
+}
+
+@keyframes phoneCardFloat {
+  0%,100% { transform: rotate(4deg) translateY(0); }
+  50%      { transform: rotate(4deg) translateY(-8px); }
+}
+
+.phone-card-shell {
+  position: absolute;
+  inset: 0;
+  background: #1a1a1e;
+  border-radius: 17px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.phone-card-notch {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 5px;
+  background: #080808;
+  border-radius: 3px;
+  z-index: 3;
+}
+
+.phone-card-screen {
+  position: absolute;
+  top: 3px; left: 3px; right: 3px; bottom: 3px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  z-index: 2;
+}
+
+.phone-card-screen iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 390px;
+  height: 844px;
+  transform: scale(0.154);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+}
+
+/* ── Panel Tabs ── */
+.mp-tabs {
+  display: flex;
+  gap: 3px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.mp-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.mp-tab.active {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.mp-tab:hover:not(.active) {
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── Web view in panel ── */
+.mpweb-mock {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 16px 40px rgba(0,0,0,0.65);
+}
+
+.mpweb-chrome {
+  background: #18181b;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.mpweb-screen {
+  position: relative;
+  background: #050505;
+  overflow: hidden;
+  height: 240px;
+}
+
+.mpweb-screen iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 400%;
+  height: 3000px;
+  transform: scale(0.25);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+}
+
+/* ── Card Body ── */
+.card-body {
+  padding: 1.25rem 1.4rem 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.card-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.card-accent-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 780;
+  letter-spacing: -0.025em;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.2rem;
+}
+
+.ctag {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.63rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.card-btn-demo {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.22s;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+.card-btn-demo:hover {
+  background: rgba(255,255,255,0.13);
+  color: #fff;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.card-btn-phone {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.22s;
+  flex-shrink: 0;
+}
+.card-btn-phone:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* ============================================================
+   MOBILE PREVIEW PANEL (drawer from right)
+============================================================ */
+#mobilePanel {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: none;
+}
+#mobilePanel.open { display: flex; }
+
+.mp-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.mp-drawer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  background: #0f0f0f;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.32s var(--ease-out);
+  overflow: hidden;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.mp-top {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.mp-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.mp-close {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.mp-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.mp-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  gap: 1.5rem;
+}
+
+/* Big phone mockup inside panel */
+.mp-phone {
+  position: relative;
+  width: 180px;
+  height: 370px;
+  flex-shrink: 0;
+}
+
+.mp-phone-shell {
+  position: absolute;
+  inset: 0;
+  background: #1a1a1e;
+  border-radius: 34px;
+  border: 2px solid rgba(255,255,255,0.13);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.9),
+    0 30px 60px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+.mp-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 8px;
+  background: #080808;
+  border-radius: 4px;
+  z-index: 3;
+}
+
+.mp-btn-vol {
+  position: absolute;
+  left: -4px;
+  top: 60px;
+  width: 4px;
+  height: 26px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+.mp-btn-vol::after {
+  content: '';
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 4px;
+  height: 26px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+.mp-btn-pwr {
+  position: absolute;
+  right: -4px;
+  top: 80px;
+  width: 4px;
+  height: 32px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+}
+
+.mp-screen {
+  position: absolute;
+  top: 6px; left: 6px; right: 6px; bottom: 6px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #000;
+  z-index: 2;
+}
+
+.mp-screen iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 390px;
+  height: 844px;
+  transform: scale(0.43333);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+}
+
+/* Home indicator */
+.mp-indicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  z-index: 3;
+}
+
+/* Status bar mock */
+.mp-statusbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.mp-time {
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.02em;
+}
+
+.mp-icons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mp-icons svg { opacity: 0.75; }
+
+/* Info below phone */
+.mp-info {
+  width: 100%;
+  text-align: center;
+}
+
+.mp-info-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.mp-info-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.mp-info-desc {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.mp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.mp-btn-open {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  color: #0a0a0a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.22s;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+.mp-btn-open:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255,255,255,0.12);
+}
+
+/* ============================================================
+   DEMO OVERLAY (full screen)
+============================================================ */
+#demoOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0a0a0a;
+  flex-direction: column;
+}
+#demoOverlay.open {
+  display: flex;
+  animation: demoFadeIn 0.25s ease;
+}
+@keyframes demoFadeIn { from{opacity:0} to{opacity:1} }
+
+#demoTopBar {
+  height: 52px;
+  flex-shrink: 0;
+  background: rgba(8,8,8,0.98);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  backdrop-filter: blur(12px);
+}
+
+.demo-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  color: rgba(255,255,255,0.8);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+}
+.demo-back-btn:hover {
+  background: rgba(255,255,255,0.13);
+  color: #fff;
+}
+
+.demo-name-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.04em;
+}
+
+.demo-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#demoFrame {
+  flex: 1;
+  border: none;
+  width: 100%;
+  display: block;
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+  padding: 2.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-logo { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
+.footer-logo em { font-style: normal; color: rgba(255,255,255,0.22); }
+
+.footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
+
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 768px) {
+  #header { padding: 1rem 1.25rem; }
+
+  .hero { padding: 8.5rem 1.5rem 4rem; }
+  .hero-stats { gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+
+  .filters { padding: 0 1.25rem 2.5rem; }
+
+  .systems-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1.25rem 5rem;
+    gap: 1rem;
+  }
+
+  .mp-drawer { width: 100%; border-left: none; border-top: 1px solid var(--border); top: auto; border-radius: 20px 20px 0 0; }
+  @keyframes slideInRight {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 420px) {
+  .header-nav .nav-pill-ghost { display: none; }
+  .hero-title { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header id="header">
+  <a href="index.html" class="logo">magno<em>DSG</em></a>
+  <nav class="header-nav">
+    <a href="index.html" class="nav-pill nav-pill-ghost">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Portfólio
+    </a>
+    <a href="index.html#contato" class="nav-pill nav-pill-solid">Contato</a>
+  </nav>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+  <div class="hero-label reveal">
+    <span class="dot"></span>
+    <span>Sistemas Web · magnoDSG</span>
+  </div>
+
+  <h1 class="hero-title reveal">
+    <span class="grad">Sistemas</span><br>desenvolvidos.
+  </h1>
+
+  <p class="hero-sub reveal">
+    Plataformas completas, do banco de dados à interface — cada sistema resolvendo um problema real.
+  </p>
+
+  <div class="hero-stats reveal">
+    <div class="hstat">
+      <div class="hstat-num">7</div>
+      <div class="hstat-lbl">Sistemas</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">5+</div>
+      <div class="hstat-lbl">Tecnologias</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-num">100%</div>
+      <div class="hstat-lbl">Responsivos</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FILTER
+============================================================ -->
+<div class="filters reveal">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="gestao">Gestão</button>
+  <button class="filter-btn" data-filter="saude">Saúde</button>
+  <button class="filter-btn" data-filter="comercio">Comércio</button>
+  <button class="filter-btn" data-filter="agendamento">Agendamento</button>
+</div>
+
+<!-- ============================================================
+     GRID
+============================================================ -->
+<div class="systems-grid" id="systemsGrid">
+  <!-- cards injetados via JS -->
+</div>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <span class="footer-logo">magno<em>DSG</em></span>
+  <span class="footer-copy">© 2026 magnoDSG — Todos os direitos reservados.</span>
+</footer>
+
+<!-- ============================================================
+     MOBILE PREVIEW PANEL
+============================================================ -->
+<div id="mobilePanel">
+  <div class="mp-backdrop" id="mpBackdrop"></div>
+  <div class="mp-drawer">
+    <div class="mp-top">
+      <div class="mp-tabs">
+        <button class="mp-tab active" data-view="mobile">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Mobile
+        </button>
+        <button class="mp-tab" data-view="web">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Web
+        </button>
+      </div>
+      <button class="mp-close" id="mpClose" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mp-body">
+
+      <!-- Mobile View -->
+      <div id="mpViewMobile">
+
+      <div class="mp-phone">
+        <div class="mp-phone-shell"></div>
+        <div class="mp-notch"></div>
+        <div class="mp-btn-vol"></div>
+        <div class="mp-btn-pwr"></div>
+        <div class="mp-screen" id="mpScreen">
+          <!-- status bar -->
+          <div class="mp-statusbar">
+            <span class="mp-time" id="mpTime">9:41</span>
+            <div class="mp-icons">
+              <!-- signal -->
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="white">
+                <rect x="0" y="6" width="2" height="4" rx="0.5"/>
+                <rect x="3" y="4" width="2" height="6" rx="0.5"/>
+                <rect x="6" y="2" width="2" height="8" rx="0.5"/>
+                <rect x="9" y="0" width="2" height="10" rx="0.5" opacity="0.35"/>
+              </svg>
+              <!-- wifi -->
+              <svg width="11" height="8" viewBox="0 0 11 8" fill="none" stroke="white" stroke-width="1.4" stroke-linecap="round">
+                <path d="M1 3 Q5.5 0 10 3"/>
+                <path d="M2.5 5 Q5.5 3.2 8.5 5"/>
+                <circle cx="5.5" cy="7" r="0.8" fill="white" stroke="none"/>
+              </svg>
+              <!-- battery -->
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+                <rect x="0" y="1" width="15" height="8" rx="2" stroke="white" stroke-width="1.2"/>
+                <rect x="1" y="2" width="10" height="6" rx="1.2" fill="white"/>
+                <path d="M16 3.5 Q17.5 4.5 16 6.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <iframe id="mpIframe" src="" loading="lazy"></iframe>
+        </div>
+        <div class="mp-indicator"></div>
+      </div>
+
+      </div><!-- /mpViewMobile -->
+
+      <!-- Web View -->
+      <div id="mpViewWeb" style="display:none; width:100%">
+        <div class="mpweb-mock">
+          <div class="mpweb-chrome">
+            <div class="bmock-dots">
+              <span class="bd bd-r"></span><span class="bd bd-y"></span><span class="bd bd-g"></span>
+            </div>
+            <div class="bmock-bar"><span class="bmock-url" id="mpWebUrl">sistema.magno.dev</span></div>
+          </div>
+          <div class="mpweb-screen">
+            <iframe id="mpWebIframe" src="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div><!-- /mpViewWeb -->
+
+      <!-- Info -->
+      <div class="mp-info">
+        <div class="mp-info-badge" id="mpBadge"></div>
+        <div class="mp-info-name" id="mpName"></div>
+        <div class="mp-info-desc" id="mpDesc"></div>
+        <div class="mp-tags" id="mpTags"></div>
+        <button class="mp-btn-open" id="mpOpenFull">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Abrir Demo Completo
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DEMO OVERLAY
+============================================================ -->
+<div id="demoOverlay">
+  <div id="demoTopBar">
+    <button class="demo-back-btn" onclick="closeDemo()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar
+    </button>
+    <span class="demo-name-label" id="demoNameLabel"></span>
+    <span class="demo-badge-pill">
+      <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#4ade80"/></svg>
+      Modo Demo
+    </span>
+  </div>
+  <iframe id="demoFrame" src="" allowfullscreen></iframe>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+const SYSTEMS = [
+  {
+    id: 'techos',
+    badge: 'Sistema de Gestão',
+    name: 'TechOS',
+    desc: 'Plataforma completa para assistências técnicas. Controle de OS, timeline de status, mensagens internas e dashboard em tempo real.',
+    tags: ['#gestao', '#flask', '#dark-ui'],
+    filter: 'gestao',
+    accent: '#6366f1',
+    bg: 'radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, #050510 60%)',
+    live: 'demos/techos.html',
+  },
+  {
+    id: 'techadmin',
+    badge: 'Dashboard Administrativo',
+    name: 'TechAdmin',
+    desc: 'Painel interno do TechOS. Visão completa das OS, gráficos de status, filtros rápidos e relatórios por período.',
+    tags: ['#dashboard', '#gestao', '#admin'],
+    filter: 'gestao',
+    accent: '#818cf8',
+    bg: 'radial-gradient(ellipse at 70% 40%, rgba(129,140,248,0.15) 0%, #06060f 60%)',
+    live: 'demos/techadmin.html',
+  },
+  {
+    id: 'barberbook',
+    badge: 'Agendamento Online',
+    name: 'BarberBook',
+    desc: 'Agendamento digital para barbearias. Interface moderna, gestão de horários, cortes e notificações ao cliente.',
+    tags: ['#agendamento', '#barbearia', '#webapp'],
+    filter: 'agendamento',
+    accent: '#ff6b00',
+    bg: 'radial-gradient(ellipse at 40% 60%, rgba(255,107,0,0.18) 0%, #0d0500 60%)',
+    live: 'demos/barberbook.html',
+  },
+  {
+    id: 'mercadinho',
+    badge: 'Sistema Comercial',
+    name: 'Comércio PVH',
+    desc: 'Gestão de vendas, estoque e clientes para comércios locais. PDV integrado, controle de caixa e relatórios.',
+    tags: ['#comercio', '#pdv', '#estoque'],
+    filter: 'comercio',
+    accent: '#f59e0b',
+    bg: 'radial-gradient(ellipse at 60% 40%, rgba(245,158,11,0.16) 0%, #080600 60%)',
+    live: 'demos/mercadinho.html',
+  },
+  {
+    id: 'medagenda',
+    badge: 'Saúde Digital — Landing',
+    name: 'MedAgenda',
+    desc: 'Landing pública de clínica com agendamento online, equipe médica, especialidades e sistema de convênios.',
+    tags: ['#saude', '#landing', '#agendamento'],
+    filter: 'saude',
+    accent: '#10b981',
+    bg: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.16) 0%, #020f07 60%)',
+    live: 'demos/medagenda.html',
+  },
+  {
+    id: 'medadmin',
+    badge: 'Saúde Digital — Painel',
+    name: 'MedAdmin',
+    desc: 'Painel administrativo da clínica. Gestão de agendamentos, profissionais, usuários, relatórios e logs.',
+    tags: ['#saude', '#dashboard', '#admin'],
+    filter: 'saude',
+    accent: '#34d399',
+    bg: 'radial-gradient(ellipse at 65% 45%, rgba(52,211,153,0.13) 0%, #020f07 60%)',
+    live: 'demos/medadmin.html',
+  },
+  {
+    id: 'quickorder',
+    badge: 'Food Service',
+    name: 'Pedidos Rápidos',
+    desc: 'Sistema de pedidos e cardápio digital para lanchonetes. Interface escura e veloz com painel para o caixa.',
+    tags: ['#comercio', '#pedidos', '#cardapio'],
+    filter: 'comercio',
+    accent: '#ef4444',
+    bg: 'radial-gradient(ellipse at 50% 30%, rgba(239,68,68,0.15) 0%, #0e0303 60%)',
+    live: 'demos/quickorder.html',
+  },
+];
+
+// ── Build cards ──────────────────────────────────────────────
+function buildCards(systems) {
+  const grid = document.getElementById('systemsGrid');
+  grid.innerHTML = '';
+
+  systems.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'sys-card reveal';
+    card.style.transitionDelay = (i % 3) * 0.08 + 's';
+    card.dataset.filter = s.filter;
+
+    card.innerHTML = `
+      <!-- glow layer -->
+      <div class="card-glow" style="background:radial-gradient(ellipse at 50% 0%, ${s.accent}28 0%, transparent 65%)"></div>
+
+      <!-- preview -->
+      <div class="card-preview">
+        <div class="preview-bg" style="background:${s.bg}"></div>
+
+        <!-- Browser mockup -->
+        <div class="bmock">
+          <div class="bmock-chrome">
+            <div class="bmock-dots"><span class="bd bd-r"></span><span class="bd bd-y"></span><span class="bd bd-g"></span></div>
+            <div class="bmock-bar"><span class="bmock-url">${s.id}.magno.dev</span></div>
+          </div>
+          <div class="bmock-screen">
+            <iframe src="${s.live}" loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <!-- Phone floating -->
+        <div class="phone-float-card">
+          <div class="phone-card-shell"></div>
+          <div class="phone-card-notch"></div>
+          <div class="phone-card-screen">
+            <iframe src="${s.live}" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- body -->
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-badge">${s.badge}</span>
+          <span class="card-accent-dot" style="background:${s.accent}"></span>
+        </div>
+        <div class="card-title">${s.name}</div>
+        <div class="card-desc">${s.desc}</div>
+        <div class="card-tags">
+          ${s.tags.map(t => `<span class="ctag">${t}</span>`).join('')}
+        </div>
+        <div class="card-footer">
+          <button class="card-btn-demo" data-live="${s.live}" data-name="${s.name} · ${s.badge}">
+            Ver Demo
+          </button>
+          <button class="card-btn-phone" data-idx="${s.id}" data-view="mobile" aria-label="Ver no celular" title="Visualização Mobile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </button>
+          <button class="card-btn-phone" data-idx="${s.id}" data-view="web" aria-label="Ver em Web" title="Visualização Web">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  // re-observe
+  observeReveals();
+
+  // bind events
+  grid.querySelectorAll('.card-btn-demo').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openDemo(btn.dataset.live, btn.dataset.name);
+    });
+  });
+
+  grid.querySelectorAll('.card-btn-phone').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const sys = SYSTEMS.find(s => s.id === btn.dataset.idx);
+      if (sys) openMobilePanel(sys, btn.dataset.view || 'mobile');
+    });
+  });
+
+  // card click → demo
+  grid.querySelectorAll('.sys-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const demoBtn = this.querySelector('.card-btn-demo');
+      openDemo(demoBtn.dataset.live, demoBtn.dataset.name);
+    });
+  });
+}
+
+// ── Filter ───────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    const f = this.dataset.filter;
+    const filtered = f === 'all' ? SYSTEMS : SYSTEMS.filter(s => s.filter === f);
+    buildCards(filtered);
+  });
+});
+
+// ── Mobile Panel ─────────────────────────────────────────────
+function openMobilePanel(sys, view = 'mobile') {
+  document.getElementById('mpBadge').textContent  = sys.badge;
+  document.getElementById('mpName').textContent   = sys.name;
+  document.getElementById('mpDesc').textContent   = sys.desc;
+  document.getElementById('mpTags').innerHTML     = sys.tags.map(t => `<span class="ctag">${t}</span>`).join('');
+
+  document.getElementById('mpIframe').src         = sys.live;
+  document.getElementById('mpWebIframe').src      = sys.live;
+  document.getElementById('mpWebUrl').textContent = sys.id + '.magno.dev';
+
+  document.getElementById('mpOpenFull').onclick = () => {
+    closeMobilePanel();
+    openDemo(sys.live, sys.name + ' · ' + sys.badge);
+  };
+
+  const now = new Date();
+  document.getElementById('mpTime').textContent =
+    now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+  switchMpView(view);
+  document.getElementById('mobilePanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function switchMpView(view) {
+  document.querySelectorAll('.mp-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`.mp-tab[data-view="${view}"]`);
+  if (tab) tab.classList.add('active');
+  document.getElementById('mpViewMobile').style.display = view === 'mobile' ? '' : 'none';
+  document.getElementById('mpViewWeb').style.display    = view === 'web'    ? '' : 'none';
+}
+
+function closeMobilePanel() {
+  document.getElementById('mobilePanel').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    document.getElementById('mpIframe').src    = '';
+    document.getElementById('mpWebIframe').src = '';
+  }, 350);
+}
+
+document.getElementById('mpClose').addEventListener('click', closeMobilePanel);
+document.getElementById('mpBackdrop').addEventListener('click', closeMobilePanel);
+document.querySelectorAll('.mp-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchMpView(tab.dataset.view));
+});
+
+// ── Demo Overlay ──────────────────────────────────────────────
+function openDemo(url, label) {
+  document.getElementById('demoFrame').src = url;
+  document.getElementById('demoNameLabel').textContent = label;
+  document.getElementById('demoOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDemo() {
+  document.getElementById('demoOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { document.getElementById('demoFrame').src = ''; }, 300);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDemo(); closeMobilePanel(); }
+});
+
+// ── Scroll reveal ─────────────────────────────────────────────
+function observeReveals() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 70);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal:not(.in)').forEach(el => obs.observe(el));
+}
+
+// ── Init ──────────────────────────────────────────────────────
+buildCards(SYSTEMS);
+</script>
+
+</body>
+</html>
