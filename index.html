@@ -881,6 +881,24 @@ nav a:hover::after { width: 100%; }
   .light-section, .white-section, #contato { padding: 6rem 1.5rem; }
 
   nav a { font-size: 0.65rem; gap: 0.8rem; }
+
+  /* ── Perf: mobile GPU optimizations ── */
+  .b1, .b2, .b3 { animation: none !important; }
+  .blob { filter: blur(50px) !important; }
+  .b1 { width: 420px !important; height: 420px !important; }
+  .b2 { width: 360px !important; height: 360px !important; }
+  .b3 { width: 300px !important; height: 300px !important; }
+  #header.scrolled { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .mockup-card { animation: none !important; will-change: auto !important; }
+  .hero-badge { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.1ms !important;
+  }
 }
 
 /* ============================================================

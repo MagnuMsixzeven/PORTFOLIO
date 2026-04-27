@@ -256,9 +256,10 @@ body {
   border: 1px solid var(--border);
   border-radius: 20px;
   overflow: hidden;
-  transition: all 0.35s var(--ease);
+  transition: background 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
   cursor: pointer;
   position: relative;
+  contain: layout style;
 }
 
 .sys-card:hover {
@@ -313,6 +314,7 @@ body {
     0 18px 44px rgba(0,0,0,0.65);
   transform: perspective(900px) rotateY(7deg) rotateX(2deg);
   animation: bmockFloat 7s ease-in-out infinite;
+  will-change: transform;
   z-index: 2;
   flex-shrink: 0;
 }
@@ -386,6 +388,7 @@ body {
   animation: phoneCardFloat 6s ease-in-out infinite;
   animation-delay: 0.5s;
   filter: drop-shadow(-8px 14px 22px rgba(0,0,0,0.75));
+  will-change: transform;
 }
 
 @keyframes phoneCardFloat {
@@ -1008,11 +1011,26 @@ footer {
   }
 
   footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+
+  /* ── Perf: desativa ops pesadas de GPU no mobile ── */
+  .bmock, .phone-float-card { animation: none !important; will-change: auto !important; }
+  .mp-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0,0,0,0.88) !important; }
+  .hero-label { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .hero-stats { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .hero::before { display: none !important; }
 }
 
 @media (max-width: 420px) {
   .header-nav .nav-pill-ghost { display: none; }
   .hero-title { font-size: 2.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.1ms !important;
+  }
 }
 </style>
 </head>
@@ -1296,6 +1314,7 @@ const SYSTEMS = [
 function buildCards(systems) {
   const grid = document.getElementById('systemsGrid');
   grid.innerHTML = '';
+  const isMob = window.matchMedia('(max-width:768px)').matches;
 
   systems.forEach((s, i) => {
     const card = document.createElement('div');
@@ -1318,7 +1337,7 @@ function buildCards(systems) {
             <div class="bmock-bar"><span class="bmock-url">${s.id}.magno.dev</span></div>
           </div>
           <div class="bmock-screen">
-            <iframe src="${s.live}" loading="lazy"></iframe>
+            ${isMob ? '' : `<iframe src="${s.live}" loading="lazy"></iframe>`}
           </div>
         </div>
 
@@ -1327,7 +1346,7 @@ function buildCards(systems) {
           <div class="phone-card-shell"></div>
           <div class="phone-card-notch"></div>
           <div class="phone-card-screen">
-            <iframe src="${s.live}" loading="lazy"></iframe>
+            ${isMob ? '' : `<iframe src="${s.live}" loading="lazy"></iframe>`}
           </div>
         </div>
       </div>
@@ -1414,8 +1433,7 @@ function openMobilePanel(sys, view = 'mobile') {
   document.getElementById('mpDesc').textContent   = sys.desc;
   document.getElementById('mpTags').innerHTML     = sys.tags.map(t => `<span class="ctag">${t}</span>`).join('');
 
-  document.getElementById('mpIframe').src         = sys.live;
-  document.getElementById('mpWebIframe').src      = sys.live;
+  window._mpSysLive = sys.live;
   document.getElementById('mpWebUrl').textContent = sys.id + '.magno.dev';
 
   document.getElementById('mpOpenFull').onclick = () => {
@@ -1438,14 +1456,25 @@ function switchMpView(view) {
   if (tab) tab.classList.add('active');
   document.getElementById('mpViewMobile').style.display = view === 'mobile' ? '' : 'none';
   document.getElementById('mpViewWeb').style.display    = view === 'web'    ? '' : 'none';
+  // lazy-load: só carrega o iframe da aba ativa
+  if (window._mpSysLive) {
+    const el = view === 'mobile' ? document.getElementById('mpIframe') : document.getElementById('mpWebIframe');
+    if ((el.dataset.loaded || '') !== window._mpSysLive) {
+      el.src = window._mpSysLive;
+      el.dataset.loaded = window._mpSysLive;
+    }
+  }
 }
 
 function closeMobilePanel() {
   document.getElementById('mobilePanel').classList.remove('open');
   document.body.style.overflow = '';
+  window._mpSysLive = '';
   setTimeout(() => {
-    document.getElementById('mpIframe').src    = '';
-    document.getElementById('mpWebIframe').src = '';
+    const fi = document.getElementById('mpIframe');
+    const fw = document.getElementById('mpWebIframe');
+    fi.src = ''; fi.removeAttribute('data-loaded');
+    fw.src = ''; fw.removeAttribute('data-loaded');
   }, 350);
 }
 
