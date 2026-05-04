@@ -997,6 +997,78 @@ nav a:hover::after { width: 100%; }
 
 .pricing-note strong { color: rgba(255,255,255,0.5); }
 
+.price-from-note {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  margin-top: 0.3rem;
+  letter-spacing: 0.03em;
+}
+
+.mensalidade-box {
+  margin-top: 2.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mensalidade-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mensalidade-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(245,197,24,0.1);
+  border: 1px solid rgba(245,197,24,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mensalidade-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 0.2rem;
+}
+
+.mensalidade-desc {
+  font-size: 0.73rem;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.5;
+}
+
+.mensalidade-val {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mensalidade-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #f5c518;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.mensalidade-sub {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.2rem;
+  text-align: right;
+}
+
 /* ── CTA Final ── */
 .cta-final {
   background: linear-gradient(135deg, #0b1f10 0%, #0a1a0e 50%, #051209 100%);
@@ -1682,9 +1754,10 @@ nav a:hover::after { width: 100%; }
         <p class="price-desc">Ideal para quem precisa aparecer online rápido com uma página profissional.</p>
         <div class="price-val">
           <span class="price-currency">R$</span>
-          <span class="price-number">397</span>
-          <span class="price-note">página única</span>
+          <span class="price-number">399</span>
+          <span class="price-note">p/ página</span>
         </div>
+        <p class="price-from-note">valor pode variar conforme complexidade do projeto</p>
         <ul class="price-features">
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 1 página responsiva (mobile + desktop)</li>
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Hero, sobre, serviços e contato</li>
@@ -1705,9 +1778,10 @@ nav a:hover::after { width: 100%; }
         <p class="price-desc">Para negócios que querem um site completo, com múltiplas páginas e mais conversão.</p>
         <div class="price-val">
           <span class="price-currency">R$</span>
-          <span class="price-number">797</span>
+          <span class="price-number">800</span>
           <span class="price-note">até 5 páginas</span>
         </div>
+        <p class="price-from-note">valor pode variar conforme escopo e funcionalidades</p>
         <ul class="price-features">
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Até 5 páginas ou seções customizadas</li>
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Identidade visual aplicada (logo, cores)</li>
@@ -1727,9 +1801,10 @@ nav a:hover::after { width: 100%; }
         <p class="price-desc">Para quem precisa de lógica de negócio, banco de dados e painel de gestão real.</p>
         <div class="price-val">
           <span class="price-currency">R$</span>
-          <span class="price-number">1.497</span>
+          <span class="price-number">1.449</span>
           <span class="price-note">a partir de</span>
         </div>
+        <p class="price-from-note">valor definido após análise do escopo completo</p>
         <ul class="price-features">
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Sistema completo personalizado</li>
           <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Banco de dados (SQLite / PostgreSQL)</li>
@@ -1748,6 +1823,22 @@ nav a:hover::after { width: 100%; }
       Precisa de algo diferente? <strong>Cada projeto é orçado individualmente.</strong><br>
       Entre em contato — orçamento gratuito e sem compromisso.
     </p>
+
+    <div class="mensalidade-box reveal">
+      <div class="mensalidade-left">
+        <div class="mensalidade-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5c518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="mensalidade-title">Mensalidade de Manutenção</div>
+          <div class="mensalidade-desc">Inclui suporte técnico, correções, atualizações de conteúdo e pequenas modificações.<br>Disponível como plano opcional após a entrega do projeto.</div>
+        </div>
+      </div>
+      <div class="mensalidade-val">
+        <div class="mensalidade-price">R$ 80 – R$ 250</div>
+        <div class="mensalidade-sub">/mês · valor conforme o sistema</div>
+      </div>
+    </div>
   </div>
 </section>
 
