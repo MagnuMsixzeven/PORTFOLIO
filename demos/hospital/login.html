@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Acesso | Sistema de Fila — Ass. Zequinha Araújo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0c0f18;
+  --surface:#131928;
+  --surface-2:#1a2236;
+  --border:#1e2d45;
+  --border-focus:#2d6cdf;
+  --text:#d8e3f5;
+  --text-sec:#5a7399;
+  --accent:#2563eb;
+  --accent-hover:#1d4ed8;
+  --danger:#c0392b;
+  --radius:9px;
+}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:min(390px,92vw);}
+.brand{
+  text-align:center;
+  margin-bottom:28px;
+}
+.brand img{
+  width:260px;height:auto;object-fit:contain;
+  border-radius:0;
+  margin-bottom:14px;
+}
+.brand-name{
+  font-size:11px;font-weight:600;
+  color:var(--text-sec);
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 26px;
+}
+.card-heading{
+  font-size:16px;font-weight:700;
+  margin-bottom:18px;
+}
+.role-tabs{
+  display:flex;gap:4px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:3px;
+  margin-bottom:18px;
+}
+.role-tab{
+  flex:1;padding:7px 4px;
+  text-align:center;
+  font-size:11px;font-weight:600;
+  color:var(--text-sec);
+  cursor:pointer;
+  border-radius:7px;
+  transition:background .15s,color .15s;
+  user-select:none;letter-spacing:.03em;
+}
+.role-tab:hover{color:var(--text);}
+.role-tab.active{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.field label{
+  font-size:11px;font-weight:600;
+  color:var(--text-sec);
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.field input{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  color:var(--text);
+  font-size:14px;font-family:inherit;
+  padding:10px 12px;
+  outline:none;
+  transition:border-color .15s;
+  width:100%;
+}
+.field input:focus{border-color:var(--border-focus);}
+.field input::placeholder{color:var(--text-sec);}
+.btn-submit{
+  width:100%;margin-top:4px;
+  padding:11px;
+  background:var(--accent);
+  border:none;border-radius:var(--radius);
+  color:#fff;font-size:14px;font-weight:600;
+  font-family:inherit;cursor:pointer;
+  transition:background .15s;
+  letter-spacing:.01em;
+}
+.btn-submit:hover:not(:disabled){background:var(--accent-hover);}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed;}
+.login-msg{
+  min-height:18px;font-size:12px;font-weight:500;
+  color:var(--danger);margin-top:10px;text-align:center;
+}
+.cred-box{
+  margin-top:16px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:11px 13px;
+  font-size:12px;line-height:1.9;
+  color:var(--text-sec);
+}
+.cred-box b{color:var(--text);font-weight:600;}
+.cred-title{
+  font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-sec);margin-bottom:5px;display:block;
+}
+.login-footer{
+  text-align:center;font-size:11px;
+  color:var(--text-sec);margin-top:14px;opacity:.45;
+}
+.spinner{
+  display:inline-block;width:13px;height:13px;
+  border:2px solid rgba(255,255,255,.2);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .6s linear infinite;
+  vertical-align:middle;margin-right:6px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand">
+    <img src="img/logo.svg" alt="Ass. Zequinha Araújo" onerror="this.style.display='none'" />
+    <div class="brand-name">Sistema de Gestão de Filas</div>
+  </div>
+
+  <div class="card">
+    <div class="card-heading">Acesso ao sistema</div>
+
+    <div class="role-tabs">
+      <div class="role-tab active" onclick="selecionarPerfil('admin',this)">Administrador</div>
+      <div class="role-tab" onclick="selecionarPerfil('recepcionista',this)">Recepção</div>
+      <div class="role-tab" onclick="selecionarPerfil('spv',this)">Supervisor</div>
+    </div>
+
+    <div class="field">
+      <label for="inp-user">Usuário</label>
+      <input id="inp-user" type="text" placeholder="Ex: carlos" autocomplete="username" maxlength="40"
+             onkeydown="if(event.key==='Enter')document.getElementById('inp-pass').focus()" />
+    </div>
+    <div class="field">
+      <label for="inp-pass">Senha</label>
+      <input id="inp-pass" type="password" placeholder="Senha de acesso" autocomplete="current-password" maxlength="60"
+             onkeydown="if(event.key==='Enter')fazerLogin()" />
+    </div>
+
+    <button class="btn-submit" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="login-msg" id="login-msg"></div>
+
+    <div class="cred-box">
+      <span class="cred-title">Credenciais de acesso</span>
+      <b>Admin:</b> carlos / carlos123<br/>
+      <b>Recepção 1:</b> recepcao_1 / rec1@hosp<br/>
+      <b>Recepção 2:</b> recepcao_2 / rec2@hosp<br/>
+      <b>Supervisor:</b> spv / spv@hosp2826
+    </div>
+  </div>
+
+  <div class="login-footer">Ass. Zequinha Araújo &nbsp;·&nbsp; Sistema de Fila v1.0</div>
+</div>
+
+<script>
+let _perfilSelecionado = 'admin';
+const HINTS = {
+  admin:       { user: 'carlos',      ph: 'Ex: carlos' },
+  recepcionista:{ user: 'recepcao_1', ph: 'Ex: recepcao_1' },
+  spv:         { user: 'spv',         ph: 'Ex: spv' },
+};
+
+function selecionarPerfil(role, el) {
+  _perfilSelecionado = role;
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const hint = HINTS[role] || {};
+  document.getElementById('inp-user').placeholder = hint.ph || 'Nome de usuário';
+  document.getElementById('inp-user').value = '';
+  document.getElementById('inp-pass').value = '';
+  document.getElementById('login-msg').textContent = '';
+  document.getElementById('inp-user').focus();
+}
+
+async function fazerLogin() {
+  const user = document.getElementById('inp-user').value.trim();
+  const pass = document.getElementById('inp-pass').value;
+  const msg  = document.getElementById('login-msg');
+  const btn  = document.getElementById('btn-login');
+
+  if (!user) { msg.textContent = 'Informe o usuário.'; return; }
+  if (!pass) { msg.textContent = 'Informe a senha.'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Verificando...';
+  msg.textContent = '';
+
+  try {
+    const CRED = {
+      carlos: { pass: 'carlos123', role: 'admin', redirect: 'admin.html' },
+      recepcao_1: { pass: 'rec1@hosp', role: 'recepcionista', redirect: 'admin.html' },
+      recepcao_2: { pass: 'rec2@hosp', role: 'recepcionista', redirect: 'admin.html' },
+      spv: { pass: 'spv@hosp2826', role: 'spv', redirect: 'spv.html' },
+    };
+    const acc = CRED[user.toLowerCase()];
+
+    if (!acc || acc.pass !== pass) {
+      msg.textContent = 'Usuário ou senha incorretos.';
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      return;
+    }
+
+    // Salva sessão
+    sessionStorage.setItem('fila_session_user', user.toLowerCase());
+    sessionStorage.setItem('fila_session_role', acc.role);
+    sessionStorage.setItem('fila_session_ts',   Date.now().toString());
+
+    // Compatibilidade com fluxo já existente do admin.html
+    if (acc.role === 'admin') {
+      sessionStorage.setItem('fila_auth_carlos', '1');
+    }
+    if (acc.role === 'recepcionista') {
+      sessionStorage.setItem('fila_recep_user', user.toLowerCase());
+      sessionStorage.setItem('fila_recep_role', 'recepcionista');
+    }
+
+    btn.innerHTML = '✓ Redirecionando...';
+    setTimeout(() => { window.location.href = acc.redirect; }, 400);
+
+  } catch(e) {
+    msg.textContent = 'Falha ao validar login.';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+}
+
+// Se já logado, redireciona direto
+(function checkSession() {
+  const role = sessionStorage.getItem('fila_session_role');
+  const user = sessionStorage.getItem('fila_session_user');
+  const ts   = parseInt(sessionStorage.getItem('fila_session_ts') || '0');
+  const valid = Date.now() - ts < 8 * 60 * 60 * 1000; // 8h
+  if (role && user && valid) {
+    if (role === 'spv') window.location.href = 'spv.html';
+    else window.location.href = 'admin.html';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 3877 >>
+stream
+BT
+/F1 11 Tf
+14 TL
+48 794 Td
+(CONTRATO DE LICENCA DE USO DE SOFTWARE \(SAAS\) E PRESTACAO DE SERVICOS DE SUPORTE TECNICO) Tj
+T*
+() Tj
+T*
+(CONTRATADO: CARLOS MAGNO LIMA DO NASCIMENTO, inscrito no CPF sob o n 050.831.552-22, residente e domiciliado em Porto) Tj
+T*
+(Velho - RO.) Tj
+T*
+() Tj
+T*
+(CONTRATANTE: [NOME DA EMPRESA/CLIENTE], inscrito no CNPJ/CPF sob o n [NUMERO], com sede em [ENDERECO COMPLETO],) Tj
+T*
+(representado neste ato por [NOME DO REPRESENTANTE], [CARGO].) Tj
+T*
+() Tj
+T*
+(CLAUSULA PRIMEIRA - DO OBJETO E FUNCIONALIDADES) Tj
+T*
+(1.1. O CONTRATADO concede a CONTRATANTE licenca de uso, em carater nao exclusivo e intransferivel, de software de gestao de) Tj
+T*
+(sua propriedade exclusiva.) Tj
+T*
+(1.2. O software contempla as seguintes funcionalidades de gestao de fluxo e atendimento: Dashboard de indicadores,) Tj
+T*
+(Gerenciamento e Visualizacao de Filas, Cadastro de Medicos/Profissionais, Gestao de Salas e Setores, Gerenciador de Totem de) Tj
+T*
+(autoatendimento, Relatorios operacionais, Logs de sistema e interface para Telao de chamadas.) Tj
+T*
+(1.3. Implantacao de Novas Abas: A implementacao de novas funcionalidades ou abas seguira o rito de solicitacao formal, aprovacao) Tj
+T*
+(de requisitos tecnicos e validacao pela CONTRATANTE.) Tj
+T*
+() Tj
+T*
+(CLAUSULA SEGUNDA - DOS VALORES, PAGAMENTOS E REAJUSTE) Tj
+T*
+(2.1. TAXA DE ADESAO \(SETUP\): Valor total de R$ 8.000,00, podendo ser pago em duas etapas, sendo R$ 4.000,00 no ato da) Tj
+T*
+(contratacao \(destinado a implantacao e parametrizacao inicial\) e R$ 4.000,00 apos a entrega do sistema, ou, alternativamente, o) Tj
+T*
+(montante total a vista, mediante anexacao do comprovante ao contrato.) Tj
+T*
+(2.2. MENSALIDADE/MANUTENCAO \(SAAS\): Valor de R$ 250,00 \(ja incluindo o custo de hospedagem mensal\), com vencimento no quinto) Tj
+T*
+(dia util de cada mes.) Tj
+T*
+(2.3. DOMINIO \(REGISTRO DE ENDERECO\): Valor anual de R$ 40,00 \(quarenta reais\), referente a renovacao do endereco eletronico) Tj
+T*
+(\(URL\) do sistema, com vencimento a cada 12 meses.) Tj
+T*
+(2.4. EQUIPAMENTOS E HARDWARE: Caso haja necessidade de aquisicao ou instalacao de qualquer hardware ou equipamento para o) Tj
+T*
+(pleno funcionamento do sistema, os custos financeiros e a aquisicao serao de responsabilidade exclusiva da CONTRATANTE.) Tj
+T*
+(2.5. ADICIONAIS POR FUNCIONALIDADE: Para cada nova aba solicitada e aprovada \(conforme item 1.3\), sera aplicado um acrescimo) Tj
+T*
+(de 5% \(cinco por cento\) sobre o valor da mensalidade vigente.) Tj
+T*
+(2.6. INADIMPLENCIA \(MULTA DE MORA\): O atraso superior a 5 dias podera acarretar suspensao parcial ou total de acesso, alem de) Tj
+T*
+(multa de 2% sobre o valor devido e juros de 1% ao mes.) Tj
+T*
+() Tj
+T*
+(CLAUSULA TERCEIRA - DO TREINAMENTO E PREPARACAO DA EQUIPE) Tj
+T*
+(3.1. O CONTRATADO disponibilizara o periodo de 03 \(tres\) dias de treinamento presencial ou remoto \(conforme acordado entre as) Tj
+T*
+(partes\) para a preparacao da equipe da CONTRATANTE, visando a correta operacao do sistema e suas funcionalidades.) Tj
+T*
+(3.2. O treinamento abrangera a operacao do Totem, gerenciamento de filas, cadastro de profissionais e leitura de dashboards.) Tj
+T*
+(3.3. Caso a CONTRATANTE solicite novos periodos de treinamento apos o prazo inicial estipulado, estes poderao ser objeto de) Tj
+T*
+(orcamento complementar e nova agenda.) Tj
+T*
+() Tj
+T*
+(CLAUSULA QUARTA - DO SUPORTE E NIVEL DE SERVICO \(SLA\)) Tj
+T*
+(4.1. O suporte sera prestado de forma remota, em horario comercial, via WhatsApp ou atraves da ferramenta ANYDESK.) Tj
+T*
+(4.2. Disponibilidade \(Uptime\): O CONTRATADO envidara esforcos para manter a disponibilidade do software em uma media de 99%) Tj
+T*
+(\(noventa e nove por cento\) do tempo por mes civil.) Tj
+T*
+(4.3. Janelas de Manutencao: Interrupcoes programadas para melhorias e seguranca, comunicadas com ate 24h de antecedencia,) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 2695 >>
+stream
+BT
+/F1 11 Tf
+14 TL
+48 794 Td
+(nao serao computadas como indisponibilidade.) Tj
+T*
+() Tj
+T*
+(CLAUSULA QUINTA - DO BANCO DE DADOS E PROCESSAMENTO DE INFORMACOES) Tj
+T*
+(5.1. Autorizacao de Processamento: A CONTRATANTE autoriza o CONTRATADO a realizar o armazenamento e gestao de dados em) Tj
+T*
+(servidores Cloud para execucao das funcionalidades do sistema.) Tj
+T*
+(5.2. Propriedade dos Dados: Todos os dados inseridos no sistema sao de propriedade exclusiva da CONTRATANTE. O CONTRATADO) Tj
+T*
+(atua como custodiante tecnico e processador dos dados.) Tj
+T*
+(5.3. Extracao de Dados: Em caso de rescisao, a CONTRATANTE tera o direito de exportar as tabelas essenciais em formato legivel) Tj
+T*
+(\(.csv ou .sql\).) Tj
+T*
+(5.4. Confiabilidade de Backup: O CONTRATADO realizara copias de seguranca \(backups\) automaticas e periodicas dos dados) Tj
+T*
+(contidos no sistema.) Tj
+T*
+() Tj
+T*
+(CLAUSULA SEXTA - DA PROPRIEDADE INTELECTUAL E RESTRICOES) Tj
+T*
+(6.1. O software, sua logica, estrutura, layout e codigos-fonte permanecem como propriedade exclusiva do CONTRATADO.) Tj
+T*
+(6.2. E vedado a CONTRATANTE realizar engenharia reversa, sublicenciar, copiar ou ceder o acesso a terceiros sem autorizacao) Tj
+T*
+(previa por escrito.) Tj
+T*
+() Tj
+T*
+(CLAUSULA SETIMA - PROTECAO DE DADOS \(LGPD\) E CONFIDENCIALIDADE) Tj
+T*
+(7.1. As partes comprometem-se a cumprir a Lei Geral de Protecao de Dados \(Lei n 13.709/2018\).) Tj
+T*
+(7.2. As partes obrigam-se a manter sigilo absoluto sobre informacoes comerciais, estrategicas ou tecnicas da outra parte a que) Tj
+T*
+(venham a ter acesso em razao deste contrato.) Tj
+T*
+() Tj
+T*
+(CLAUSULA OITAVA - LIMITACAO DE RESPONSABILIDADE E RESCISAO) Tj
+T*
+(8.1. O CONTRATADO nao se responsabiliza por falhas decorrentes de instabilidade na internet local, queda de energia ou mau uso) Tj
+T*
+(do sistema por parte da CONTRATANTE.) Tj
+T*
+(8.2. O contrato possui prazo indeterminado, podendo ser rescindido por qualquer parte mediante aviso previo por escrito de 30) Tj
+T*
+(dias.) Tj
+T*
+(8.3. A responsabilidade civil total do CONTRATADO limita-se ao valor somado das ultimas 3 \(tres\) mensalidades pagas.) Tj
+T*
+(8.4. MULTA CONTRATUAL \(RESCISAO ANTECIPADA\): Caso a CONTRATANTE rescinda o contrato antes de completar os primeiros 6) Tj
+T*
+(\(seis\) meses de vigencia, devera pagar ao CONTRATADO uma multa equivalente a 20% \(vinte por cento\) do valor das mensalidades) Tj
+T*
+(restantes para completar o referido periodo.) Tj
+T*
+() Tj
+T*
+(CLAUSULA NONA - DO FORO) Tj
+T*
+(9.1. Fica eleito o foro da comarca de Porto Velho - RO para dirimir quaisquer controversias oriundas deste contrato.) Tj
+T*
+() Tj
+T*
+(Porto Velho - RO, ______ de __________________ de 2026.) Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000197 00000 n 
+0000000323 00000 n 
+0000004252 00000 n 
+0000004378 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+7125
+%%EOF

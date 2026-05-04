@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Admin | Sistema de Fila - Ass. Zequinha Araujo</title>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .section { display: none; }
+  .section.active { display: block; }
+  .contract-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr);
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 24px;
+  }
+  .contract-upload-box.hidden { display: none !important; }
+  @media (max-width: 980px) {
+    .contract-grid { grid-template-columns: 1fr; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" style="padding:0 8px 8px;">
+    <img src="img/logo.svg" alt="Associacao Zequinha Araujo" style="width:100%;max-width:220px;height:auto;filter:drop-shadow(0 0 8px rgba(40,168,84,.35));" />
+  </div>
+
+  <div style="padding:14px 18px 6px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);opacity:.7;">Visao geral</div>
+  <a class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-icon">&#9783;</span> Dashboard</a>
+  <a class="nav-item" onclick="nav('relatorio',this)"><span class="nav-icon">&#8645;</span> Relatorio</a>
+  <a class="nav-item" onclick="nav('logs',this)"><span class="nav-icon">&#9679;</span> Logs</a>
+
+  <div style="padding:14px 18px 6px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);opacity:.7;">Operacao</div>
+  <a class="nav-item" onclick="nav('fila',this)"><span class="nav-icon">&#9776;</span> Gerenciar Fila</a>
+  <a class="nav-item" onclick="nav('recepcao',this)"><span class="nav-icon">&#9733;</span> Recepcao</a>
+  <a class="nav-item" onclick="nav('medicos',this)"><span class="nav-icon">&#43;</span> Medicos</a>
+  <a class="nav-item" onclick="nav('prontuarios',this)"><span class="nav-icon">🗂️</span> Prontuarios</a>
+  <a class="nav-item" onclick="nav('salas',this)"><span class="nav-icon">&#9633;</span> Salas e Setores</a>
+  <a class="nav-item" onclick="nav('atendimentos',this)"><span class="nav-icon">&#9741;</span> Gerenciador Totem</a>
+
+  <div style="padding:14px 18px 6px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);opacity:.7;">Expansao</div>
+  <a class="nav-item" onclick="nav('integracoes',this)"><span class="nav-icon">&#8646;</span> Integracoes</a>
+  <a class="nav-item" onclick="nav('auditlog',this)"><span class="nav-icon">🔍</span> Audit Log</a>
+
+  <div style="padding:14px 18px 6px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);opacity:.7;">Atalhos</div>
+  <a class="nav-item" href="totem.html" target="_blank"><span class="nav-icon">🖥️</span> Abrir Totem</a>
+  <a class="nav-item" href="telao.html" target="_blank"><span class="nav-icon">📺</span> Abrir Telao</a>
+
+  <div class="sidebar-footer">
+    <div style="font-size:11px;color:var(--text-sec);margin-bottom:8px;">
+      Sistema de Fila v1.0 &nbsp;·&nbsp; <span style="color:var(--green-light);">&#9679; Online</span>
+    </div>
+    <div id="sidebar-session-user" style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--yellow);"></div>
+    <button onclick="fazerLogoutAdmin()" style="width:100%;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:7px;font-size:11px;font-weight:700;color:var(--danger);cursor:pointer;font-family:inherit;">
+      Sair do sistema
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">Painel <span>Administrativo</span></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="recep-topbar-badge" style="display:none;align-items:center;gap:7px;background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:5px 14px 5px 10px;font-size:12px;font-weight:700;color:#f59e0b;">
+        <span>&#9733;</span>
+        <span id="recep-topbar-nome">—</span>
+        <button onclick="logoutRecep()" style="background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:6px;padding:2px 7px;font-size:11px;color:#ef4444;cursor:pointer;font-weight:700;margin-left:4px;">Sair</button>
+      </div>
+      <button id="btn-login-recep" onclick="abrirLoginRecep()" class="btn btn-outline btn-sm" style="font-size:12px;">🔑 Recepção</button>
+      <div id="topbar-clock" class="topbar-badge">--:--:--</div>
+    </div>
+  </div>
+
+  <section id="sec-dashboard" class="section active">
+    <div class="stats-grid mb-24">
+      <div class="stat-card"><div class="stat-label">Senhas Hoje</div><div class="stat-value" id="st-total">0</div><div class="stat-sub">emitidas hoje</div></div>
+      <div class="stat-card"><div class="stat-label">Aguardando</div><div class="stat-value" id="st-esp" style="color:var(--yellow)">0</div><div class="stat-sub">na fila agora</div></div>
+      <div class="stat-card"><div class="stat-label">Atendidos</div><div class="stat-value" id="st-atend" style="color:var(--green-light)">0</div><div class="stat-sub">finalizados hoje</div></div>
+      <div class="stat-card"><div class="stat-label">Prioritarios</div><div class="stat-value" id="st-prior" style="color:var(--yellow)">0</div><div class="stat-sub">na fila</div></div>
+    </div>
+
+    <div class="card mb-24">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Status dos Equipamentos</div>
+        <div style="font-size:11px;color:var(--text-sec)">Atualiza a cada 5s</div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><div id="dot-totem" style="width:10px;height:10px;border-radius:50%;background:#334155;"></div><div style="font-size:13px;font-weight:700;">Totem Principal</div></div>
+          <div id="lbl-totem" style="font-size:12px;color:var(--text-sec);">Verificando...</div>
+          <div id="sub-totem" style="font-size:11px;color:var(--text-sec);margin-top:3px;"></div>
+        </div>
+        <div style="flex:1;min-width:220px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><div id="dot-telao" style="width:10px;height:10px;border-radius:50%;background:#334155;"></div><div style="font-size:13px;font-weight:700;">Telao</div></div>
+          <div id="lbl-telao" style="font-size:12px;color:var(--text-sec);">Verificando...</div>
+          <div id="sub-telao" style="font-size:11px;color:var(--text-sec);margin-top:3px;"></div>
+        </div>
+      </div>
+      <div id="alerta-offline" class="hidden" style="margin-top:12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;font-weight:600;color:var(--danger);">Equipamento offline detectado.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Fila em Tempo Real</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="chamarProxima()">Chamar Proxima</button>
+          <button class="btn btn-outline btn-sm" id="btn-auto-modo" onclick="toggleAutoMode()">Auto: OFF</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Senha</th><th>Paciente</th><th>Tipo</th><th>Procedimento</th><th>Prioridade</th><th>Aguardando</th><th>Status</th><th>Acoes</th></tr></thead>
+          <tbody id="fila-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-fila" class="section">
+    <div class="card mb-24">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Chamar Senha Manualmente</div></div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Senha</label><input id="inp-senha-manual" class="form-input" placeholder="Ex: CG-012" maxlength="10" /></div>
+        <div class="form-group"><label class="form-label">Sala</label><select id="inp-sala-manual" class="form-select"><option value="">Selecione...</option></select></div>
+      </div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Medico</label><select id="inp-med-manual" class="form-select"><option value="">Selecione...</option></select></div>
+        <div class="form-group"><label class="form-label">Procedimento</label><input id="inp-proc-manual" class="form-input" placeholder="Ex: Consulta Clinica" /></div>
+      </div>
+      <button class="btn btn-primary" onclick="chamarManual()">Chamar no Telao</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Fila Completa</div>
+        <button class="btn btn-danger btn-sm" onclick="if(confirm('Zerar toda fila?'))zerarFila()">Zerar Fila</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Senha</th><th>Paciente</th><th>Tipo</th><th>Prioridade</th><th>Status</th><th>Acoes</th></tr></thead>
+          <tbody id="fila-full-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEÇÃO RECEPCAO ── -->
+  <section id="sec-recepcao" class="section">
+
+    <!-- ESTADO: nao autenticado -->
+    <div id="recep-wall" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px;gap:18px;text-align:center;">
+      <div style="font-size:48px;">🔒</div>
+      <div style="font-size:22px;font-weight:900;">Acesso restrito</div>
+      <div style="font-size:14px;color:var(--text-sec);max-width:400px;line-height:1.7;">Esta seção é exclusiva das recepcionistas.<br>Faça login para emitir e chamar senhas prioritárias.</div>
+      <button class="btn btn-primary" onclick="abrirLoginRecep()" style="font-size:15px;padding:12px 30px;">🔑 Entrar como Recepcionista</button>
+    </div>
+
+    <!-- ESTADO: autenticado -->
+    <div id="recep-painel" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-sec);margin-bottom:4px;">Recepção — Estação de trabalho</div>
+          <div style="font-size:22px;font-weight:900;">Olá, <span id="recep-nome-painel" style="color:var(--yellow);">—</span> 👋</div>
+        </div>
+        <button onclick="logoutRecep()" class="btn btn-danger btn-sm">Encerrar sessão</button>
+      </div>
+
+      <!-- Card: emitir senha prioritária -->
+      <div class="card mb-24" style="border:1px solid rgba(245,158,11,.3);box-shadow:0 0 24px rgba(245,158,11,.08);">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></span> Emitir Senha Prioritária</div>
+          <span style="font-size:11px;font-weight:700;background:rgba(245,158,11,.15);color:var(--yellow);padding:4px 10px;border-radius:999px;">P-PREFIX-XXX</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Nome do paciente</label>
+            <input id="recep-nome-pac" class="form-input" type="text" placeholder="Nome completo" maxlength="80" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Tipo de atendimento</label>
+            <select id="recep-tipo" class="form-select"></select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Justificativa</label>
+            <input id="recep-just" class="form-input" type="text" placeholder="Ex: gestante, idoso, deficiência..." maxlength="80" />
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="emitirSenhaPrioritaria()" style="background:var(--yellow);color:#000;font-weight:800;">⚡ Emitir Senha Prioritária</button>
+          <span id="recep-emit-msg" style="font-size:12px;color:var(--text-sec);"></span>
+        </div>
+        <!-- resultado -->
+        <div id="recep-senha-gerada" style="display:none;margin-top:14px;padding:14px 18px;border-radius:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);">
+          <div style="font-size:10px;color:var(--text-sec);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Senha emitida</div>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div id="recep-senha-num" style="font-size:36px;font-weight:900;color:var(--yellow);letter-spacing:.04em;">---</div>
+            <div>
+              <div id="recep-senha-pac" style="font-size:15px;font-weight:700;">—</div>
+              <div id="recep-senha-tipo" style="font-size:12px;color:var(--text-sec);">—</div>
+            </div>
+            <button id="btn-chamar-prior" class="btn btn-primary" onclick="chamarSenhaPrior()" style="margin-left:auto;background:var(--yellow);color:#000;font-weight:800;">📢 Chamar agora</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila de prioritários esperando -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--yellow);"></span> Prioritários Aguardando</div>
+          <button class="btn btn-outline btn-sm" onclick="renderFilaPrior()">Atualizar</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Senha</th><th>Paciente</th><th>Tipo</th><th>Tempo</th><th>Ação</th></tr></thead>
+            <tbody id="recep-prior-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-medicos" class="section">
+    <div class="card mb-24">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Cadastrar Medico</div></div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Nome completo</label><input id="med-nome" class="form-input" placeholder="Dr. Jose da Silva" maxlength="80" /></div>
+        <div class="form-group"><label class="form-label">CRM</label><input id="med-crm" class="form-input" placeholder="12345-MA" maxlength="15" /></div>
+      </div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Especialidade</label><select id="med-esp" class="form-select"><option value="Clinico Geral">Clinico Geral</option><option value="Odontologista">Odontologista</option><option value="Pediatra">Pediatra</option><option value="Ginecologista">Ginecologista</option><option value="Ortopedista">Ortopedista</option></select></div>
+        <div class="form-group"><label class="form-label">Sala padrao</label><select id="med-sala" class="form-select"><option value="">Selecione...</option></select></div>
+      </div>
+      <button class="btn btn-primary" onclick="salvarMedico()">Salvar Medico</button>
+    </div>
+    <div class="card">
+      <div class="card-title mb-16"><span class="dot"></span> Medicos Cadastrados</div>
+      <div class="table-wrap"><table><thead><tr><th>Nome</th><th>CRM</th><th>Especialidade</th><th>Sala</th><th>Status</th><th>Acoes</th></tr></thead><tbody id="med-tbody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="sec-salas" class="section">
+    <div class="card mb-24">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Cadastrar Sala / Setor</div></div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Numero / Nome da Sala</label><input id="sala-nome" class="form-input" placeholder="Sala 01" maxlength="40" /></div>
+        <div class="form-group"><label class="form-label">Setor</label><select id="sala-setor" class="form-select"><option value="Clinica Geral">Clinica Geral</option><option value="Odontologia">Odontologia</option><option value="Exames">Exames</option><option value="Triagem">Triagem</option><option value="Administracao">Administracao</option></select></div>
+      </div>
+      <button class="btn btn-primary" onclick="salvarSala()">Salvar Sala</button>
+    </div>
+    <div class="card"><div class="card-title mb-16"><span class="dot"></span> Salas Cadastradas</div><div class="table-wrap"><table><thead><tr><th>Sala</th><th>Setor</th><th>Status</th><th>Acoes</th></tr></thead><tbody id="salas-tbody"></tbody></table></div></div>
+  </section>
+
+  <section id="sec-atendimentos" class="section">
+    <div class="card mb-24">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Configuracoes do Totem</div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;margin-bottom:20px;">
+        <div><div style="font-size:14px;font-weight:700;">Solicitar nome do paciente</div><div style="font-size:12px;color:var(--text-sec);margin-top:2px;">Se desabilitado, o totem usa Paciente automaticamente</div></div>
+        <button id="btn-toggle-nome" class="btn btn-outline btn-sm" onclick="toggleNomeTotem()">Habilitado</button>
+      </div>
+      <div class="card-title mb-16"><span class="dot"></span> Adicionar Tipo de Atendimento</div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Nome</label><input id="atend-nome" class="form-input" placeholder="Ex: Consulta Clinica" maxlength="60" /></div>
+        <div class="form-group"><label class="form-label">Prefixo da Senha</label><input id="atend-prefix" class="form-input" placeholder="Ex: CG" maxlength="4" /></div>
+      </div>
+      <div class="form-grid mb-16">
+        <div class="form-group"><label class="form-label">Modalidade</label><select id="atend-modal" class="form-select"><option value="Particular">Particular</option><option value="Convenio">Convenio</option><option value="SUS">SUS</option></select></div>
+        <div class="form-group"><label class="form-label">Categoria</label><select id="atend-cat" class="form-select"><option value="Clinica Geral">Clinica Geral</option><option value="Odontologia">Odontologia</option><option value="Exames">Exames</option></select></div>
+      </div>
+      <button class="btn btn-primary" onclick="salvarAtend()">Adicionar</button>
+    </div>
+    <div class="card"><div class="card-title mb-16"><span class="dot"></span> Tipos Cadastrados</div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Prefixo</th><th>Modalidade</th><th>Categoria</th><th>Status no Totem</th><th>Remover</th></tr></thead><tbody id="atend-tbody"></tbody></table></div></div>
+  </section>
+
+  <section id="sec-logs" class="section">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Logs do Sistema</div><button class="btn btn-outline btn-sm" onclick="limparLogs()">Limpar</button></div>
+      <div id="logs-container" style="background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;font-family:monospace;font-size:13px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;"><span style="color:var(--text-sec);">Nenhum evento registrado ainda.</span></div>
+    </div>
+  </section>
+
+  <section id="sec-prontuarios" class="section">
+    <div class="card mb-24">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Novo Prontuario</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Nome do Paciente *</label>
+          <input id="pront-nome" class="form-input" type="text" placeholder="Nome completo" maxlength="80" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">CPF</label>
+          <input id="pront-cpf" class="form-input" type="text" placeholder="000.000.000-00" maxlength="14" oninput="mascararCPF(this)" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Data de Nascimento</label>
+          <input id="pront-nascimento" class="form-input" type="date" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Telefone</label>
+          <input id="pront-tel" class="form-input" type="text" placeholder="(00) 00000-0000" maxlength="15" oninput="mascararTelefone(this)" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Senha da Fila</label>
+          <select id="pront-senha" class="form-select"></select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Tipo de Atendimento</label>
+          <input id="pront-tipo" class="form-input" type="text" placeholder="Ex: Clinica Geral" maxlength="40" />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Sintomas / Queixa Principal *</label>
+          <textarea id="pront-sintomas" class="form-input" rows="3" placeholder="Descreva os sintomas ou queixa principal..." style="resize:vertical;min-height:72px;"></textarea>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:12px;color:var(--text-sec);font-weight:600;">Observacoes</label>
+          <textarea id="pront-obs" class="form-input" rows="3" placeholder="Alergias, medicamentos em uso, historico relevante..." style="resize:vertical;min-height:72px;"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="salvarProntuario()">Registrar Presenca e Salvar</button>
+        <button class="btn btn-outline btn-sm" onclick="limparFormProntuario()">Limpar</button>
+        <span id="pront-form-msg" style="font-size:12px;color:var(--text-sec);"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Prontuarios Registrados</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="pront-busca" class="form-input" type="text" placeholder="Buscar por nome ou senha..." style="max-width:220px;padding:6px 10px;font-size:13px;" oninput="renderProntuarios()" />
+          <span id="pront-total" style="font-size:12px;color:var(--text-sec);white-space:nowrap;"></span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Retirada</th>
+              <th>Saida</th>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Nascimento</th>
+              <th>Tel</th>
+              <th>Senha</th>
+              <th>Sala</th>
+              <th>Medico</th>
+              <th>Tipo</th>
+              <th>Sintomas</th>
+              <th>Obs</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody id="pront-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-auditlog" class="section">
+    <div class="card mb-24">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> system_logs — Audit Log Persistente</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="audit-filter" class="form-select" style="max-width:200px;" onchange="carregarAuditLog()">
+            <option value="">Todas as acoes</option>
+            <option value="DELETE">DELETE</option>
+            <option value="UPDATE_STATUS">UPDATE_STATUS</option>
+            <option value="UPDATE_PRIORIDADE_BLOCKED">TRIGGER BLOQUEADO</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="carregarAuditLog()">Atualizar</button>
+          <span id="audit-total" style="font-size:12px;color:var(--text-sec);white-space:nowrap;"></span>
+        </div>
+      </div>
+      <div id="audit-msg" style="font-size:13px;color:var(--text-sec);padding:12px 0;display:none;"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Acao</th>
+              <th>Tabela</th>
+              <th>IP</th>
+              <th>Usuario</th>
+              <th>Detalhes</th>
+            </tr>
+          </thead>
+          <tbody id="audit-tbody">
+            <tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">Clique em "Atualizar" para carregar</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Sobre as Database Functions (Triggers)</div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;font-size:13px;">
+        <div style="background:rgba(33,150,243,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-weight:800;margin-bottom:6px;color:var(--info);">trg_proteger_prioridade</div>
+          <div style="color:var(--text-sec);line-height:1.7;">Impede alteracao do campo <code style="background:var(--bg-panel);padding:1px 5px;border-radius:4px;">prioritario</code> em qualquer senha ja emitida. Apenas usuarios com papel <strong>recepcionista</strong> ou <strong>admin</strong> podem alterar. Bloqueia e reverte o estado no cliente.</div>
+        </div>
+        <div style="background:rgba(16,185,129,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-weight:800;margin-bottom:6px;color:var(--green-light);">trg_audit_fila</div>
+          <div style="color:var(--text-sec);line-height:1.7;">Registra automaticamente cada exclusao de senha e cada mudanca de status (<em>esperando → chamado → finalizado</em>) com IP e ID do usuario responsavel.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-weight:800;margin-bottom:6px;color:var(--yellow);">trg_audit_medicos</div>
+          <div style="color:var(--text-sec);line-height:1.7;">Registra automaticamente cada remocao de medico da tabela <code style="background:var(--bg-panel);padding:1px 5px;border-radius:4px;">fila_medicos</code>, preservando nome, CRM e IP da operacao.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-integracoes" class="section">
+    <div style="background:linear-gradient(135deg,#09111f 0%,#0f2742 55%,#114f8e 100%);border-radius:18px;padding:28px 30px;margin-bottom:24px;color:#f8fbff;box-shadow:0 18px 45px rgba(0,0,0,.28);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;">
+        <div style="max-width:760px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;opacity:.65;margin-bottom:8px;">Modulo futuro</div>
+          <div style="font-size:30px;font-weight:900;line-height:1.05;margin-bottom:10px;">Integracoes com outros sistemas</div>
+          <div style="font-size:14px;line-height:1.7;opacity:.84;">Esta aba informa ao cliente que a plataforma esta preparada para evoluir com conectores, APIs e sincronizacao com sistemas de outras empresas.</div>
+        </div>
+        <div style="min-width:190px;padding:16px 18px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-bottom:6px;">Status atual</div>
+          <div style="font-size:24px;font-weight:900;color:#7dd3fc;">Em desenvolvimento</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid mb-24">
+      <div class="stat-card"><div class="stat-label">APIs externas</div><div class="stat-value" style="font-size:26px;">Planejado</div><div class="stat-sub">conectores sob demanda</div></div>
+      <div class="stat-card"><div class="stat-label">ERP e CRM</div><div class="stat-value" style="font-size:26px;">Mapeando</div><div class="stat-sub">estrutura de dados</div></div>
+      <div class="stat-card"><div class="stat-label">Prontuario / Agenda</div><div class="stat-value" style="font-size:26px;">Analise</div><div class="stat-sub">compatibilidade de integracao</div></div>
+      <div class="stat-card"><div class="stat-label">Webhook / Sync</div><div class="stat-value" style="font-size:26px;">Roadmap</div><div class="stat-sub">eventos entre plataformas</div></div>
+    </div>
+
+    <div class="card mb-24">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Mensagem para apresentacao</div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:16px;line-height:1.7;color:var(--text-sec);">O sistema esta sendo preparado para integracao com plataformas de terceiros, permitindo troca de dados e automatizacao entre empresas parceiras.</div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:16px;line-height:1.7;color:var(--text-sec);">Novas integracoes poderao contemplar cadastro compartilhado, sincronizacao de filas, importacao de dados e comunicacao por API.</div>
+        <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:16px;line-height:1.7;color:var(--text-sec);">Cada parceria tecnica sera validada conforme requisitos, seguranca dos dados, disponibilidade da outra empresa e escopo comercial aprovado.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="dot"></span> Tipos de integracao previstos</div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+        <div style="background:rgba(33,150,243,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px;">Sistema de agenda</div>
+          <div style="font-size:13px;color:var(--text-sec);line-height:1.7;">Receber horarios, profissionais e servicos para organizar o fluxo de atendimento automaticamente.</div>
+        </div>
+        <div style="background:rgba(33,150,243,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px;">ERP / Financeiro</div>
+          <div style="font-size:13px;color:var(--text-sec);line-height:1.7;">Sincronizar dados operacionais, unidades, convenios, faturamento e controles administrativos.</div>
+        </div>
+        <div style="background:rgba(33,150,243,.08);border:1px solid var(--border);border-radius:14px;padding:16px;">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px;">Painel corporativo</div>
+          <div style="font-size:13px;color:var(--text-sec);line-height:1.7;">Compartilhar metricas, chamadas, alertas e indicadores com outras plataformas institucionais.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-relatorio" class="section">
+    <div class="card mb-24">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Filtro do Relatorio</div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <select id="rel-periodo" class="form-select" style="max-width:240px;" onchange="renderRelatorio()">
+          <option value="diario">Diario</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensal">Mensal</option>
+          <option value="anual">Anual</option>
+        </select>
+        <div id="rel-periodo-info" style="font-size:12px;color:var(--text-sec);">Exibindo movimentacao do dia atual.</div>
+      </div>
+    </div>
+    <div class="stats-grid mb-24">
+      <div class="stat-card"><div class="stat-label" id="rel-total-label">Atendimentos Hoje</div><div class="stat-value" id="rel-hoje">0</div></div>
+      <div class="stat-card"><div class="stat-label">Tempo Medio</div><div class="stat-value" id="rel-tempo" style="font-size:28px">--</div><div class="stat-sub">minutos de espera</div></div>
+      <div class="stat-card"><div class="stat-label" id="rel-prior-label">Prioritarios Hoje</div><div class="stat-value" id="rel-prior">0</div></div>
+      <div class="stat-card"><div class="stat-label">Setor Mais Movim.</div><div class="stat-value" id="rel-setor" style="font-size:20px">--</div></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="card-title"><span class="dot"></span> Historico de Atendimentos</div><div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" onclick="exportarCSV()">Exportar CSV</button><button class="btn btn-sm" style="background:var(--green-light,#10b981);color:#fff" onclick="exportarExcel()">Exportar XLSX</button></div></div><div class="table-wrap"><table><thead><tr><th>Senha</th><th>Paciente</th><th>Tipo</th><th>Medico</th><th>Sala</th><th>Emissao</th><th>Status</th></tr></thead><tbody id="hist-tbody"></tbody></table></div></div>
+  </section>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ── MODAL LOGIN RECEPCIONISTA ── -->
+<div id="modal-recep-login" style="display:none;position:fixed;inset:0;z-index:950;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:var(--bg-panel);border:1px solid rgba(245,158,11,.3);border-radius:20px;width:min(420px,95vw);padding:30px 32px;box-shadow:0 24px 64px rgba(0,0,0,.55);position:relative;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:36px;margin-bottom:8px;">🔑</div>
+      <div style="font-size:20px;font-weight:900;">Login — Recepcionista</div>
+      <div style="font-size:12px;color:var(--text-sec);margin-top:4px;">Acesso exclusivo para recepção</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+      <div>
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;display:block;margin-bottom:4px;">Usuário</label>
+        <select id="recep-login-user" class="form-select">
+          <option value="">Selecione...</option>
+          <option value="recepcao_1">recepcao_1</option>
+          <option value="recepcao_2">recepcao_2</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;display:block;margin-bottom:4px;">Senha</label>
+        <input id="recep-login-pass" class="form-input" type="password" placeholder="Senha de acesso" maxlength="40" onkeydown="if(event.key==='Enter')loginRecep()" />
+      </div>
+      <div id="recep-login-msg" style="font-size:12px;color:var(--danger);min-height:16px;"></div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="loginRecep()" style="flex:1;background:var(--yellow);color:#000;font-weight:800;">Entrar</button>
+      <button class="btn btn-outline" onclick="fecharLoginRecep()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL PRONTUÁRIO AUTO ── -->
+<div id="modal-pront-overlay" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div id="modal-pront-box" style="background:var(--bg-panel);border:1px solid var(--border);border-radius:20px;width:min(760px,95vw);max-height:90vh;overflow-y:auto;padding:28px 30px;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+    <!-- banner de prioridade (visível só quando senha é prioritária) -->
+    <div id="mpront-prior-banner" style="display:none;background:linear-gradient(90deg,rgba(245,158,11,.2),rgba(245,158,11,.06));border:1px solid rgba(245,158,11,.4);border-radius:12px;padding:10px 16px;margin-bottom:16px;align-items:center;gap:10px;">
+      <span style="font-size:22px;">⚡</span>
+      <div>
+        <div style="font-size:12px;font-weight:900;color:var(--yellow);letter-spacing:.06em;text-transform:uppercase;">Atendimento Prioritário</div>
+        <div id="mpront-prior-just" style="font-size:12px;color:var(--text-sec);">Confira as informações antes de confirmar.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text-sec);margin-bottom:4px;">Prontuario — Registro de Atendimento</div>
+        <div style="font-size:22px;font-weight:900;">Senha <span id="mpront-senha-titulo" style="color:var(--green-light);">---</span></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="text-align:right;">
+          <div style="font-size:10px;color:var(--text-sec);font-weight:600;">RETIRADA</div>
+          <div id="mpront-hr-retirada" style="font-size:13px;font-weight:700;color:var(--yellow);">--:--:--</div>
+        </div>
+        <button onclick="fecharModalProntuario()" style="background:var(--danger);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Nome do Paciente *</label>
+        <input id="mpront-nome" class="form-input" type="text" placeholder="Nome completo" maxlength="80" />
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">CPF</label>
+        <input id="mpront-cpf" class="form-input" type="text" placeholder="000.000.000-00" maxlength="14" oninput="mascararCPF(this)" />
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Data de Nascimento</label>
+        <input id="mpront-nasc" class="form-input" type="date" />
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Telefone</label>
+        <input id="mpront-tel" class="form-input" type="text" placeholder="(00) 00000-0000" maxlength="15" oninput="mascararTelefone(this)" />
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Sala Destino</label>
+        <select id="mpront-sala" class="form-select"></select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Medico</label>
+        <select id="mpront-medico" class="form-select"></select>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Sintomas / Queixa Principal *</label>
+        <textarea id="mpront-sintomas" class="form-input" rows="4" placeholder="Sintomas ou queixa principal..." style="resize:vertical;min-height:90px;"></textarea>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11px;color:var(--text-sec);font-weight:600;">Observacoes</label>
+        <textarea id="mpront-obs" class="form-input" rows="4" placeholder="Alergias, medicamentos, historico..." style="resize:vertical;min-height:90px;"></textarea>
+      </div>
+    </div>
+
+    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;">
+      <div><div style="font-size:10px;color:var(--text-sec);font-weight:700;">SENHA</div><div id="mpront-info-senha" style="font-size:14px;font-weight:800;color:var(--green-light);">—</div></div>
+      <div><div style="font-size:10px;color:var(--text-sec);font-weight:700;">TIPO</div><div id="mpront-info-tipo" style="font-size:14px;font-weight:700;">—</div></div>
+      <div><div style="font-size:10px;color:var(--text-sec);font-weight:700;">PRIORIDADE</div><div id="mpront-info-prior" style="font-size:14px;font-weight:700;">—</div></div>
+      <div><div style="font-size:10px;color:var(--text-sec);font-weight:700;">HORA RETIRADA</div><div id="mpront-info-retirada" style="font-size:14px;font-weight:700;color:var(--yellow);">—</div></div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <button class="btn btn-primary" onclick="salvarFecharModalProntuario()">Salvar Prontuario e Fechar</button>
+      <button class="btn btn-outline" onclick="fecharModalProntuario()">Fechar sem salvar</button>
+      <span id="mpront-msg" style="font-size:12px;color:var(--danger);"></span>
+    </div>
+  </div>
+</div>
+
+<script src="js/sync.js"></script>
+<script src="js/kiosk.js"></script>
+<script src="js/app.js"></script>
+<script>
+// ── Auth guard ────────────────────────────────────────
+(function authGuard(){
+  const role = sessionStorage.getItem('fila_session_role');
+  const user = sessionStorage.getItem('fila_session_user');
+  const ts   = parseInt(sessionStorage.getItem('fila_session_ts') || '0');
+  const valid = Date.now() - ts < 8 * 60 * 60 * 1000; // 8h
+  if (role === 'spv') { window.location.href = 'spv.html'; return; }
+  if ((!role && !user) || !valid) {
+    if (!sessionStorage.getItem('fila_auth_carlos') && !sessionStorage.getItem('fila_recep_user')) {
+      window.location.href = 'login.html';
+    }
+  }
+})();
+
+function fazerLogoutAdmin() {
+  sessionStorage.removeItem('fila_session_user');
+  sessionStorage.removeItem('fila_session_role');
+  sessionStorage.removeItem('fila_session_ts');
+  sessionStorage.removeItem('fila_auth_carlos');
+  sessionStorage.removeItem('fila_recep_user');
+  sessionStorage.removeItem('fila_recep_role');
+  window.location.href = 'login.html';
+}
+
+// Mostra usuário logado na sidebar
+(function mostrarSessao(){
+  const u = sessionStorage.getItem('fila_session_user') || sessionStorage.getItem('fila_recep_user') || 'admin';
+  const el = document.getElementById('sidebar-session-user');
+  if(el) el.textContent = '👤 ' + u;
+})();
+
+function atualizarClock(){
+  const n=new Date();
+  document.getElementById('topbar-clock').textContent=n.toLocaleTimeString('pt-BR');
+}
+setInterval(atualizarClock,1000);atualizarClock();
+
+const _logs=[];
+function addLog(msg,nivel='info'){
+  const hora=new Date().toLocaleTimeString('pt-BR');
+  _logs.unshift({msg,nivel,hora});
+  if(_logs.length>200) _logs.pop();
+  const secLogs=document.getElementById('sec-logs');
+  if(secLogs&&secLogs.classList.contains('active')) renderLogs();
+}
+function renderLogs(){
+  const c=document.getElementById('logs-container');
+  if(!_logs.length){c.innerHTML='<span style="color:var(--text-sec)">Nenhum evento registrado ainda.</span>';return;}
+  const cores={info:'var(--info)',warn:'var(--yellow)',error:'var(--danger)',ok:'var(--green-light)'};
+  c.innerHTML=_logs.map(l=>`<div><span style="color:var(--text-sec)">[${l.hora}]</span> <span style="color:${cores[l.nivel]||'var(--text)'};">${l.msg}</span></div>`).join('');
+}
+function limparLogs(){_logs.length=0;renderLogs();addLog('Logs limpos','warn');}
+
+function toast(msg,tipo='success'){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className=`toast toast-${tipo}`;
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+function nav(sec,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const secEl=document.getElementById('sec-'+sec);
+  if(secEl) secEl.classList.add('active');
+  if(el) el.classList.add('active');
+  if(sec==='dashboard'||sec==='fila') renderFila();
+  if(sec==='medicos') renderMedicos();
+  if(sec==='salas') renderSalas();
+  if(sec==='atendimentos') renderAtendimentos();
+  if(sec==='relatorio') renderRelatorio();
+  if(sec==='logs') renderLogs();
+  if(sec==='contratos') {}
+  if(sec==='prontuarios') renderProntuarios();
+  if(sec==='auditlog') carregarAuditLog();
+  if(sec==='recepcao'){ _aplicarEstadoRecep(); }
+}
+
+function rowFila(s){
+  const age=Math.floor((Date.now()-s.emitida)/60000);
+  const stClass={esperando:'badge-yellow',chamado:'badge-blue',atendendo:'badge-blue',finalizado:'badge-green'}[s.status]||'badge-yellow';
+  const stLabel={esperando:'Aguardando',chamado:'Chamado',atendendo:'Chamado',finalizado:'Finalizado'}[s.status]||s.status;
+  return `<tr>
+    <td class="font-bold text-green">${s.senha}</td>
+    <td>${s.nome}</td>
+    <td>${s.tipo}</td>
+    <td>${s.procedimento||'-'}</td>
+    <td>${s.prioritario?'<span class="badge badge-yellow">PRIOR.</span>':'<span class="badge badge-green">Normal</span>'}</td>
+    <td>${age}min</td>
+    <td><span class="badge ${stClass}">${stLabel}</span></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap;">
+      ${s.status==='esperando'?`<button class="btn btn-primary btn-sm" onclick="chamarSenha('${s.id}')">Chamar</button>`:''}
+      ${(s.status==='chamado'||s.status==='atendendo')?`<button class="btn btn-outline btn-sm" onclick="App.setStatus('${s.id}','finalizado');renderFila()">Finalizar</button>`:''}
+      <button class="btn btn-danger btn-sm" onclick="App.remover('${s.id}');renderFila()">Remover</button>
+    </td>
+  </tr>`;
+}
+
+function renderFila(){
+  const fila=App.getFila();
+  const tbody=document.getElementById('fila-tbody');
+  const tbody2=document.getElementById('fila-full-tbody');
+  document.getElementById('st-total').textContent=App.getTotalHoje();
+  document.getElementById('st-esp').textContent=fila.filter(f=>f.status==='esperando').length;
+  document.getElementById('st-atend').textContent=App.getAtendidos();
+  document.getElementById('st-prior').textContent=fila.filter(f=>f.prioritario&&f.status==='esperando').length;
+  const rows=fila.map(rowFila).join('');
+  if(tbody) tbody.innerHTML=rows||'<tr><td colspan="8" class="text-muted" style="text-align:center;padding:24px">Fila vazia</td></tr>';
+  if(tbody2) tbody2.innerHTML=rows||'<tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">Fila vazia</td></tr>';
+}
+
+function chamarSenha(id){
+  const s=App.getSenha(id);
+  if(!s) return;
+  App.setStatus(id,'chamado');
+  App.setChamadaAtual(s);
+  if(window.SyncBus){ SyncBus.emit(SyncBus.MSG.SENHA_CHAMADA,s); SyncBus.emit(SyncBus.MSG.FILA_MUDOU,{}); }
+  renderFila();
+  addLog('Senha '+s.senha+' chamada manualmente','ok');
+  toast('Senha '+s.senha+' chamada no telao!');
+  abrirModalProntuario(s);
+}
+
+let _autoInterval=null;
+function toggleAutoMode(){
+  const btn=document.getElementById('btn-auto-modo');
+  if(_autoInterval){
+    clearInterval(_autoInterval); _autoInterval=null;
+    btn.textContent='Auto: OFF'; btn.classList.remove('btn-primary'); btn.classList.add('btn-outline');
+    addLog('Modo automatico desativado','warn'); toast('Modo automatico desativado');
+    return;
+  }
+  _autoInterval=setInterval(()=>{
+    const p=App.chamarProximaAuto();
+    if(!p) return;
+    if(window.SyncBus){ SyncBus.emit(SyncBus.MSG.SENHA_CHAMADA,p); SyncBus.emit(SyncBus.MSG.FILA_MUDOU,{}); }
+    renderFila();
+    addLog('Auto chamou: '+p.senha+' ('+p.nome+')','ok');
+  },8000);
+  btn.textContent='Auto: ON'; btn.classList.remove('btn-outline'); btn.classList.add('btn-primary');
+  addLog('Modo automatico ativado (8s/senha)','info'); toast('Modo automatico ativado!');
+}
+
+function chamarProxima(){
+  const prox=App.chamarProximaAuto();
+  if(!prox){toast('Fila vazia!','error');return;}
+  if(window.SyncBus){ SyncBus.emit(SyncBus.MSG.SENHA_CHAMADA,prox); SyncBus.emit(SyncBus.MSG.FILA_MUDOU,{}); }
+  renderFila();
+  addLog('Proxima chamada: '+prox.senha+' ('+prox.nome+')','ok');
+  toast('Proxima: '+prox.senha+' - '+prox.nome);
+}
+
+function chamarManual(){
+  const senha=document.getElementById('inp-senha-manual').value.trim();
+  const sala=document.getElementById('inp-sala-manual').value;
+  const medico=document.getElementById('inp-med-manual').value;
+  const proc=document.getElementById('inp-proc-manual').value.trim();
+  if(!senha){toast('Informe a senha','error');return;}
+  const chamada={senha,nome:'-',tipo:'Manual',sala,medico,procedimento:proc,prioritario:false};
+  App.setChamadaAtual(chamada);
+  if(window.SyncBus) SyncBus.emit(SyncBus.MSG.SENHA_CHAMADA,chamada);
+  addLog('Chamada manual: '+senha,'ok'); toast('Senha '+senha+' chamada manualmente!');
+}
+
+function zerarFila(){ App.zerarFila(); renderFila(); addLog('Fila zerada pelo administrador','warn'); toast('Fila zerada com sucesso!'); }
+
+function salvarMedico(){
+  const nome=document.getElementById('med-nome').value.trim();
+  const crm=document.getElementById('med-crm').value.trim();
+  const esp=document.getElementById('med-esp').value;
+  const sala=document.getElementById('med-sala').value;
+  if(!nome||!crm){toast('Preencha nome e CRM','error');return;}
+  App.addMedico({nome,crm,esp,sala,ativo:true});
+  document.getElementById('med-nome').value=''; document.getElementById('med-crm').value='';
+  renderMedicos(); addLog('Medico cadastrado: '+nome,'ok'); toast('Medico salvo!');
+}
+function renderMedicos(){
+  const lista=App.getMedicos();
+  document.getElementById('med-tbody').innerHTML=lista.length?lista.map((m,i)=>`<tr><td class="font-bold">${m.nome}</td><td>${m.crm}</td><td>${m.esp}</td><td>${m.sala||'-'}</td><td><span class="badge ${m.ativo?'badge-green':'badge-red'}">${m.ativo?'Ativo':'Inativo'}</span></td><td><button class="btn btn-danger btn-sm" onclick="App.removeMedico(${i});renderMedicos()">Remover</button></td></tr>`).join(''):'<tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">Nenhum medico cadastrado</td></tr>';
+  preencherSelectMedicos();
+}
+function preencherSelectMedicos(){
+  const meds=App.getMedicos();
+  const sel=document.getElementById('inp-med-manual');
+  if(sel) sel.innerHTML='<option value="">Selecione...</option>'+meds.map(m=>`<option>${m.nome}</option>`).join('');
+}
+
+function salvarSala(){
+  const nome=document.getElementById('sala-nome').value.trim();
+  const setor=document.getElementById('sala-setor').value;
+  if(!nome){toast('Informe o nome da sala','error');return;}
+  App.addSala({nome,setor,ativo:true});
+  document.getElementById('sala-nome').value='';
+  renderSalas(); addLog('Sala cadastrada: '+nome,'ok'); toast('Sala salva!');
+}
+function renderSalas(){
+  const lista=App.getSalas();
+  document.getElementById('salas-tbody').innerHTML=lista.length?lista.map((s,i)=>`<tr><td class="font-bold">${s.nome}</td><td>${s.setor}</td><td><span class="badge ${s.ativo?'badge-green':'badge-red'}">${s.ativo?'Ativa':'Inativa'}</span></td><td><button class="btn btn-danger btn-sm" onclick="App.removeSala(${i});renderSalas()">Remover</button></td></tr>`).join(''):'<tr><td colspan="4" class="text-muted" style="text-align:center;padding:24px">Nenhuma sala cadastrada</td></tr>';
+  document.querySelectorAll('#inp-sala-manual,#med-sala').forEach(sel=>{ sel.innerHTML='<option value="">Selecione...</option>'+lista.map(s=>`<option>${s.nome}</option>`).join(''); });
+}
+
+function salvarAtend(){
+  const nome=document.getElementById('atend-nome').value.trim();
+  const prefix=document.getElementById('atend-prefix').value.trim().toUpperCase();
+  const modal=document.getElementById('atend-modal').value;
+  const cat=document.getElementById('atend-cat').value;
+  if(!nome||!prefix){toast('Preencha nome e prefixo','error');return;}
+  App.addAtend({nome,prefix,modal,cat});
+  document.getElementById('atend-nome').value=''; document.getElementById('atend-prefix').value='';
+  renderAtendimentos(); addLog('Tipo adicionado: '+nome+' ('+prefix+')','ok'); toast('Tipo de atendimento salvo!');
+}
+function toggleNomeTotem(){
+  const cfg=App.getConfig(); cfg.requireNome=!cfg.requireNome; App.saveConfig(cfg);
+  const btn=document.getElementById('btn-toggle-nome');
+  btn.textContent=cfg.requireNome?'Habilitado':'Desabilitado'; btn.className='btn btn-sm '+(cfg.requireNome?'btn-primary':'btn-danger');
+  addLog('Solicitar nome do paciente: '+(cfg.requireNome?'habilitado':'desabilitado'),'info'); toast('Configuracao salva!');
+}
+function renderAtendimentos(){
+  const cfg=App.getConfig();
+  const btn=document.getElementById('btn-toggle-nome');
+  if(btn){ btn.textContent=cfg.requireNome?'Habilitado':'Desabilitado'; btn.className='btn btn-sm '+(cfg.requireNome?'btn-primary':'btn-danger'); }
+  const lista=App.getAtendimentos(); const servicos=App.getServicos();
+  document.getElementById('atend-tbody').innerHTML=lista.length?lista.map((a,i)=>{ const ativo=servicos[a.nome]!==false; return `<tr><td class="font-bold">${a.nome}</td><td><span class="badge badge-green">${a.prefix}</span></td><td>${a.modal}</td><td>${a.cat}</td><td><button class="btn btn-sm ${ativo?'btn-primary':'btn-danger'}" onclick="toggleServico('${a.nome}')">${ativo?'Ativo':'Inativo'}</button></td><td><button class="btn btn-danger btn-sm" onclick="App.removeAtend(${i});renderAtendimentos();addLog('Tipo removido: ${a.nome}','warn')">Remover</button></td></tr>`; }).join(''):'<tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">Nenhum tipo cadastrado</td></tr>';
+}
+
+function getRelatorioPeriodo(){
+  const select=document.getElementById('rel-periodo');
+  return select?select.value:'diario';
+}
+function getPeriodoInfo(periodo){
+  const hoje=new Date();
+  if(periodo==='diario') return 'Exibindo movimentacao do dia atual.';
+  if(periodo==='semanal'){
+    const inicio=new Date(hoje);
+    const dia=inicio.getDay();
+    const ajuste=dia===0?6:dia-1;
+    inicio.setDate(inicio.getDate()-ajuste);
+    return 'Exibindo movimentacao da semana desde '+inicio.toLocaleDateString('pt-BR')+'.';
+  }
+  if(periodo==='mensal') return 'Exibindo movimentacao do mes atual.';
+  return 'Exibindo movimentacao do ano atual.';
+}
+function filtrarHistoricoPorPeriodo(hist,periodo){
+  const agora=new Date();
+  return hist.filter(h=>{
+    const data=new Date(h.emitida);
+    if(periodo==='diario'){
+      return data.toDateString()===agora.toDateString();
+    }
+    if(periodo==='semanal'){
+      const inicioSemana=new Date(agora);
+      inicioSemana.setHours(0,0,0,0);
+      const dia=inicioSemana.getDay();
+      const ajuste=dia===0?6:dia-1;
+      inicioSemana.setDate(inicioSemana.getDate()-ajuste);
+      return data>=inicioSemana;
+    }
+    if(periodo==='mensal'){
+      return data.getFullYear()===agora.getFullYear()&&data.getMonth()===agora.getMonth();
+    }
+    if(periodo==='anual'){
+      return data.getFullYear()===agora.getFullYear();
+    }
+    return true;
+  });
+}
+function formatarPeriodoEmissao(data,periodo){
+  if(periodo==='diario') return new Date(data).toLocaleTimeString('pt-BR');
+  return new Date(data).toLocaleString('pt-BR');
+}
+function renderRelatorio(){
+  const periodo=getRelatorioPeriodo();
+  const hist=filtrarHistoricoPorPeriodo(App.getHistorico(),periodo);
+  const rotulos={diario:'Hoje',semanal:'na Semana',mensal:'no Mes',anual:'no Ano'};
+  document.getElementById('rel-total-label').textContent='Atendimentos '+rotulos[periodo];
+  document.getElementById('rel-prior-label').textContent='Prioritarios '+rotulos[periodo];
+  document.getElementById('rel-periodo-info').textContent=getPeriodoInfo(periodo);
+  document.getElementById('rel-hoje').textContent=hist.length;
+  document.getElementById('rel-prior').textContent=hist.filter(h=>h.prioritario).length;
+  const atendidos=hist.filter(h=>h.status==='finalizado'&&h.emitida&&h.finalizado);
+  document.getElementById('rel-tempo').textContent=atendidos.length?Math.floor(atendidos.reduce((a,h)=>a+((h.finalizado-h.emitida)/60000),0)/atendidos.length)+'min':'--';
+  const cats={}; hist.forEach(h=>{ const c=h.tipo||'Outro'; cats[c]=(cats[c]||0)+1; });
+  const top=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('rel-setor').textContent=top?top[0]:'--';
+  document.getElementById('hist-tbody').innerHTML=hist.length?hist.map(h=>`<tr><td class="font-bold text-green">${h.senha}</td><td>${h.nome}</td><td>${h.tipo}</td><td>${h.medico||'-'}</td><td>${h.sala||'-'}</td><td>${formatarPeriodoEmissao(h.emitida,periodo)}</td><td><span class="badge ${h.status==='finalizado'?'badge-green':'badge-yellow'}">${h.status}</span></td></tr>`).join(''):`<tr><td colspan="7" class="text-muted" style="text-align:center;padding:24px">Sem registros ${periodo==='diario'?'hoje':'neste periodo'}</td></tr>`;
+}
+function exportarCSV(){
+  const periodo=getRelatorioPeriodo();
+  const hist=filtrarHistoricoPorPeriodo(App.getHistorico(),periodo);
+  if(!hist.length){toast('Sem dados para exportar','error');return;}
+  const header='Senha,Paciente,Tipo,Medico,Sala,Emissao,Status\n';
+  const rows=hist.map(h=>[h.senha,h.nome,h.tipo,h.medico||'-',h.sala||'-',new Date(h.emitida).toLocaleString('pt-BR'),h.status].join(',')).join('\n');
+  const blob=new Blob([header+rows],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='relatorio_fila_'+periodo+'.csv'; a.click(); toast('CSV exportado!');
+}
+async function exportarExcel(){
+  const periodo=getRelatorioPeriodo();
+  const hist=filtrarHistoricoPorPeriodo(App.getHistorico(),periodo);
+  if(!hist.length){toast('Sem dados para exportar','error');return;}
+  const periodoLabel={diario:'Diario',semanal:'Semanal',mensal:'Mensal',anual:'Anual'}[periodo]||periodo;
+  const total=hist.length;
+  const finalizados=hist.filter(h=>h.status==='finalizado').length;
+  const prioritarios=hist.filter(h=>h.tipo&&h.tipo.toLowerCase().includes('prior')).length;
+  const wb=new ExcelJS.Workbook();
+  wb.creator='Sistema de Fila';
+  const ws=wb.addWorksheet('Relatorio',{views:[{state:'frozen',ySplit:4}]});
+  // colunas
+  ws.columns=[
+    {key:'senha', width:14},
+    {key:'paciente', width:28},
+    {key:'tipo', width:22},
+    {key:'medico', width:24},
+    {key:'sala', width:18},
+    {key:'emissao', width:22},
+    {key:'status', width:16}
+  ];
+  // linha 1 - titulo
+  ws.mergeCells('A1:G1');
+  const t=ws.getRow(1); t.height=32;
+  const tc=ws.getCell('A1');
+  tc.value='Sistema de Fila — Relatorio de Atendimentos ('+periodoLabel+')';
+  tc.font={name:'Calibri',size:16,bold:true,color:{argb:'FF1E3A5F'}};
+  tc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDBEAFE'}};
+  tc.alignment={horizontal:'center',vertical:'middle'};
+  // linha 2 - subtitulo
+  ws.mergeCells('A2:G2');
+  const s=ws.getRow(2); s.height=20;
+  const sc=ws.getCell('A2');
+  sc.value='Gerado em '+new Date().toLocaleString('pt-BR')+' | Total: '+total+' | Finalizados: '+finalizados+' | Prioritarios: '+prioritarios;
+  sc.font={name:'Calibri',size:10,italic:true,color:{argb:'FF475569'}};
+  sc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDBEAFE'}};
+  sc.alignment={horizontal:'center',vertical:'middle'};
+  // linha 3 - spacer
+  ws.getRow(3).height=8;
+  ws.mergeCells('A3:G3');
+  ws.getCell('A3').fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  // linha 4 - cabecalho
+  const headerRow=ws.getRow(4); headerRow.height=22;
+  ['Senha','Paciente','Tipo','Medico','Sala','Emissao','Status'].forEach((v,i)=>{
+    const cell=headerRow.getCell(i+1);
+    cell.value=v;
+    cell.font={name:'Calibri',size:11,bold:true,color:{argb:'FFFFFFFF'}};
+    cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF2563EB'}};
+    cell.alignment={horizontal:'center',vertical:'middle'};
+    cell.border={bottom:{style:'thin',color:{argb:'FF1D4ED8'}}};
+  });
+  ws.autoFilter={from:'A4',to:'G4'};
+  // dados
+  hist.forEach((h,i)=>{
+    const row=ws.addRow([
+      h.senha, h.nome, h.tipo||'-', h.medico||'-', h.sala||'-',
+      new Date(h.emitida).toLocaleString('pt-BR'), h.status
+    ]);
+    row.height=18;
+    const bgFill=i%2===0?{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}}:{type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};
+    row.eachCell(cell=>{ cell.fill=bgFill; cell.font={name:'Calibri',size:10}; cell.alignment={vertical:'middle'}; });
+    const statusCell=row.getCell(7);
+    if(h.status==='finalizado'){
+      statusCell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};
+      statusCell.font={name:'Calibri',size:10,bold:true,color:{argb:'FF065F46'}};
+    } else {
+      statusCell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEF9C3'}};
+      statusCell.font={name:'Calibri',size:10,bold:true,color:{argb:'FF92400E'}};
+    }
+    statusCell.alignment={horizontal:'center',vertical:'middle'};
+  });
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='relatorio_fila_'+periodo+'.xlsx'; a.click();
+  toast('XLSX exportado!');
+}
+
+
+function toggleServico(nome){ const servicos=App.getServicos(); const ativo=servicos[nome]!==false; App.setServico(nome,!ativo); if(window.SyncBus) SyncBus.emit(SyncBus.MSG.SERVICO_CHANGED,{nome,ativo:!ativo}); renderAtendimentos(); }
+
+function renderTotemStatus(){
+  ['totem-01','telao-01'].forEach(id=>{ const isTelao=id.startsWith('telao'); const pfx=isTelao?'telao':'totem'; const st=window.Kiosk?Kiosk.getStatus(id):{online:false,label:'Sem monitoramento'}; const dot=document.getElementById('dot-'+pfx); const lbl=document.getElementById('lbl-'+pfx); const sub=document.getElementById('sub-'+pfx); if(!dot) return; dot.style.background=st.online?'#22c55e':'#ef4444'; lbl.textContent=st.online?'Online':'Offline'; lbl.style.color=st.online?'var(--green-light)':'var(--danger)'; sub.textContent=st.label||''; });
+  const totemOff=window.Kiosk?!Kiosk.getStatus('totem-01').online:true; const telaoOff=window.Kiosk?!Kiosk.getStatus('telao-01').online:true; const alertDiv=document.getElementById('alerta-offline');
+  if(alertDiv){ if(totemOff||telaoOff){ alertDiv.classList.remove('hidden'); alertDiv.textContent=(totemOff?'Totem offline. ':'')+(telaoOff?'Telao offline. ':'')+'Verifique a conexao.'; } else { alertDiv.classList.add('hidden'); } }
+}
+setInterval(renderTotemStatus,5000); renderTotemStatus();
+
+if(window.SyncBus){
+  SyncBus.on(SyncBus.MSG.SENHA_EMITIDA,()=>renderFila());
+  SyncBus.on(SyncBus.MSG.HB_TOTEM,()=>renderTotemStatus());
+  SyncBus.on(SyncBus.MSG.HB_TELAO,()=>renderTotemStatus());
+  SyncBus.on(SyncBus.MSG.FILA_MUDOU,()=>renderFila());
+}
+
+(function initDemo(){
+  if(App.getMedicos().length===0){ App.addMedico({nome:'Dr. Carlos Mendes',crm:'12345-MA',esp:'Clinico Geral',sala:'Sala 01',ativo:true}); App.addMedico({nome:'Dra. Ana Paula Lima',crm:'54321-MA',esp:'Pediatra',sala:'Sala 02',ativo:true}); }
+  if(App.getSalas().length===0){ App.addSala({nome:'Sala 01',setor:'Clinica Geral',ativo:true}); App.addSala({nome:'Sala 02',setor:'Pediatra',ativo:true}); App.addSala({nome:'Triagem',setor:'Triagem',ativo:true}); }
+  if(App.getAtendimentos().length===0){ App.addAtend({nome:'Clinica Geral',prefix:'CG',modal:'SUS',cat:'Clinica Geral'}); App.addAtend({nome:'Odontologia',prefix:'OD',modal:'SUS',cat:'Odontologia'}); App.addAtend({nome:'Exames',prefix:'EX',modal:'Particular',cat:'Exames'}); }
+  if(App.getFila().length===0){ ['Maria Silva','Joao Souza','Ana Lima','Pedro Costa'].forEach((nome,i)=>{ const tipos=[{t:'Clinica Geral',p:'CG'},{t:'Odontologia',p:'OD'},{t:'Exames',p:'EX'}]; const tp=tipos[i%tipos.length]; App.gerarSenha({nome,tipo:tp.t,prefix:tp.p,modalidade:'SUS',prioritario:i%3===0}); }); }
+  // Restaura sessão da recepcionista se existir
+  _aplicarEstadoRecep();
+})();
+
+(function demoBar(){
+  const bar=document.createElement('div');
+  bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9998;background:rgba(245,197,24,.15);border-bottom:1px solid var(--yellow);padding:5px 16px;text-align:center;font-size:11px;font-weight:700;color:var(--yellow);letter-spacing:.5px;';
+  bar.textContent='DEMONSTRACAO - Painel administrativo modelo para o cliente';
+  document.body.prepend(bar);
+  document.querySelector('.main').style.paddingTop='64px';
+  document.querySelector('.sidebar').style.paddingTop='44px';
+})();
+
+// ── Prontuarios ──
+function mascararCPF(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+  el.value=v;
+}
+function mascararTelefone(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>10) v=v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
+  else if(v.length>6) v=v.replace(/(\d{2})(\d{4,5})(\d{0,4})/,'($1) $2-$3');
+  else if(v.length>2) v=v.replace(/(\d{2})(\d*)/,'($1) $2');
+  el.value=v;
+}
+function preencherSelectSenhas(){
+  const sel=document.getElementById('pront-senha');
+  if(!sel) return;
+  const fila=App.getFila();
+  sel.innerHTML='<option value="">Sem senha vinculada</option>'+fila.map(s=>`<option value="${s.senha}">${s.senha} - ${s.nome} (${s.tipo})</option>`).join('');
+}
+function salvarProntuario(){
+  const nome=document.getElementById('pront-nome').value.trim();
+  const sintomas=document.getElementById('pront-sintomas').value.trim();
+  if(!nome){toast('Informe o nome do paciente','error');return;}
+  if(!sintomas){toast('Informe os sintomas','error');return;}
+  const p={
+    nome,
+    cpf:document.getElementById('pront-cpf').value.trim(),
+    nascimento:document.getElementById('pront-nascimento').value,
+    telefone:document.getElementById('pront-tel').value.trim(),
+    senha:document.getElementById('pront-senha').value,
+    tipo:document.getElementById('pront-tipo').value.trim(),
+    sintomas,
+    obs:document.getElementById('pront-obs').value.trim(),
+  };
+  App.addProntuario(p);
+  addLog('Prontuario registrado: '+nome+(p.senha?' (Senha '+p.senha+')':''),'ok');
+  toast('Prontuario salvo e presenca registrada!');
+  limparFormProntuario();
+  renderProntuarios();
+}
+function limparFormProntuario(){
+  ['pront-nome','pront-cpf','pront-nascimento','pront-tel','pront-tipo','pront-sintomas','pront-obs'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('pront-form-msg').textContent='';
+}
+function renderProntuarios(){
+  preencherSelectSenhas();
+  const lista=App.getProntuarios();
+  const busca=(document.getElementById('pront-busca')?.value||'').toLowerCase().trim();
+  const filtrado=busca?lista.filter(p=>
+    (p.nome||'').toLowerCase().includes(busca)||
+    (p.senha||'').toLowerCase().includes(busca)||
+    (p.cpf||'').includes(busca)
+  ):lista;
+  const total=document.getElementById('pront-total');
+  if(total) total.textContent=filtrado.length+' registro(s)';
+  const tbody=document.getElementById('pront-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=filtrado.length?[...filtrado].reverse().map(p=>{
+    const hrRet = p.hrRetirada ? new Date(p.hrRetirada).toLocaleString('pt-BR') : (p.presenca ? new Date(p.presenca).toLocaleString('pt-BR') : '-');
+    const hrSai = p.hrSaida ? new Date(p.hrSaida).toLocaleTimeString('pt-BR') : '-';
+    const dur   = p.duracaoMin!=null ? `(${p.duracaoMin}min)` : '';
+    return `<tr>
+    <td style="white-space:nowrap;font-size:12px;">${hrRet}</td>
+    <td style="white-space:nowrap;font-size:12px;">${hrSai} <span style="color:var(--text-sec);font-size:10px;">${dur}</span></td>
+    <td class="font-bold">${p.nome}</td>
+    <td style="font-size:12px;">${p.cpf||'-'}</td>
+    <td style="font-size:12px;">${p.nascimento?new Date(p.nascimento+'T00:00').toLocaleDateString('pt-BR'):'-'}</td>
+    <td style="font-size:12px;">${p.telefone||'-'}</td>
+    <td><span class="badge badge-blue">${p.senha||'-'}</span></td>
+    <td style="font-size:12px;font-weight:700;">${p.sala||'-'}</td>
+    <td style="font-size:12px;">${p.medico||'-'}</td>
+    <td style="font-size:12px;">${p.tipo||'-'}</td>
+    <td style="font-size:12px;max-width:180px;white-space:pre-wrap;word-break:break-word;">${p.sintomas}</td>
+    <td style="font-size:12px;max-width:160px;white-space:pre-wrap;word-break:break-word;">${p.obs||'-'}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="App.removeProntuario('${p.id}');renderProntuarios();addLog('Prontuario removido: ${p.nome}','warn')">Remover</button></td>
+  </tr>`;
+  }).join(''):'<tr><td colspan="13" class="text-muted" style="text-align:center;padding:24px">Nenhum prontuario registrado</td></tr>';
+}
+
+// ── Modal Prontuario Auto ──
+let _modalProntSenhaId = null;
+let _modalProntRetirada = null;
+
+function abrirModalProntuario(s){
+  _modalProntSenhaId = s.id;
+  _modalProntRetirada = Date.now();
+
+  // Banner e estilo de prioridade
+  const banner   = document.getElementById('mpront-prior-banner');
+  const tituloEl = document.getElementById('mpront-senha-titulo');
+  const box      = document.getElementById('modal-pront-box');
+  if(s.prioritario){
+    banner.style.display = 'flex';
+    const recepUser = sessionStorage.getItem('fila_recep_user') || '';
+    document.getElementById('mpront-prior-just').textContent =
+      (s.justificativa ? ('Justificativa: ' + s.justificativa + '  ') : '') +
+      (recepUser ? 'Emitida por: ' + recepUser : 'Confirme os dados antes de prosseguir.');
+    tituloEl.style.color = 'var(--yellow)';
+    box.style.borderColor = 'rgba(245,158,11,.4)';
+    box.style.boxShadow = '0 24px 64px rgba(0,0,0,.5), 0 0 0 2px rgba(245,158,11,.2)';
+  } else {
+    banner.style.display = 'none';
+    tituloEl.style.color = 'var(--green-light)';
+    box.style.borderColor = 'var(--border)';
+    box.style.boxShadow = '0 24px 64px rgba(0,0,0,.5)';
+  }
+
+  // Preenche infos da senha
+  tituloEl.textContent = s.senha;
+  document.getElementById('mpront-info-senha').textContent   = s.senha;
+  document.getElementById('mpront-info-tipo').textContent    = s.tipo||'-';
+  document.getElementById('mpront-info-prior').textContent   = s.prioritario?'⚡ PRIORITARIO':'Normal';
+  const hrRet = new Date(_modalProntRetirada).toLocaleTimeString('pt-BR');
+  document.getElementById('mpront-info-retirada').textContent = hrRet;
+  document.getElementById('mpront-hr-retirada').textContent   = hrRet;
+
+  // Nome e tipo pré-preenchidos
+  document.getElementById('mpront-nome').value     = (s.nome && s.nome!=='Paciente') ? s.nome : '';
+  document.getElementById('mpront-sintomas').value = '';
+  document.getElementById('mpront-obs').value      = '';
+  document.getElementById('mpront-cpf').value      = '';
+  document.getElementById('mpront-nasc').value     = '';
+  document.getElementById('mpront-tel').value      = '';
+  document.getElementById('mpront-msg').textContent = '';
+
+  // Preenche select de salas e médicos
+  const salas = App.getSalas();
+  const salaEl = document.getElementById('mpront-sala');
+  salaEl.innerHTML = '<option value="">Selecionar sala...</option>' +
+    salas.map(sl=>`<option value="${sl.nome}">${sl.nome} — ${sl.setor}</option>`).join('');
+  if(s.sala) salaEl.value = s.sala;
+
+  const meds = App.getMedicos();
+  const medEl = document.getElementById('mpront-medico');
+  medEl.innerHTML = '<option value="">Selecionar medico...</option>' +
+    meds.map(m=>`<option value="${m.nome}">${m.nome} (${m.esp})</option>`).join('');
+  if(s.medico) medEl.value = s.medico;
+
+  const ov = document.getElementById('modal-pront-overlay');
+  ov.style.display = 'flex';
+  setTimeout(()=>{ document.getElementById('mpront-nome').focus(); }, 120);
+}
+
+function fecharModalProntuario(){
+  document.getElementById('modal-pront-overlay').style.display = 'none';
+  _modalProntSenhaId = null;
+}
+
+function salvarFecharModalProntuario(){
+  const nome     = document.getElementById('mpront-nome').value.trim();
+  const sintomas = document.getElementById('mpront-sintomas').value.trim();
+  const msg      = document.getElementById('mpront-msg');
+
+  if(!nome){ msg.textContent='Informe o nome do paciente.'; return; }
+  if(!sintomas){ msg.textContent='Informe os sintomas.'; return; }
+  msg.textContent='';
+
+  const saida = Date.now();
+  const sala  = document.getElementById('mpront-sala').value;
+  const medico= document.getElementById('mpront-medico').value;
+
+  // Salva prontuário com todos os dados + timestamps
+  const reg = App.addProntuario({
+    nome,
+    cpf:        document.getElementById('mpront-cpf').value.trim(),
+    nascimento: document.getElementById('mpront-nasc').value,
+    telefone:   document.getElementById('mpront-tel').value.trim(),
+    senha:      document.getElementById('mpront-info-senha').textContent,
+    tipo:       document.getElementById('mpront-info-tipo').textContent,
+    sala,
+    medico,
+    sintomas,
+    obs:        document.getElementById('mpront-obs').value.trim(),
+    hrRetirada: _modalProntRetirada,
+    hrSaida:    saida,
+    duracaoMin: Math.round((saida - (_modalProntRetirada||saida)) / 60000),
+  });
+
+  // Atualiza o registro da fila com sala e médico selecionados
+  if(_modalProntSenhaId && (sala||medico)){
+    App.editarSenha(_modalProntSenhaId, { sala, medico });
+    if(window.SyncBus) SyncBus.emit(SyncBus.MSG.FILA_MUDOU,{});
+    renderFila();
+  }
+
+  addLog('Prontuario salvo: '+nome+' (Senha '+reg.senha+', Sala '+( sala||'-')+')', 'ok');
+  toast('Prontuario registrado com sucesso!');
+  fecharModalProntuario();
+  // Atualiza aba prontuários se estiver aberta
+  if(document.getElementById('sec-prontuarios')?.classList.contains('active')) renderProntuarios();
+}
+
+// Fecha modal com ESC
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ fecharModalProntuario(); fecharLoginRecep(); } });
+
+// ── Recepcionista Auth ──
+let _recepSenhaGeradaId = null;
+
+function abrirLoginRecep(){
+  document.getElementById('recep-login-user').value = '';
+  document.getElementById('recep-login-pass').value = '';
+  document.getElementById('recep-login-msg').textContent = '';
+  const m = document.getElementById('modal-recep-login');
+  m.style.display = 'flex';
+  setTimeout(()=>document.getElementById('recep-login-pass').focus(), 120);
+}
+function fecharLoginRecep(){
+  document.getElementById('modal-recep-login').style.display = 'none';
+}
+async function loginRecep(){
+  const user = document.getElementById('recep-login-user').value;
+  const pass = document.getElementById('recep-login-pass').value.trim();
+  const msgEl = document.getElementById('recep-login-msg');
+  if(!user){ msgEl.textContent = 'Selecione o usuário.'; return; }
+  if(!pass){ msgEl.textContent = 'Informe a senha.'; return; }
+  msgEl.textContent = 'Verificando...';
+  try {
+    const cred = { recepcao_1:'rec1@hosp', recepcao_2:'rec2@hosp' };
+    if(cred[user] !== pass){ msgEl.textContent = 'Usuário ou senha incorretos.'; return; }
+    // Salva sessão
+    sessionStorage.setItem('fila_recep_user', user);
+    sessionStorage.setItem('fila_recep_role', 'recepcionista');
+    // Registra papel no socket
+    if(window.SyncBus) SyncBus.registerRole(user, 'recepcionista');
+    fecharLoginRecep();
+    _aplicarEstadoRecep();
+    addLog('Recepcionista logada: '+user, 'ok');
+    toast('Bem-vinda, '+user+'! ✨');
+  } catch(e){
+    msgEl.textContent = 'Falha ao validar login.';
+  }
+}
+function logoutRecep(){
+  sessionStorage.removeItem('fila_recep_user');
+  sessionStorage.removeItem('fila_recep_role');
+  if(window.SyncBus) SyncBus.registerRole('viewer', 'viewer');
+  _aplicarEstadoRecep();
+  addLog('Recepcionista encerrou sessão', 'warn');
+  toast('Sessão encerrada.', 'warn');
+}
+function _aplicarEstadoRecep(){
+  const user = sessionStorage.getItem('fila_recep_user');
+  const badge = document.getElementById('recep-topbar-badge');
+  const btnLogin = document.getElementById('btn-login-recep');
+  const wall = document.getElementById('recep-wall');
+  const painel = document.getElementById('recep-painel');
+  if(user){
+    badge.style.display = 'flex';
+    document.getElementById('recep-topbar-nome').textContent = user;
+    if(btnLogin) btnLogin.style.display = 'none';
+    if(wall) wall.style.display = 'none';
+    if(painel) painel.style.display = 'block';
+    document.getElementById('recep-nome-painel').textContent = user;
+    _preencherTiposRecep();
+    renderFilaPrior();
+  } else {
+    badge.style.display = 'none';
+    if(btnLogin) btnLogin.style.display = '';
+    if(wall) wall.style.display = 'flex';
+    if(painel) painel.style.display = 'none';
+  }
+}
+function _preencherTiposRecep(){
+  const sel = document.getElementById('recep-tipo');
+  if(!sel) return;
+  const atends = App.getAtendimentos();
+  sel.innerHTML = atends.length
+    ? atends.map(a=>`<option value="${a.nome}" data-prefix="${a.prefix}">${a.nome} (${a.prefix})</option>`).join('')
+    : '<option value="Clinica Geral" data-prefix="CG">Clinica Geral (CG)</option>';
+}
+function emitirSenhaPrioritaria(){
+  const user = sessionStorage.getItem('fila_recep_user');
+  if(!user){ toast('Faça login como recepcionista primeiro.', 'error'); return; }
+  const tipoEl = document.getElementById('recep-tipo');
+  const nomePac = document.getElementById('recep-nome-pac').value.trim();
+  const just = document.getElementById('recep-just').value.trim();
+  const msgEl = document.getElementById('recep-emit-msg');
+  if(!tipoEl || !tipoEl.value){ msgEl.textContent = 'Selecione o tipo de atendimento.'; return; }
+  const selectedOpt = tipoEl.options[tipoEl.selectedIndex];
+  const tipo = tipoEl.value;
+  const prefix = selectedOpt.dataset.prefix || tipo.substring(0,2).toUpperCase();
+  msgEl.textContent = '';
+  const reg = App.gerarSenha({ nome: nomePac||'Paciente', tipo, prefix, modalidade:'SUS', prioritario: true });
+  // Guarda justificativa no registro
+  reg.justificativa = just;
+  App.editarSenha(reg.id, { justificativa: just, recepcionista: user });
+  if(window.SyncBus) SyncBus.emit(SyncBus.MSG.FILA_MUDOU, {});
+  _recepSenhaGeradaId = reg.id;
+  // Mostra resultado
+  document.getElementById('recep-senha-gerada').style.display = 'block';
+  document.getElementById('recep-senha-num').textContent = reg.senha;
+  document.getElementById('recep-senha-pac').textContent = nomePac||'Paciente';
+  document.getElementById('recep-senha-tipo').textContent = tipo;
+  // Limpa form
+  document.getElementById('recep-nome-pac').value = '';
+  document.getElementById('recep-just').value = '';
+  renderFila();
+  renderFilaPrior();
+  addLog('Senha prioritária emitida por '+user+': '+reg.senha+' ('+tipo+')', 'ok');
+  toast('Senha prioritária '+reg.senha+' emitida! ⚡');
+}
+function chamarSenhaPrior(){
+  if(!_recepSenhaGeradaId){ toast('Nenhuma senha para chamar.','error'); return; }
+  chamarSenha(_recepSenhaGeradaId);
+  document.getElementById('recep-senha-gerada').style.display = 'none';
+  _recepSenhaGeradaId = null;
+}
+function renderFilaPrior(){
+  const tbody = document.getElementById('recep-prior-tbody');
+  if(!tbody) return;
+  const fila = App.getFila().filter(s=>s.prioritario && s.status==='esperando');
+  tbody.innerHTML = fila.length ? fila.map(s=>{
+    const age = Math.floor((Date.now()-s.emitida)/60000);
+    return `<tr>
+      <td class="font-bold" style="color:var(--yellow)">${s.senha}</td>
+      <td>${s.nome}</td>
+      <td>${s.tipo}</td>
+      <td>${age}min</td>
+      <td><button class="btn btn-primary btn-sm" style="background:var(--yellow);color:#000;font-weight:800;" onclick="chamarSenha('${s.id}')">📢 Chamar</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" class="text-muted" style="text-align:center;padding:20px">Nenhum prioritário aguardando</td></tr>';
+}
+
+// ── Audit Log ──
+const AUDIT_SECRET='MagumDSG_';
+const AUDIT_ACTION_COLORS={DELETE:'var(--danger)',UPDATE_STATUS:'var(--info)',UPDATE_PRIORIDADE_BLOCKED:'var(--yellow)'};
+async function carregarAuditLog(){
+  const tbody=document.getElementById('audit-tbody');
+  const msg=document.getElementById('audit-msg');
+  const filter=document.getElementById('audit-filter')?.value||'';
+  if(!tbody) return;
+  tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-sec)">Carregando...</td></tr>';
+  try{
+    const res=await fetch('/api/system-logs?limit=200',{headers:{'X-Contract-Secret':AUDIT_SECRET}});
+    if(!res.ok) throw new Error('unauthorized');
+    const data=await res.json();
+    let logs=data.logs||[];
+    if(filter) logs=logs.filter(l=>l.action===filter);
+    document.getElementById('audit-total').textContent=logs.length+' registro(s)';
+    if(msg) msg.style.display='none';
+    tbody.innerHTML=logs.length?logs.map(l=>{
+      const cor=AUDIT_ACTION_COLORS[l.action]||'var(--text)';
+      const hora=new Date(l.ts).toLocaleString('pt-BR');
+      const det=JSON.stringify(l.details||{},null,0).replace(/"/g,'').replace(/[{}]/g,'').slice(0,120);
+      return `<tr>
+        <td style="font-size:12px;white-space:nowrap;">${hora}</td>
+        <td><span class="badge" style="background:${cor}22;color:${cor};border:1px solid ${cor}44;font-size:11px;font-weight:800;">${l.action}</span></td>
+        <td style="font-size:12px;">${l.table_name}</td>
+        <td style="font-size:12px;font-family:monospace;">${l.ip}</td>
+        <td style="font-size:12px;">${l.user_id}</td>
+        <td style="font-size:12px;color:var(--text-sec);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${det}">${det}</td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">Nenhum registro de audit encontrado</td></tr>';
+  }catch(e){
+    if(msg){msg.textContent='Servidor offline ou sem permissao. Inicie o servidor para ver o audit log.';msg.style.display='block';}
+    tbody.innerHTML='<tr><td colspan="6" class="text-muted" style="text-align:center;padding:24px">—</td></tr>';
+  }
+}
+
+// Listener do trigger server-side: alerta e reverte visualmente
+document.addEventListener('trigger-rejected',e=>{
+  const {message}=e.detail||{};
+  toast(message||'Operacao bloqueada pelo servidor (trigger).','error');
+  setTimeout(()=>renderFila(),300);
+});
+
+renderFila();
+renderMedicos();
+renderSalas();
+renderAtendimentos();
+</script>
+</body>
+</html>

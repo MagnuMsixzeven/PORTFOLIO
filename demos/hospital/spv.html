@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Supervisor | Sistema de Fila — Ass. Zequinha Araújo</title>
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+/* ── SPV overrides ─────────────────────────────────── */
+.spv-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.device-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 22px;
+  display:flex;align-items:center;gap:16px;
+  transition:border-color .3s;
+}
+.device-card.online {border-color:rgba(33,150,243,.4);box-shadow:0 0 20px rgba(33,150,243,.08);}
+.device-card.offline{border-color:rgba(239,68,68,.35);}
+.device-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;
+}
+.device-card.online  .device-icon{background:rgba(33,150,243,.12);}
+.device-card.offline .device-icon{background:rgba(239,68,68,.1);}
+.device-info .di-name{font-size:15px;font-weight:800;margin-bottom:2px;}
+.device-info .di-status{font-size:12px;font-weight:700;letter-spacing:.04em;}
+.device-card.online  .di-status{color:var(--green-light);}
+.device-card.offline .di-status{color:var(--danger);}
+.device-info .di-sub{font-size:11px;color:var(--text-sec);margin-top:2px;}
+
+/* dot pulsante */
+.pulse-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+}
+.pulse-dot.on{
+  background:var(--green-light);
+  box-shadow:0 0 0 0 rgba(33,150,243,.4);
+  animation:pulse 2s infinite;
+}
+.pulse-dot.off{background:#334155;}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(33,150,243,.4);}
+  70%{box-shadow:0 0 0 8px rgba(33,150,243,0);}
+  100%{box-shadow:0 0 0 0 rgba(33,150,243,0);}
+}
+
+/* tabelas */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{
+  background:rgba(33,150,243,.06);
+  color:var(--text-sec);
+  font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+td{padding:10px 14px;border-bottom:1px solid rgba(33,150,243,.06);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(33,150,243,.03);}
+.badge{
+  display:inline-flex;align-items:center;
+  padding:3px 9px;border-radius:999px;
+  font-size:11px;font-weight:700;
+}
+.badge-admin{background:rgba(33,150,243,.15);color:#60a5fa;}
+.badge-recep{background:rgba(245,197,24,.15);color:var(--yellow);}
+.badge-spv  {background:rgba(16,185,129,.15);color:#34d399;}
+.badge-view {background:rgba(100,116,139,.15);color:#94a3b8;}
+.badge-online{background:rgba(33,150,243,.12);color:var(--green-light);}
+.badge-off   {background:rgba(239,68,68,.12);color:var(--danger);}
+.badge-del{background:rgba(239,68,68,.12);color:var(--danger);}
+.badge-upd{background:rgba(245,197,24,.12);color:var(--yellow);}
+.badge-log{background:rgba(33,150,243,.12);color:var(--info);}
+.badge-blk{background:rgba(239,68,68,.15);color:var(--danger);}
+
+/* topbar spv */
+.spv-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg-panel);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;
+  height:60px;
+  position:sticky;top:0;z-index:50;
+}
+.spv-topbar-title{font-size:15px;font-weight:800;display:flex;align-items:center;gap:10px;}
+.spv-topbar-right{display:flex;align-items:center;gap:12px;}
+.spv-user-badge{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);
+  border-radius:999px;padding:5px 14px;
+  font-size:12px;font-weight:700;color:#34d399;
+}
+
+/* layout */
+.spv-body{padding:24px 28px;max-width:1400px;margin:0 auto;}
+.sec-title{
+  font-size:11px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-sec);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.sec-title::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px 20px;
+  margin-bottom:20px;
+}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;gap:10px;flex-wrap:wrap;
+}
+.card-title{font-size:14px;font-weight:800;display:flex;align-items:center;gap:7px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green-light);display:inline-block;}
+
+.btn{
+  border:none;border-radius:8px;padding:7px 14px;
+  font-size:12px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:.2s;
+}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-sec);}
+.btn-outline:hover{border-color:var(--green-light);color:var(--text);}
+.btn-sm{padding:5px 11px;font-size:11px;}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3);}
+
+/* live log */
+#spv-live-log{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  font-family:monospace;font-size:12px;
+  max-height:280px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:3px;
+}
+.log-line-info {color:var(--text-sec);}
+.log-line-ok   {color:var(--green-light);}
+.log-line-warn {color:var(--yellow);}
+.log-line-err  {color:var(--danger);}
+
+/* stat bar */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+.stat-mini{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
+  padding:14px 16px;
+}
+.stat-mini .sm-val{font-size:28px;font-weight:900;line-height:1;}
+.stat-mini .sm-lbl{font-size:11px;color:var(--text-sec);margin-top:4px;font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- topbar -->
+<div class="spv-topbar">
+  <div class="spv-topbar-title">
+    🔭
+    <span>Supervisor</span>
+    <span style="font-size:11px;color:var(--text-sec);font-weight:500;">— Painel de Monitoramento</span>
+  </div>
+  <div class="spv-topbar-right">
+    <div id="spv-clock" style="font-size:13px;font-weight:700;color:var(--text-sec);letter-spacing:.06em;"></div>
+    <div class="spv-user-badge">🔭 <span id="spv-nome">—</span></div>
+    <button class="btn btn-outline btn-sm" onclick="fazerLogout()">Sair</button>
+    <button class="btn btn-outline btn-sm" onclick="carregarTudo()">↺ Atualizar</button>
+  </div>
+</div>
+
+<div class="spv-body">
+
+  <!-- Estatísticas rápidas -->
+  <div class="stat-row">
+    <div class="stat-mini">
+      <div class="sm-val" id="spv-total-online" style="color:var(--green-light);">0</div>
+      <div class="sm-lbl">Usuários online</div>
+    </div>
+    <div class="stat-mini">
+      <div class="sm-val" id="spv-total-devices" style="color:var(--yellow);">0</div>
+      <div class="sm-lbl">Dispositivos ativos</div>
+    </div>
+    <div class="stat-mini">
+      <div class="sm-val" id="spv-total-fila" style="color:var(--info);">0</div>
+      <div class="sm-lbl">Senhas na fila</div>
+    </div>
+    <div class="stat-mini">
+      <div class="sm-val" id="spv-total-logs" style="color:var(--text-sec);">0</div>
+      <div class="sm-lbl">Eventos no audit</div>
+    </div>
+  </div>
+
+  <!-- Equipamentos -->
+  <div class="sec-title">📡 Status dos Equipamentos</div>
+  <div class="spv-grid" id="spv-devices-grid">
+    <!-- preenchido via JS -->
+  </div>
+
+  <!-- Usuários conectados -->
+  <div class="sec-title">👥 Usuários Conectados Agora</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="dot"></span> Online</div>
+      <div style="display:flex;gap:8px;">
+        <span id="spv-online-count" style="font-size:12px;color:var(--text-sec);"></span>
+        <button class="btn btn-outline btn-sm" onclick="carregarOnline()">Atualizar</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Usuário</th><th>Papel</th><th>Socket ID</th><th>Status</th></tr></thead>
+        <tbody id="spv-online-tbody">
+          <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-sec);">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Fila em tempo real -->
+  <div class="sec-title">📋 Fila em Tempo Real</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="dot"></span> Senhas Aguardando</div>
+      <span id="spv-fila-count" style="font-size:12px;color:var(--text-sec);"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Senha</th><th>Paciente</th><th>Tipo</th><th>Prioridade</th><th>Status</th><th>Tempo</th></tr></thead>
+        <tbody id="spv-fila-tbody">
+          <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-sec);">Aguardando dados...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Audit Log -->
+  <div class="sec-title">🔍 Audit Log — Modificações e Solicitações</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="dot"></span> Histórico de Eventos</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <select id="spv-audit-filter" class="form-select" style="background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:5px 10px;font-size:12px;font-family:inherit;" onchange="carregarAudit()">
+          <option value="">Todas as ações</option>
+          <option value="LOGIN">LOGIN</option>
+          <option value="LOGIN_FAILED">LOGIN FALHOU</option>
+          <option value="DELETE">DELETE</option>
+          <option value="UPDATE_STATUS">UPDATE STATUS</option>
+          <option value="UPDATE_PRIORIDADE_BLOCKED">TRIGGER BLOQUEADO</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="carregarAudit()">↺</button>
+        <span id="spv-audit-total" style="font-size:12px;color:var(--text-sec);white-space:nowrap;"></span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Data/Hora</th><th>Ação</th><th>Tabela</th><th>Usuário</th><th>IP</th><th>Detalhes</th></tr></thead>
+        <tbody id="spv-audit-tbody">
+          <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-sec);">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Live log em tempo real (Socket.io) -->
+  <div class="sec-title">⚡ Live Feed — Eventos em Tempo Real</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="dot" style="animation:pulse 2s infinite;background:var(--green-light);"></span> Stream ao vivo</div>
+      <button class="btn btn-danger btn-sm" onclick="limparLive()">Limpar</button>
+    </div>
+    <div id="spv-live-log">
+      <span class="log-line-info">[aguardando eventos...]</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Auth guard ────────────────────────────────────────
+const _sessaoUser = sessionStorage.getItem('fila_session_user');
+const _sessaoRole = sessionStorage.getItem('fila_session_role');
+const _sessaoTs   = parseInt(sessionStorage.getItem('fila_session_ts') || '0');
+const _valid = Date.now() - _sessaoTs < 8 * 60 * 60 * 1000; // 8h
+if (!_sessaoUser || _sessaoRole !== 'spv' || !_valid) {
+  window.location.href = 'login.html';
+}
+document.getElementById('spv-nome').textContent = _sessaoUser || '—';
+
+const AUDIT_SECRET = 'MagumDSG_';
+
+// ── Clock ─────────────────────────────────────────────
+function tick(){ document.getElementById('spv-clock').textContent = new Date().toLocaleTimeString('pt-BR'); }
+setInterval(tick, 1000); tick();
+
+// ── Logout ────────────────────────────────────────────
+function fazerLogout() {
+  sessionStorage.removeItem('fila_session_user');
+  sessionStorage.removeItem('fila_session_role');
+  sessionStorage.removeItem('fila_session_ts');
+  window.location.href = 'login.html';
+}
+
+// ── Live log ──────────────────────────────────────────
+const _liveLines = [];
+function addLive(msg, tipo='info') {
+  const hora = new Date().toLocaleTimeString('pt-BR');
+  _liveLines.unshift({ msg, tipo, hora });
+  if (_liveLines.length > 120) _liveLines.pop();
+  renderLive();
+}
+function renderLive() {
+  const el = document.getElementById('spv-live-log');
+  el.innerHTML = _liveLines.map(l =>
+    `<div class="log-line-${l.tipo}"><span style="opacity:.55">[${l.hora}]</span> ${l.msg}</div>`
+  ).join('') || '<span class="log-line-info">[aguardando eventos...]</span>';
+}
+function limparLive() { _liveLines.length = 0; renderLive(); }
+
+// ── Socket.io ─────────────────────────────────────────
+const socket = (typeof io !== 'undefined') ? io() : null;
+
+if (socket) {
+  socket.on('connect', () => {
+    addLive('Conectado ao servidor (socket: '+socket.id+')', 'ok');
+    socket.emit('auth:register', {
+      user: _sessaoUser,
+      role: 'spv',
+      secret: AUDIT_SECRET,
+    });
+    carregarTudo();
+  });
+
+  socket.on('disconnect', () => addLive('Conexão perdida com o servidor!', 'err'));
+
+  socket.on('device:status', (devices) => {
+    renderDevices(devices);
+    addLive('Status de dispositivos atualizado', 'info');
+  });
+
+  socket.on('bus:emit', ({ type, payload }) => {
+    addLive(`Event SyncBus: ${type}` + (payload?.senha ? ` (senha: ${payload.senha})` : ''), 'ok');
+    if (type === 'FILA_MUDOU' || type === 'SENHA_CHAMADA') {
+      renderFilaLs();
+    }
+  });
+
+  socket.on('ls:set', ({ key }) => {
+    addLive(`localStorage sync: ${key}`, 'info');
+    if (key === 'fila_senhas') renderFilaLs();
+  });
+
+  socket.on('trigger:rejected', ({ message }) => {
+    addLive('⛔ TRIGGER BLOQUEADO: ' + message, 'err');
+  });
+} else {
+  addLive('Modo local ativo (sem servidor).', 'info');
+  carregarTudo();
+}
+
+// ── Renderiza dispositivos ────────────────────────────
+let _devicesCache = {};
+function renderDevices(devices) {
+  _devicesCache = devices || {};
+  const grid = document.getElementById('spv-devices-grid');
+  const known = [
+    { id: 'totem',  label: 'Totem Principal',  icon: '🖥️' },
+    { id: 'telao',  label: 'Telão',             icon: '📺' },
+  ];
+
+  const extra = Object.keys(devices).filter(k => !['totem','telao'].includes(k));
+  const all = [...known, ...extra.map(k => ({ id: k, label: k, icon: '📡' }))];
+
+  let html = '';
+  for (const dev of all) {
+    const d = devices[dev.id];
+    const alive = d?.alive === true;
+    const lastSeen = d ? tempoRelativo(d.ts) : 'nunca';
+    const ip = d?.ip || '—';
+    html += `
+      <div class="device-card ${alive?'online':'offline'}">
+        <div class="device-icon">${dev.icon}</div>
+        <div class="device-info" style="flex:1;">
+          <div class="di-name">${dev.label}</div>
+          <div class="di-status">${alive ? '● Online' : '○ Offline'}</div>
+          <div class="di-sub">IP: ${ip} &nbsp;·&nbsp; ${alive ? 'Último ping: '+lastSeen : 'Desconectado: '+lastSeen}</div>
+        </div>
+        <div class="pulse-dot ${alive?'on':'off'}"></div>
+      </div>`;
+  }
+  grid.innerHTML = html || '<div style="color:var(--text-sec);font-size:13px;padding:16px;">Nenhum dispositivo detectado.</div>';
+
+  // Atualiza stat
+  const ativos = Object.values(devices).filter(d => d.alive).length;
+  document.getElementById('spv-total-devices').textContent = ativos;
+}
+
+// ── Usuários online ───────────────────────────────────
+async function carregarOnline() {
+  try {
+    const res = await fetch('/api/online-users', { headers: { 'X-Contract-Secret': AUDIT_SECRET } });
+    const data = await res.json();
+    if (!data.ok) return;
+
+    const tbody = document.getElementById('spv-online-tbody');
+    const roleClass = { admin:'badge-admin', recepcionista:'badge-recep', spv:'badge-spv', viewer:'badge-view' };
+    const roleLabel = { admin:'Admin', recepcionista:'Recepção', spv:'Supervisor', viewer:'Visitante' };
+
+    document.getElementById('spv-total-online').textContent = data.total;
+    document.getElementById('spv-online-count').textContent = data.total + ' conectado(s)';
+
+    tbody.innerHTML = data.users.length
+      ? data.users.map(u => `<tr>
+          <td class="font-bold">${u.user}</td>
+          <td><span class="badge ${roleClass[u.role]||'badge-view'}">${roleLabel[u.role]||u.role}</span></td>
+          <td style="font-size:11px;color:var(--text-sec);font-family:monospace;">${u.socketId.slice(0,12)}…</td>
+          <td><span class="badge badge-online">● Online</span></td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-sec);">Nenhum usuário autenticado no momento</td></tr>';
+
+    renderDevices(data.devices || _devicesCache);
+    addLive('Usuários online atualizados: ' + data.total, 'ok');
+  } catch(e) {
+    addLive('Erro ao buscar usuários: ' + e.message, 'err');
+  }
+}
+
+// ── Fila (via localStorage sync) ─────────────────────
+function renderFilaLs() {
+  try {
+    const raw = localStorage.getItem('fila_senhas');
+    if (!raw) return;
+    const fila = JSON.parse(raw).filter(s => s.status !== 'finalizado');
+    const tbody = document.getElementById('spv-fila-tbody');
+    const stClass = { esperando:'badge-recep', chamado:'badge-log', atendendo:'badge-log', finalizado:'badge-online' };
+    document.getElementById('spv-total-fila').textContent = fila.length;
+    document.getElementById('spv-fila-count').textContent = fila.length + ' senha(s)';
+    tbody.innerHTML = fila.length
+      ? fila.map(s => {
+          const age = Math.floor((Date.now() - s.emitida) / 60000);
+          return `<tr>
+            <td class="font-bold" style="color:var(--yellow);">${s.senha}</td>
+            <td>${s.nome}</td>
+            <td>${s.tipo}</td>
+            <td>${s.prioritario ? '<span class="badge badge-recep">⚡ PRIOR.</span>' : '<span style="color:var(--text-sec);">Normal</span>'}</td>
+            <td><span class="badge ${stClass[s.status]||'badge-view'}">${s.status}</span></td>
+            <td>${age}min</td>
+          </tr>`;
+        }).join('')
+      : '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-sec);">Fila vazia</td></tr>';
+  } catch(e) { /* ignora */ }
+}
+
+// ── Audit Log ─────────────────────────────────────────
+async function carregarAudit() {
+  const filter = document.getElementById('spv-audit-filter').value;
+  try {
+    const res = await fetch('/api/system-logs?limit=300', { headers: { 'X-Contract-Secret': AUDIT_SECRET } });
+    const data = await res.json();
+    if (!data.ok) { addLive('Erro ao buscar audit log: não autorizado', 'err'); return; }
+
+    let logs = data.logs;
+    if (filter) logs = logs.filter(l => l.action === filter);
+
+    document.getElementById('spv-total-logs').textContent = data.total;
+    document.getElementById('spv-audit-total').textContent = logs.length + ' evento(s)';
+
+    const acaoClass = {
+      LOGIN:                    'badge-log',
+      LOGIN_FAILED:             'badge-err',
+      DELETE:                   'badge-del',
+      UPDATE_STATUS:            'badge-upd',
+      UPDATE_PRIORIDADE_BLOCKED:'badge-blk',
+    };
+
+    const tbody = document.getElementById('spv-audit-tbody');
+    tbody.innerHTML = logs.length
+      ? logs.map(l => {
+          const det = typeof l.details === 'object' ? JSON.stringify(l.details) : (l.details || '—');
+          return `<tr>
+            <td style="white-space:nowrap;font-size:11px;">${new Date(l.ts).toLocaleString('pt-BR')}</td>
+            <td><span class="badge ${acaoClass[l.action]||'badge-view'}" style="font-size:10px;">${l.action}</span></td>
+            <td style="font-size:12px;">${l.table_name||'—'}</td>
+            <td style="font-weight:700;">${l.user_id||'—'}</td>
+            <td style="font-size:11px;color:var(--text-sec);">${l.ip||'—'}</td>
+            <td style="font-size:11px;color:var(--text-sec);max-width:280px;white-space:pre-wrap;word-break:break-all;">${det}</td>
+          </tr>`;
+        }).join('')
+      : '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-sec);">Nenhum evento encontrado</td></tr>';
+
+    addLive('Audit log atualizado: ' + logs.length + ' eventos', 'ok');
+  } catch(e) {
+    addLive('Erro ao buscar audit log: ' + e.message, 'err');
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────
+function tempoRelativo(ts) {
+  if (!ts) return 'nunca';
+  const d = Date.now() - ts;
+  if (d < 60000) return 'agora';
+  if (d < 3600000) return Math.floor(d/60000) + 'min atrás';
+  return Math.floor(d/3600000) + 'h atrás';
+}
+
+// ── Status dos devices via API ────────────────────────
+async function carregarStatus() {
+  try {
+    const res = await fetch('/api/status');
+    const data = await res.json();
+    if (data.ok) renderDevices(data.devices || {});
+  } catch(e) { addLive('Erro ao buscar status: ' + e.message, 'err'); }
+}
+
+// ── Carrega tudo ──────────────────────────────────────
+function carregarTudo() {
+  carregarOnline();
+  carregarAudit();
+  carregarStatus();
+  renderFilaLs();
+}
+
+// Sincroniza fila via localStorage events
+window.addEventListener('storage', e => {
+  if (e.key === 'fila_senhas') { renderFilaLs(); addLive('Fila atualizada via localStorage', 'info'); }
+});
+
+// Atualiza a cada 30s automaticamente
+setInterval(carregarTudo, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+============================================================
+  SISTEMA DE FILA HOSPITALAR — GUIA DE IMPLANTAÇÃO
+============================================================
+
+
+════════════════════════════════════════════
+  PASSO A PASSO — PRIMEIRO USO (POR HOSPITAL)
+════════════════════════════════════════════
+
+1. INSTALAR O NODE.JS (só na primeira vez, no PC da recepção)
+   ─────────────────────────────────────────────────────────
+   OPÇÃO 1 — Instalador (recomendado, funciona em qualquer PC):
+
+     1. Abra o navegador e acesse:  https://nodejs.org
+     2. Clique no botão verde  "LTS"  para baixar
+     3. Abra o arquivo .msi baixado e clique em Avançar/Next
+        em todas as telas (deixe tudo no padrão)
+     4. Ao final, REINICIE o computador
+
+   OPÇÃO 2 — Pelo CMD/PowerShell (só funciona se winget estiver disponível):
+
+     winget install OpenJS.NodeJS.LTS
+
+   Após instalar, abra o CMD e confirme com:
+     node --version
+   Deve aparecer algo como:  v24.14.1
+
+
+2. COPIAR A PASTA DO SISTEMA
+   ─────────────────────────
+   Copie a pasta "hospital\" para o PC da recepção.
+   Exemplo de destino: C:\Users\Usuario\Desktop\hospital\
+
+
+3. INICIAR O SERVIDOR
+   ──────────────────
+   Dentro da pasta "hospital\", dê duplo clique em:
+
+     iniciar.bat
+
+   Na primeira vez, ele instala as dependências automaticamente.
+   Uma janela preta vai aparecer com o endereço da rede. NÃO FECHE.
+
+
+4. DESCOBRIR O IP DO COMPUTADOR (para o tablet/totem)
+   ────────────────────────────────────────────────────
+   Abra o CMD e rode:
+
+     ipconfig
+
+   Procure por "Endereço IPv4" na seção da sua rede (Wi-Fi ou Ethernet).
+   Exemplo: 192.168.1.105
+
+   O endereço completo para acessar pelo tablet será:
+     http://[IP-ENCONTRADO]:3000
+
+
+════════════════════════════════════════════
+  ENDEREÇOS DE ACESSO
+════════════════════════════════════════════
+
+  Painel Admin (recepção — mesmo PC do servidor):
+    http://localhost:3000/admin.html
+
+  Totem (tablet conectado no Wi-Fi da mesma rede):
+    http://[IP-DO-PC]:3000/totem.html
+    Exemplo: http://192.168.1.105:3000/totem.html
+
+  Telão — VER OBSERVAÇÃO ABAIXO
+
+
+════════════════════════════════════════════
+  TELÃO — HDMI WIRELESS OU CABO (RECOMENDADO)
+════════════════════════════════════════════
+
+  SIM, o telão pode ser conectado por HDMI (cabo ou wireless)
+  direto ao PC da recepção.
+
+  Vantagens:
+    - Não precisa de Wi-Fi para o telão
+    - Sem lentidão ou queda de conexão
+    - O único dispositivo que usa a rede é o TABLET (totem)
+
+  Como configurar (Windows):
+    1. Conecte o HDMI wireless (Miracast/Chromecast) ou cabo na TV
+    2. Pressione  Win + P  e escolha "Estender"
+    3. Arraste a janela do telão para a segunda tela
+    4. Abra no navegador:  http://localhost:3000/telao.html
+    5. Pressione F11 para tela cheia
+
+  Resultado: TV mostra o telão, PC mostra o admin, tablet é o totem.
+  Apenas o tablet precisa estar no Wi-Fi.
+
+
+════════════════════════════════════════════
+  RESUMO RÁPIDO — USO DIÁRIO
+════════════════════════════════════════════
+
+  Todo dia:
+    1. Abrir a pasta "hospital\"
+    2. Clicar duas vezes em  iniciar.bat
+    3. Esperar aparecer "Servidor ativo!"
+    4. Admin abre automaticamente no navegador
+
+  No tablet (totem):
+    - Abrir o navegador e digitar o endereço da rede
+    - O endereço aparece na janela preta do servidor
+    - Exemplo: http://192.168.1.105:3000/totem.html
+
+  Na TV (telão via HDMI):
+    - Abrir  http://localhost:3000/telao.html  no navegador
+    - Arrastar para a tela da TV
+    - Pressionar F11 (tela cheia)
+
+
+════════════════════════════════════════════
+  COMANDOS ÚTEIS (CMD / PowerShell)
+════════════════════════════════════════════
+
+  Descobrir IP da máquina:
+    ipconfig
+
+  Instalar Node.js:
+    winget install OpenJS.NodeJS.LTS
+
+  Instalar dependências do sistema (só 1ª vez, na pasta hospital\):
+    npm install
+
+  Iniciar o servidor manualmente:
+    node server.js
+
+  Ver se o servidor está respondendo:
+    Abra o navegador em:  http://localhost:3000/api/status
+
+
+============================================================
+  EM CASO DE PROBLEMAS
+============================================================
+
+  - "Página não encontrada" no tablet → conferir se está no mesmo Wi-Fi
+  - "Servidor não inicia" → verificar se Node.js está instalado (node --version no CMD)
+  - "IP mudou" → rodar ipconfig novamente e atualizar o endereço no tablet
+  - Dados do dia anterior aparecendo → clicar em "Zerar fila" no painel Admin
+
+============================================================

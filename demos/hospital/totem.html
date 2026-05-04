@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Totem | Sistema de Fila</title>
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+body{background:radial-gradient(ellipse at 50% 0%,#0f3d1c 0%,#0a1a0f 70%);}
+.totem-wrap{
+  width:100%;max-width:680px;
+  margin:0 auto;
+  padding-bottom:48px;
+}
+/* Progresso de steps */
+.steps-bar{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-bottom:40px;
+  animation:fadeInDown .5s ease both;
+}
+.step-dot{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg-card);
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+  color:var(--text-sec);
+  transition:var(--transition);
+  position:relative;z-index:1;
+}
+.step-dot.done{background:var(--green);border-color:var(--green-light);color:#fff;}
+.step-dot.current{
+  background:linear-gradient(135deg,var(--green),var(--green-light));
+  border-color:var(--green-light);
+  color:#fff;
+  box-shadow:0 0 20px var(--green-glow);
+}
+.step-line{flex:1;height:2px;background:var(--border);max-width:80px;}
+.step-line.done{background:var(--green);}
+</style>
+</head>
+<body class="totem-body">
+<div class="totem-wrap">
+
+  <!-- HEADER -->
+  <div class="totem-header">
+    <img src="img/logo.svg" alt="Associação Zequinha Araújo"
+      style="width:min(340px,90vw);height:auto;margin-bottom:12px;
+             filter:drop-shadow(0 0 20px rgba(33,150,243,.5));"
+    />
+    <p style="font-size:16px;color:var(--text-sec);margin-top:4px">Toque para retirar sua senha de atendimento</p>
+  </div>
+
+  <!-- BARRA DE PROGRESSO -->
+  <div class="steps-bar" id="steps-bar">
+    <div class="step-dot current" id="sdot-1">1</div>
+    <div class="step-line" id="sline-1"></div>
+    <div class="step-dot" id="sdot-2">2</div>
+    <div class="step-line" id="sline-2"></div>
+    <div class="step-dot" id="sdot-3">&#10003;</div>
+  </div>
+
+  <!-- ══ STEP 1 – TIPO ══ -->
+  <div class="totem-step" id="step-1">
+    <div class="step-title">Qual o <span>tipo de atendimento</span>?</div>
+    <div class="opcoes-grid" id="tipo-opcoes">
+      <!-- preenchido por JS -->
+    </div>
+    <div class="totem-nav">
+      <button class="btn btn-primary" onclick="irStep(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2 – PRIORIDADE ══ -->
+  <div class="totem-step hidden" id="step-2">
+    <div class="step-title">Você tem <span>prioridade</span>?</div>
+    <p style="text-align:center;color:var(--text-sec);font-size:14px;margin-bottom:20px">
+      Idosos (60+), gestantes, pessoas com deficiência ou mobilidade reduzida têm atendimento prioritário.
+    </p>
+    <div class="prioridade-toggle">
+      <div class="toggle-btn" id="prio-nao" onclick="selecionarPrior(false,this)">
+        Atendimento Normal
+      </div>
+      <div class="toggle-btn" id="prio-sim" onclick="selecionarPrior(true,this)">
+        Tenho Prioridade
+      </div>
+    </div>
+    <div class="totem-nav">
+      <button class="btn btn-outline" onclick="irStep(1)">← Voltar</button>
+      <button class="btn btn-primary" onclick="gerarSenha()">Gerar Senha</button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3 – SENHA GERADA ══ -->
+  <div class="totem-step hidden" id="step-3">
+    <div class="senha-resultado">
+      <div id="res-prior-banner" class="hidden" style="
+        background:linear-gradient(135deg,var(--yellow),#f59e0b);
+        color:#000;border-radius:8px;
+        padding:8px 20px;font-size:14px;font-weight:900;
+        margin-bottom:20px;display:inline-block;
+      ">PRIORIDADE GARANTIDA</div>
+
+      <div style="font-size:14px;color:var(--text-sec);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">
+        Sua senha é
+      </div>
+
+      <div id="res-senha" class="senha-numero">---</div>
+      <div id="res-info" class="senha-info">Aguarde ser chamado no telão</div>
+
+      <div class="senha-detalhe" id="res-chips"></div>
+
+      <button class="btn-imprimir" onclick="imprimirSenha()">Imprimir Comprovante</button>
+
+      <div style="margin-top:20px">
+        <button class="btn btn-outline" style="width:100%" onclick="novoAtendimento()">
+          Nova senha
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/sync.js"></script>
+<script src="js/kiosk.js"></script>
+<script src="js/app.js"></script>
+<script>
+// ── Estado ──
+const estado={tipo:null,tipoPrefix:null,prioritario:false};
+let stepAtual=1;
+
+// Demo: garantir tipos cadastrados
+(function demoInit(){
+  if(App.getAtendimentos().length===0){
+    App.addAtend({nome:'Clínica Geral',prefix:'CG',modal:'SUS',cat:'Clínica Geral'});
+    App.addAtend({nome:'Odontologia',prefix:'OD',modal:'SUS',cat:'Odontologia'});
+    App.addAtend({nome:'Exames',prefix:'EX',modal:'Particular',cat:'Exames'});
+  }
+})();
+
+// ── Steps ──
+function irStep(n){
+  if(n===2&&!estado.tipo){alert('Selecione o tipo de atendimento.');return;}
+
+  document.getElementById('step-'+stepAtual).classList.add('hidden');
+  stepAtual=n;
+  document.getElementById('step-'+stepAtual).classList.remove('hidden');
+  atualizarStepsBar(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function atualizarStepsBar(current){
+  for(let i=1;i<=3;i++){
+    const dot=document.getElementById('sdot-'+i);
+    if(!dot)return;
+    dot.classList.remove('current','done');
+    if(i<current) dot.classList.add('done');
+    else if(i===current) dot.classList.add('current');
+    if(i<3){
+      const line=document.getElementById('sline-'+i);
+      if(line) line.classList.toggle('done',i<current);
+    }
+  }
+}
+
+// ── Preencher tipos de atendimento (filtra serviços desativados remotamente) ──
+function preencherTipos(){
+  const labelMap={'Clínica Geral':'CG','Odontologia':'OD','Exames':'EX','Pediatra':'PD','Ginecologia':'GN','Ortopedia':'OR'};
+  const atends=App.getAtendimentos();
+  const servicos=App.getServicos();
+  const padroes=[
+    {nome:'Clínica Geral',prefix:'CG',cat:'Clínica Geral'},
+    {nome:'Odontologia',prefix:'OD',cat:'Odontologia'},
+    {nome:'Exames',prefix:'EX',cat:'Exames'},
+  ];
+  const lista=(atends.length?atends:padroes)
+    .filter(a=>servicos[a.nome]!==false); // remove desativados pelo admin
+
+  if(!lista.length){
+    document.getElementById('tipo-opcoes').innerHTML=
+      '<div style="text-align:center;padding:32px;color:var(--text-sec);font-size:14px;">Nenhum serviço disponível no momento.<br>Aguarde ou dirija-se à recepção.</div>';
+    return;
+  }
+
+  document.getElementById('tipo-opcoes').innerHTML=lista.map(a=>`
+    <div class="opcao-btn" onclick="selecionarTipo('${a.nome}','${a.prefix}',this)">
+      <div class="op-icon" style="font-size:28px;font-weight:900;color:var(--green-light)">${labelMap[a.nome]||a.prefix||'?'}</div>
+      <div class="op-label">${a.nome}</div>
+      <div class="op-sub">${a.modal||a.cat||''}</div>
+    </div>
+  `).join('');
+}
+
+// Atualizar lista de tipos se admin mudar remotamente
+SyncBus.on(SyncBus.MSG.SERVICO_CHANGED, ()=>preencherTipos());
+SyncBus.on(SyncBus.MSG.CONFIG_CHANGED,  ()=>{});
+
+
+function selecionarTipo(nome,prefix,el){
+  document.querySelectorAll('#tipo-opcoes .opcao-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  estado.tipo=nome;estado.tipoPrefix=prefix;
+}
+
+function selecionarModal(modal,el){
+  document.querySelectorAll('#step-2 .opcao-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  estado.modalidade=modal;
+}
+
+function selecionarPrior(val,el){
+  document.querySelectorAll('.toggle-btn').forEach(b=>{b.classList.remove('active-green','active-yellow');});
+  estado.prioritario=val;
+  el.classList.add(val?'active-yellow':'active-green');
+}
+
+// ── Gerar senha ──
+function gerarSenha(){
+  if(estado.prioritario===null||estado.prioritario===undefined){
+    alert('Selecione se tem prioridade ou não.');
+    return;
+  }
+
+  const senha=App.gerarSenha({
+    nome:'Paciente',
+    tipo:estado.tipo||'Geral',
+    prefix:estado.tipoPrefix||'GR',
+    modalidade:'',
+    prioritario:estado.prioritario,
+  });
+
+  // Notificar admin e telão em tempo real
+  SyncBus.emit(SyncBus.MSG.SENHA_EMITIDA, senha);
+  SyncBus.emit(SyncBus.MSG.FILA_MUDOU, {});
+
+  document.getElementById('res-senha').textContent=senha.senha;
+  document.getElementById('res-info').textContent='Senha gerada! Aguarde ser chamado no telão.';
+
+  const prior=document.getElementById('res-prior-banner');
+  senha.prioritario?prior.classList.remove('hidden'):prior.classList.add('hidden');
+
+  document.getElementById('res-chips').innerHTML=[
+    {label:'Tipo',val:senha.tipo},
+    {label:'Emissão',val:new Date(senha.emitida).toLocaleTimeString('pt-BR')},
+    senha.prioritario?{label:'Fila',val:'PRIORITÁRIA'}:{label:'Fila',val:'Normal'},
+  ].map(c=>`<div class="senha-detalhe-chip"><div style="font-size:11px;color:var(--text-sec)">${c.label}</div><div>${c.val}</div></div>`).join('');
+
+  irStep(3);
+  iniciarCountdown();
+}
+
+// ── Auto-retorno após 10s ──
+let _countdownTimer=null;
+function iniciarCountdown(){
+  if(_countdownTimer) clearInterval(_countdownTimer);
+  let seg=10;
+  // mostra contador no botão "Nova senha"
+  const btn=document.querySelector('#step-3 .btn.btn-outline');
+  if(btn) btn.textContent='Nova senha ('+seg+'s)';
+  _countdownTimer=setInterval(()=>{
+    seg--;
+    if(btn) btn.textContent='Nova senha ('+seg+'s)';
+    if(seg<=0){
+      clearInterval(_countdownTimer);
+      _countdownTimer=null;
+      novoAtendimento();
+    }
+  },1000);
+}
+
+// ── Impressão ──
+function imprimirSenha(){
+  const senha=document.getElementById('res-senha').textContent;
+  const tipo=estado.tipo;
+  const prior=estado.prioritario;
+  const hora=new Date().toLocaleString('pt-BR');
+
+  const win=window.open('','_blank','width=400,height=600');
+  win.document.write(`
+    <html><head><title>Comprovante</title>
+    <style>
+      body{font-family:monospace;text-align:center;padding:20px;background:#fff;color:#000;}
+      .big{font-size:72px;font-weight:900;margin:10px 0;}
+      .sep{border:1px dashed #ccc;margin:12px 0;}
+      .tag{background:#000;color:#fff;padding:4px 12px;border-radius:4px;display:inline-block;font-size:12px;margin-top:6px;}
+    </style></head><body>
+    <h2>Ass. Zequinha Araújo</h2>
+    <div class="sep"></div>
+    <p>Tipo: ${tipo}</p>
+    <div class="big">${senha}</div>
+    ${prior?'<div class="tag">PRIORIDADE</div>':''}
+    <div class="sep"></div>
+    <p style="font-size:11px">Emitida em: ${hora}</p>
+    <p style="font-size:12px">Acompanhe seu número no telão.</p>
+    <script>window.print();<\/script>
+    </body></html>
+  `);
+  win.document.close();
+}
+
+// ── Nova senha ──
+function novoAtendimento(){
+  if(_countdownTimer){ clearInterval(_countdownTimer); _countdownTimer=null; }
+  estado.tipo=null;estado.tipoPrefix=null;
+  estado.prioritario=false;
+  document.querySelectorAll('.opcao-btn,.toggle-btn').forEach(b=>b.classList.remove('selected','active-green','active-yellow'));
+  irStep(1);
+}
+
+// Demo: barra de demo no topo
+(function demoBar(){
+  const bar=document.createElement('div');
+  bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(245,197,24,.18);border-bottom:1px solid var(--yellow);padding:6px 16px;text-align:center;font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:.5px;';
+  bar.textContent='DEMONSTRACAO — Este totem e um modelo para o cliente';
+  document.body.prepend(bar);
+  document.body.style.paddingTop='34px';
+})();
+
+// ── Modo Kiosk ──
+// Botão discreto para ativar fullscreen (exigido pelo browser)
+(function kioskSetup(){
+  Kiosk.init({
+    fullscreen:  true,
+    blockKeys:   true,
+    heartbeatId: 'totem-01',
+  });
+
+  // Botão de ativação kiosk no canto inferior direito
+  const btn=document.createElement('button');
+  btn.title='Ativar modo kiosk (tela cheia)';
+  btn.style.cssText='position:fixed;bottom:12px;right:12px;z-index:9000;background:rgba(21,101,192,.2);border:1px solid rgba(33,150,243,.3);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--text-sec);cursor:pointer;font-family:inherit;';
+  btn.textContent='[KIOSK]';
+  btn.addEventListener('click',()=>{
+    Kiosk.enterFullscreen();
+    btn.style.display='none';
+  });
+  document.body.appendChild(btn);
+})();
+
+// inicia
+preencherTipos();
+</script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Telão | Sistema de Fila</title>
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  overflow:hidden;
+  background:#f8fafc;
+  color:#1e293b;
+  font-family:'Inter','Plus Jakarta Sans',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.telao-root{
+  position:fixed;inset:0;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  background:#f8fafc;
+}
+
+/* ── HEADER ── */
+.tel-header{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:16px 40px;
+  border-bottom:1px solid #e2e8f0;
+  background:#ffffff;
+  z-index:10;
+}
+.tel-logo-wrap{display:flex;align-items:center;gap:14px;}
+.tel-logo-wrap img{height:48px;width:auto;}
+.tel-logo-text{
+  display:flex;flex-direction:column;
+  font-size:15px;font-weight:800;line-height:1.25;
+  color:#1e293b;
+}
+.tel-logo-text small{font-size:11px;font-weight:500;color:#64748b;letter-spacing:.3px;}
+
+.tel-clock-wrap{text-align:center;}
+.tel-date{font-size:11px;color:#94a3b8;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:2px;}
+.tel-clock{
+  font-size:48px;font-weight:900;
+  color:#1565c0;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-2px;
+  line-height:1;
+}
+
+.tel-stats{
+  display:flex;flex-direction:column;align-items:flex-end;gap:1px;
+}
+.tel-stat-val{font-size:32px;font-weight:900;color:#1565c0;line-height:1;}
+.tel-stat-label{font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+
+/* ── BODY ── */
+.tel-body{
+  display:grid;
+  grid-template-columns:1.6fr 1fr;
+  overflow:hidden;
+}
+
+/* ── CHAMADA ATUAL ── */
+.tel-chamada{
+  padding:36px 48px;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  border-right:1px solid #e2e8f0;
+  background:#ffffff;
+  gap:0;
+}
+.tel-chamada-estado{
+  font-size:10px;font-weight:800;letter-spacing:3px;
+  color:#94a3b8;text-transform:uppercase;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.pulse-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;
+  flex-shrink:0;
+  animation:pulseClean 2s infinite;
+}
+@keyframes pulseClean{
+  0%,100%{opacity:1;}
+  50%{opacity:.4;}
+}
+
+.tel-senha-display{
+  font-size:140px;font-weight:900;line-height:.95;
+  color:#1565c0;
+  letter-spacing:-5px;
+  transition:opacity .2s;
+}
+.tel-senha-display.pop{
+  animation:telPop .4s cubic-bezier(.175,.885,.32,1.275) both;
+}
+@keyframes telPop{
+  0%{transform:scale(.9);opacity:0;}
+  60%{transform:scale(1.02);}
+  100%{transform:scale(1);opacity:1;}
+}
+
+.tel-paciente{
+  font-size:28px;font-weight:600;
+  color:#334155;
+  margin-top:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tel-prior-tag{
+  display:inline-flex;align-items:center;
+  background:#fef3c7;
+  color:#92400e;
+  border:1px solid #fbbf24;
+  border-radius:6px;
+  padding:6px 16px;
+  font-size:12px;font-weight:800;
+  letter-spacing:1px;
+  margin-top:14px;
+  width:fit-content;
+}
+.tel-chips-row{
+  display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;
+}
+.tel-chip{
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:10px 16px;
+}
+.tel-chip-label{font-size:10px;color:#94a3b8;letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px;}
+.tel-chip-val{font-size:15px;font-weight:700;color:#1e293b;}
+
+.tel-anteriores-wrap{
+  margin-top:auto;
+  padding-top:20px;
+  border-top:1px solid #e2e8f0;
+}
+.tel-ant-label{font-size:10px;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.tel-ant-list{display:flex;gap:6px;flex-wrap:wrap;}
+.tel-ant-list .badge-ant{
+  background:#e0f2fe;
+  color:#1565c0;
+  border:1px solid #bae6fd;
+  border-radius:999px;
+  padding:3px 12px;
+  font-size:12px;font-weight:700;
+}
+
+/* ── FILA LATERAL ── */
+.tel-fila-panel{
+  display:flex;flex-direction:column;
+  padding:20px;
+  gap:8px;
+  overflow-y:auto;
+  background:#f8fafc;
+}
+.tel-fila-header{
+  font-size:10px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:#94a3b8;
+  padding-bottom:12px;
+  border-bottom:1px solid #e2e8f0;
+  margin-bottom:4px;
+}
+.tel-fila-card{
+  display:flex;align-items:center;gap:12px;
+  background:#ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:12px 14px;
+  transition:.2s;
+}
+.tel-fila-card.is-next{
+  border-color:#1565c0;
+  border-left:3px solid #1565c0;
+}
+.tel-fila-card.is-prior{
+  border-left:3px solid #f59e0b;
+}
+.tel-fila-pos{
+  font-size:11px;font-weight:700;color:#cbd5e1;
+  min-width:18px;text-align:center;
+}
+.tel-fila-pos.next-pos{color:#1565c0;font-weight:900;}
+.tel-fila-senha-num{
+  font-size:22px;font-weight:900;
+  color:#1565c0;
+  min-width:80px;
+  letter-spacing:-1px;
+}
+.tel-fila-info{flex:1;min-width:0;}
+.tel-fila-nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1e293b;}
+.tel-fila-tipo{font-size:11px;color:#94a3b8;margin-top:1px;}
+.tel-fila-prior-badge{
+  background:#fef3c7;
+  border:1px solid #fbbf24;
+  color:#92400e;
+  font-size:9px;font-weight:800;
+  padding:2px 8px;border-radius:999px;
+  letter-spacing:.5px;
+  flex-shrink:0;
+}
+
+/* ── TICKER ── */
+.tel-ticker{
+  background:#1e293b;
+  border-top:1px solid #334155;
+  padding:10px 0;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.tel-ticker-text{
+  display:inline-block;
+  animation:tickerScroll 35s linear infinite;
+  font-size:12px;font-weight:600;
+  color:#94a3b8;
+  letter-spacing:.3px;
+  padding-left:100%;
+}
+
+@keyframes tickerScroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+</style>
+</head>
+<body>
+<div class="telao-root">
+
+<!-- ── HEADER ── -->
+<header class="tel-header">
+  <div class="tel-logo-wrap">
+    <img src="img/logo.svg" alt="Logo" onerror="this.style.display='none'"/>
+    <div class="tel-logo-text">
+      Ass. Zequinha Araújo
+      <small>Sistema de Fila</small>
+    </div>
+  </div>
+
+  <div class="tel-clock-wrap">
+    <div class="tel-date" id="tel-date">--/--/----</div>
+    <div class="tel-clock" id="telao-clock">00:00:00</div>
+  </div>
+
+  <div class="tel-stats">
+    <div class="tel-stat-val" id="tel-count">0</div>
+    <div class="tel-stat-label">Senhas hoje</div>
+  </div>
+</header>
+
+<!-- ── BODY ── -->
+<div class="tel-body">
+
+  <!-- CHAMADA ATUAL -->
+  <div class="tel-chamada">
+    <div class="tel-chamada-estado">
+      <span class="pulse-dot"></span>
+      <span id="tel-estado-label">Aguardando próxima chamada...</span>
+    </div>
+
+    <div id="tel-senha" class="tel-senha-display">---</div>
+
+    <div id="tel-nome" class="tel-paciente">—</div>
+
+    <div id="tel-prior-banner" class="tel-prior-tag hidden">
+      ATENDIMENTO PRIORITARIO
+    </div>
+
+    <div class="tel-chips-row" id="tel-chips"></div>
+
+    <div class="tel-anteriores-wrap">
+      <div class="tel-ant-label">Chamadas anteriores</div>
+      <div class="tel-ant-list" id="tel-anteriores"></div>
+    </div>
+  </div>
+
+  <!-- FILA LATERAL -->
+  <div class="tel-fila-panel">
+    <div class="tel-fila-header">Próximas na fila</div>
+    <div id="tel-fila-container">
+      <div class="tel-fila-card" style="justify-content:center;color:var(--text-sec);font-size:13px;">
+        Fila vazia
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── TICKER ── -->
+<div class="tel-ticker">
+  <span class="tel-ticker-text" id="ticker-msg">
+    Bem-vindo à Associação Zequinha Araújo &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Acompanhe sua senha no painel &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Atendimento com qualidade e respeito &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Portadores de necessidades especiais, idosos e gestantes têm prioridade &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Bem-vindo à Associação Zequinha Araújo &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Acompanhe sua senha no painel &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Atendimento com qualidade e respeito &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+    Portadores de necessidades especiais, idosos e gestantes têm prioridade
+  </span>
+</div>
+
+</div><!-- /telao-root -->
+
+<script src="js/sync.js"></script>
+<script src="js/kiosk.js"></script>
+<script src="js/app.js"></script>
+<script>
+// ── Relógio ──
+function tick(){
+  const n=new Date();
+  document.getElementById('telao-clock').textContent=n.toLocaleTimeString('pt-BR');
+  document.getElementById('tel-date').textContent=n.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase();
+}
+setInterval(tick,1000);tick();
+
+// Heartbeat do telão (monitorado pelo admin)
+Kiosk.startHeartbeat('telao-01');
+
+// ── Atualizar telão ──
+let ultimaChamada=null;
+
+function atualizarTelao(){
+  const chamada=App.getChamadaAtual();
+  const fila=App.getFila().filter(f=>f.status==='esperando');
+  document.getElementById('tel-count').textContent=App.getTotalHoje();
+
+  if(chamada&&(!ultimaChamada||ultimaChamada.senha!==chamada.senha)){
+    ultimaChamada=chamada;
+    mostrarChamada(chamada);
+    playBeep();
+  }
+  renderFilaTelao(fila);
+}
+
+// Atualização instantânea via BroadcastChannel quando admin chamar senha
+SyncBus.on(SyncBus.MSG.SENHA_CHAMADA, chamada=>{
+  if(!ultimaChamada||ultimaChamada.senha!==chamada.senha){
+    ultimaChamada=chamada;
+    mostrarChamada(chamada);
+    playBeep();
+    document.getElementById('tel-count').textContent=App.getTotalHoje();
+  }
+});
+SyncBus.on(SyncBus.MSG.FILA_MUDOU, ()=>{
+  const fila=App.getFila().filter(f=>f.status==='esperando');
+  renderFilaTelao(fila);
+  document.getElementById('tel-count').textContent=App.getTotalHoje();
+});
+
+function mostrarChamada(c){
+  const el=document.getElementById('tel-senha');
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  el.textContent=c.senha;
+
+  document.getElementById('tel-nome').textContent=c.nome||'—';
+  document.getElementById('tel-estado-label').textContent='SENHA CHAMADA';
+
+  const prior=document.getElementById('tel-prior-banner');
+  c.prioritario?prior.classList.remove('hidden'):prior.classList.add('hidden');
+
+  const chips=[];
+  if(c.sala)        chips.push({label:'Sala',val:c.sala});
+  if(c.medico)      chips.push({label:'Médico',val:c.medico});
+  if(c.tipo)        chips.push({label:'Tipo',val:c.tipo});
+  if(c.procedimento)chips.push({label:'Procedimento',val:c.procedimento});
+
+  document.getElementById('tel-chips').innerHTML=chips.map(ch=>`
+    <div class="tel-chip">
+      <div class="tel-chip-label">${ch.label}</div>
+      <div class="tel-chip-val">${ch.val}</div>
+    </div>
+  `).join('');
+
+  const ant=document.getElementById('tel-anteriores');
+  const badge=document.createElement('span');
+  badge.className='badge-ant';
+  badge.textContent=c.senha;
+  if(ant.children.length>=6) ant.removeChild(ant.lastChild);
+  ant.insertBefore(badge,ant.firstChild);
+}
+
+function renderFilaTelao(fila){
+  const cont=document.getElementById('tel-fila-container');
+  if(!fila.length){
+    cont.innerHTML='<div class="tel-fila-card" style="justify-content:center;color:#94a3b8;font-size:13px;">Fila vazia</div>';
+    return;
+  }
+  const sorted=[...fila].sort((a,b)=>{
+    if(a.prioritario&&!b.prioritario)return -1;
+    if(!a.prioritario&&b.prioritario)return 1;
+    return a.emitida-b.emitida;
+  }).slice(0,10);
+
+  cont.innerHTML=sorted.map((s,i)=>`
+    <div class="tel-fila-card ${i===0?'is-next':''} ${s.prioritario?'is-prior':''}">
+      <div class="tel-fila-pos ${i===0?'next-pos':''}">${i===0?'▶':i+1}</div>
+      <div class="tel-fila-senha-num">${s.senha}</div>
+      <div class="tel-fila-info">
+        <div class="tel-fila-nm">${s.nome}</div>
+        <div class="tel-fila-tipo">${s.tipo}</div>
+      </div>
+      ${s.prioritario?'<div class="tel-fila-prior-badge">PRIOR</div>':''}
+    </div>
+  `).join('');
+}
+
+// ── Beep ──
+function playBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [0,320,640].forEach(d=>{
+      setTimeout(()=>{
+        const o=ctx.createOscillator();
+        const g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=880;o.type='sine';
+        g.gain.setValueAtTime(.45,ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.3);
+        o.start();o.stop(ctx.currentTime+.3);
+      },d);
+    });
+  }catch(e){}
+}
+
+// Demo banner
+(function demoBar(){
+  const bar=document.createElement('div');
+  bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(245,197,24,.13);border-bottom:1px solid var(--yellow);padding:4px 16px;text-align:right;font-size:10px;font-weight:700;color:var(--yellow);letter-spacing:.5px;pointer-events:none;';
+  bar.textContent='DEMONSTRACAO — Modelo de telão';
+  document.body.appendChild(bar);
+})();
+
+setInterval(atualizarTelao,1500);
+atualizarTelao();
+</script>
+</body>
+</html>
