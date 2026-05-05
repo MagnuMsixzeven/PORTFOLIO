@@ -1594,15 +1594,29 @@ nav a:hover::after { width: 100%; }
 
   .hero-right { order: -1; }
 
-  .mockup-card {
-    transform: perspective(800px) rotateY(-8deg) rotateX(2deg);
-    animation: mockupFloatSm 7s ease-in-out infinite;
+  .mockup-wrap {
+    overflow: visible;
+    padding-right: 0;
   }
 
-  @keyframes mockupFloatSm {
-    0%,100% { transform: perspective(800px) rotateY(-8deg) rotateX(2deg) translateY(0px); }
-    50%      { transform: perspective(800px) rotateY(-8deg) rotateX(2deg) translateY(-8px); }
+  .mockup-card {
+    transform: none;
+    animation: none;
   }
+
+  .nav-arrows {
+    position: static;
+    transform: none;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .nav-btn {
+    width: 32px; height: 32px;
+  }
+  .nav-btn svg { width: 12px; height: 12px; }
+
+  .phone-outer { display: none; }
 
   .hero-title { font-size: 2.2rem; }
   .hero-text { gap: 1.1rem; }
@@ -1811,7 +1825,7 @@ nav a:hover::after { width: 100%; }
     </div>
   </div>
 
-  <div class="scroll-hint">
+  <div class="scroll-hint" style="display:none">
     <div class="scroll-line"></div>
     <span>scroll to explore</span>
   </div>
