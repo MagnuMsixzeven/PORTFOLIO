@@ -9,3 +9,15 @@ Desktop.ini
 *.tmp
 *.log
 
+# Fotos pessoais
+*.jpeg
+*.jpg
+*.png
+*.webp
+
+# Scripts utilitários locais
+capturar_screenshots.py
+
+# Screenshots geradas localmente
+screenshots/
+
