@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dra. Clara Lima | Nutricionista</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rosa: #d8248f;
+      --roxo: #6f25b8;
+      --roxo-claro: #bba8e1;
+      --laranja: #fe9e36;
+      --roxo-bg: #f2ebfa;
+      --fundo-claro: #faf7fc;
+      --cinza-card: #f4f0fb;
+      --sombra-card: 0 7px 30px rgba(130, 100, 180, 0.09);
+      --transicao: .23s cubic-bezier(.77,0,.18,1);
+    }
+    html, body { margin:0; padding:0; background:var(--fundo-claro); }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #251b32;
+      min-height:100vh;
+    }
+
+    main {
+      max-width:1120px;
+      margin:0 auto;
+      padding: 0 1.2rem 48px 1.2rem;
+      background: transparent;
+    }
+
+    /* HUB PRINCIPAL */
+    .hero-section {
+      display: flex;
+      flex-wrap:wrap;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 460px;
+      gap:3vw;
+      padding: 3.8vw 1.6vw 2.5vw 1.6vw;
+      background: linear-gradient(120deg, #f4eafd 65%, #fbeffa 100%);
+      border-radius: 0 0 3.5rem 3.5rem;
+      box-shadow: 0 6px 36px #dcbed9aa;
+      margin-bottom:3.5rem;
+      margin-top: 0.6rem;
+    }
+    .hero-title {
+      font-family: 'Dancing Script', cursive;
+      color: var(--roxo);
+      font-size: 2.7rem;
+      margin-bottom: .45rem;
+      margin-top:0px;
+      line-height:1;
+    }
+    .hero-subtitle {
+      font-weight:700;
+      color: var(--rosa);
+      font-size:1.09rem;
+      margin-bottom:0.2rem;
+    }
+    .hero-specialty {
+      font-size: 1.15rem;
+      color:#443063;
+      margin-bottom: 0.7rem;
+    }
+    .highlight-rosa { color: var(--rosa); font-weight: 700;}
+    .highlight-roxo { color: var(--roxo); font-weight: 700;}
+    .hero-content {
+      flex:2.5;
+      min-width:270px;
+      text-align:left;
+      max-width:540px;
+      padding-left: 1.2rem;
+    }
+    .hero-image-area {
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width:240px;
+      position:relative;
+    }
+    .hero-img-bg {
+      position: absolute;
+      top: -36px; right: -37px;
+      width: 280px; height: 340px;
+      background: radial-gradient(circle at 70% 30%, var(--roxo-claro) 62%, transparent 80%);
+      border-radius: 43% 60% 53% 47% / 41% 61% 55% 54%;
+      z-index: 1;
+      filter: blur(1.3px);
+      opacity:0.32;
+    }
+    .hero-img {
+      width: 210px; height: 270px;
+      object-fit: cover;
+      border-radius: 50% 60% 54% 52%/60% 51% 65% 59%;
+      box-shadow: 0 12px 48px #c5b2e4b0;
+      border: 8px solid var(--roxo-claro);
+      background: #eee;
+      z-index: 2;
+      position:relative;
+    }
+
+    /* SEPARADOR ESTILIZADO */
+    .catalog-divisor {
+      width:85%;
+      margin: 0 auto 2.3rem auto;
+      border: none;
+      border-top: 3px solid #e5dcfa;
+      opacity: 1;
+      border-radius: 999px;
+      position: relative;
+      height: 1rem;
+      background: none;
+      z-index:9;
+    }
+    .catalog-label {
+      position: relative;
+      top: -2.1em;
+      background: #fff;
+      display: inline-block;
+      padding: 0.2em 1.2em;
+      border-radius: 999px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: var(--roxo);
+      font-size: 1.05rem;
+      box-shadow: 0 2px 12px #eddbff19;
+      letter-spacing:.07em;
+      border: 2px solid #f2ebfa;
+      z-index:10;
+    }
+
+    /* ÁREAS DE ATUAÇÃO */
+    .areas-section {
+      background:linear-gradient(100deg,#faf7fc 60%, #f1e6fb 100%);
+      padding:1.4rem 1rem 2.3rem 1rem;
+      border-radius:2rem;
+      margin-bottom:3rem;
+      box-shadow: 0 4px 22px #f0e6fb36;
+      max-width:900px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .areas-title {
+      font-family:'Dancing Script',cursive;
+      color:var(--roxo);
+      font-size:1.65rem;
+      margin-bottom:.7rem;
+      margin-top:0;
+      text-align:left;
+    }
+    .areas-bar {
+      width:80px;
+      border:0;
+      border-top:3px solid var(--rosa);
+      opacity:.06;
+      margin-left:0;
+      margin-bottom:1.3rem;
+    }
+    .areas-grid {
+      display: grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+      gap: 1.2rem;
+      margin-bottom:.7rem;
+    }
+    .area-card {
+      background: var(--cinza-card);
+      border-radius:1.15rem;
+      box-shadow: var(--sombra-card);
+      padding: 1.22rem 1rem 1rem 1rem;
+      font-size:1.01rem;
+      color: #291c30;
+      border:1.5px solid #ede1fa;
+      transition: box-shadow .17s;
+      min-height: 130px;
+      display: flex; flex-direction: column; justify-content: flex-start;
+    }
+    .area-card strong {color:var(--roxo); font-weight:700;}
+    .areas-section {font-size:1.08rem;}
+
+    /* MODALIDADES E VALORES */
+    .valores-section {
+      background:#f7f2fd;
+      border-radius:2.2rem;
+      box-shadow: var(--sombra-card);
+      max-width:1040px;
+      margin:0 auto 2.5rem auto;
+      padding:1.5rem 1rem 2.2rem 1rem;
+      position:relative;
+    }
+    .valores-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.82rem;
+      color: var(--roxo);
+      margin-bottom: .3rem;
+      text-align:center;
+      margin-top:0;
+    }
+    .valores-bar {
+      width:60px;
+      border:0;
+      border-top: 2.2px solid #ebcdfc;
+      margin:0.7rem auto 1.2rem auto;
+      opacity:.5;
+    }
+    .valores-desc {
+      text-align:center;
+      color: #856ca8;
+      margin-bottom:1.8rem;
+      font-size:1.03rem;
+    }
+    .valores-cards {
+      display: flex;
+      justify-content: center; 
+      gap: 1.4rem;
+      margin-bottom: 1.4rem;
+      z-index:2;
+      position:relative;
+    }
+    .valor-card {
+      min-width:230px;
+      max-width:265px;
+      background: #fff;
+      border-radius:1.25rem;
+      border:2px solid #e7def9;
+      padding:1.18rem 1.13rem .97rem 1.13rem;
+      text-align:center;
+      font-size:1.11rem;
+      box-shadow:0 3px 18px 0 #eddbff37;
+      display: flex;
+      flex-direction: column;
+      gap: .1em;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      letter-spacing: .01em;
+      cursor: pointer;
+      transition: 
+        border-color var(--transicao),
+        box-shadow var(--transicao),
+        transform var(--transicao);
+      margin-bottom:0.3rem;
+    }
+    .valor-adulto:hover { border-color: var(--roxo);}
+    .valor-materno:hover { border-color: var(--rosa);}
+    .valor-tea:hover { border-color: var(--laranja);}
+    .valor-terapia:hover { border-color: var(--roxo);}
+    .valor-card:hover {
+      box-shadow: 0 9px 34px -6px #ac7bea68;
+      transform: translateY(-3px) scale(1.04);
+    }
+    .valor-card .tipo {
+      font-weight: 700;
+      font-size:1.12rem;
+      margin-bottom:0.2rem;
+      color:var(--roxo);
+    }
+    .valor-card.valor-materno .tipo { color: var(--rosa);}
+    .valor-card.valor-tea .tipo { color:var(--laranja);}
+    .valor-card.valor-terapia .tipo { color:var(--roxo);}
+    .valor-card .valor {
+      font-size: 1.32rem;
+      font-weight:bold;
+      margin-bottom: .13rem;
+      margin-top:.25rem;
+    }
+    .valor-card.valor-adulto .valor { color: var(--roxo);}
+    .valor-card.valor-materno .valor { color: var(--rosa);}
+    .valor-card.valor-tea .valor { color: var(--laranja);}
+    .valor-card.valor-terapia .valor { color: var(--roxo);}
+    .valor-card .descricao {
+      font-size:0.96rem;
+      color: #8878a2;
+      font-weight:500;
+      margin-top:.18rem;
+    }
+
+    /* CAIXA WHATSAPP */
+    .cta-section {
+      background: linear-gradient(97deg,#fdedf9 60%,#f7ecfb 100%);
+      border:1.9px solid #f1d8fd;
+      box-shadow: 0 1px 15px #e8c8f342;
+      border-radius:1.1rem;
+      padding:1.1rem 1rem 1.17rem 1rem;
+      max-width:520px;
+      margin:2.4rem auto 1.7rem auto;
+      text-align:left;
+    }
+    .cta-section .cta-title {
+      font-weight:700;
+      font-size:1.15rem;
+      color:#821864;
+      margin-bottom:0.38rem;
+      margin-top:0;
+    }
+    .cta-section .cta-desc {
+      font-size:0.97rem;
+      color:#5f4772;
+      margin-bottom:1rem;
+    }
+    .cta-whatsapp {
+      background: linear-gradient(89deg, #d8248f 60%, #fcae3e 100%);
+      color:#fff;
+      font-weight:700;
+      font-size:1rem;
+      padding:0.79em 1.28em;
+      border:none;
+      border-radius:100px;
+      cursor:pointer;
+      box-shadow:0 5px 13px #e7b5cc40, 0 1px 9px #f3d4b852;
+      transition: background .17s, transform .17s, box-shadow .17s;
+      display:inline-block;
+      text-decoration:none;
+    }
+    .cta-whatsapp:hover {
+      background: linear-gradient(93deg, #fcae3e 12%, #d8248f 100%);
+      transform: scale(1.04) translateY(-2px);
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 2.8rem;
+      font-size: 0.97rem;
+      color: #655276;
+      text-align:center;
+      background: transparent;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 900px) {
+      .hero-section, .perfil-section, .tea-section { flex-direction: column; gap:1.3rem;}
+      .hero-img, .perfil-img {width: 155px; height: 155px;}
+      .hero-content, .perfil-content {padding-left:0;margin-left:0;}
+      .hero-image-area, .perfil-img-area {margin-top:1rem;}
+      .areas-grid { grid-template-columns: 1fr; }
+      .valores-cards { flex-direction:column; align-items:center;}
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- HUB PRINCIPAL -->
+    <section class="hero-section" id="hub">
+      <div class="hero-content">
+        <h1 class="hero-title">Dra. Clara Lima</h1>
+        <div class="hero-subtitle">Nutricionista | CRN 6570 - Região 7</div>
+        <div class="hero-specialty">
+          Especialista em <span class="highlight-rosa">Nutrição Funcional</span> e
+          <span class="highlight-roxo">Comportamental</span>
+        </div>
+      </div>
+      <div class="hero-image-area">
+        <div class="hero-img-bg"></div>
+        <img class="hero-img" src="Clara.jpg" alt="Dra. Clara Lima - Nutricionista"/>
+      </div>
+    </section>
+    <hr class="catalog-divisor"><span class="catalog-label">PERFIL & ABORDAGEM</span>
+    <!-- Áreas de atuação/Perfil -->
+    <section class="areas-section">
+      <h2 class="areas-title">Áreas de Atuação</h2>
+      <hr class="areas-bar">
+      <div class="areas-grid">
+        <div class="area-card"><strong>Nutrição para Adultos </strong><br>Acompanhamento nutricional focado em saúde metabólica, equilíbrio intestinal, melhora da relação com a alimentação e prevenção de doenças.</div>
+        <div class="area-card"><strong>Nutrição Materno-Infantil </strong><br>Acompanhamento nutricional da gestante, puérpera, lactante e bebê, com orientação desde a amamentação até a introdução alimentar.</div>
+        <div class="area-card"><strong>TEA e Seletividade Alimentar </strong><br>Atendimento especializado para crianças com Transtorno do Espectro Autista e dificuldades alimentares, com estratégias baseadas em terapia alimentar.</div>
+        <div class="area-card"><strong>Terapia Alimentar </strong><br>Intervenção estruturada para ampliar repertório alimentar, reduzir recusa alimentar e melhorar a relação da criança com os alimentos.</div>
+        <div class="area-card"><strong>Eixo Cérebro/Intestino </strong><br>Abordagem nutricional focada na modulação intestinal e sua relação com comportamento, humor, imunidade e cognição.</div>
+        <div class="area-card"><strong>Distúrbios Alimentares </strong><br>Acompanhamento nutricional em casos de relação disfuncional com a alimentação, com abordagem acolhedora e multidisciplinar.</div>
+      </div>
+    </section>
+    <hr class="catalog-divisor"><span class="catalog-label">MODALIDADES E VALORES</span>
+    <section class="valores-section" id="valores">
+      <h2 class="valores-title">Modalidades e Valores</h2>
+      <hr class="valores-bar"/>
+      <p class="valores-desc">Transparência em cada etapa do cuidado</p>
+      <div class="valores-cards">
+        <div class="valor-card valor-adulto">
+          <div class="tipo">Consulta Adulto</div>
+          <div class="valor">R$ 300,00</div>
+          <div class="descricao">Avaliação completa + plano</div>
+        </div>
+        <div class="valor-card valor-materno">
+          <div class="tipo">Materno-Infantil</div>
+          <div class="valor">R$ 350,00</div>
+          <div class="descricao">Acompanhamento do desenvolvimento</div>
+        </div>
+        <div class="valor-card valor-tea">
+          <div class="tipo">TEA/Seletividade</div>
+          <div class="valor">R$ 500,00</div>
+          <div class="descricao">Avaliação detalhada + início de intervenção</div>
+        </div>
+        <div class="valor-card valor-terapia">
+          <div class="tipo">Terapia Alimentar</div>
+          <div class="valor">R$ 300,00<span style="font-size:0.9em;">/Sessão</span></div>
+          <div class="descricao">Sessões de ampliação de repertório</div>
+        </div>
+      </div>
+      <!-- CAIXA WHATSAPP -->
+      <div class="cta-section">
+        <div class="cta-title">
+          Pronto para iniciar uma transformação real na sua relação com a alimentação?
+        </div>
+        <div class="cta-desc">
+          Agende sua consulta e receba um plano estruturado com foco em resultados sustentáveis.
+        </div>
+        <a class="cta-whatsapp" target="_blank" href="https://wa.me/5569992510150">Agendar via WhatsApp</a>
+      </div>
+    </section>
+    <footer class="footer">
+      Instagram: @nutri.claralima &nbsp;&nbsp;|&nbsp;&nbsp;
+      Email: descomplica.donanutri@gmail.com &nbsp;&nbsp;|&nbsp;&nbsp;
+    </footer>
+  </main>
+</body>
+</html>

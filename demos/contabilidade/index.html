@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ferreira & Associados | Escritório de Contabilidade</title>
+  <meta name="description" content="Escritório contábil especializado em empresas de todos os portes."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold:   #d4a843;
+      --gold-l: #f0c75e;
+      --gold-d: #a8832e;
+      --bg:     #0a0a0a;
+      --bg2:    #111111;
+      --card:   #161616;
+      --border: rgba(255,255,255,.07);
+      --border-gold: rgba(212,168,67,.22);
+      --text:   #f0f0f0;
+      --muted:  #888;
+      --dim:    #555;
+      --trans:  .25s ease;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Inter',system-ui,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:900;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 1rem 6vw;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family:'Playfair Display',serif;
+      font-size:1.2rem;
+      color:#fff;
+      letter-spacing:.01em;
+    }
+    .nav-logo em { font-style:normal; color:var(--gold); }
+    .nav-links { display:flex; gap:2.2rem; list-style:none; }
+    .nav-links a {
+      color:var(--muted);
+      text-decoration:none;
+      font-size:.83rem;
+      font-weight:500;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      transition:color var(--trans);
+    }
+    .nav-links a:hover { color:#fff; }
+    .nav-cta {
+      background: var(--gold);
+      color:#0a0a0a;
+      border:none;
+      padding:.5rem 1.2rem;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.03em;
+      cursor:pointer;
+      text-decoration:none;
+      transition:background var(--trans);
+    }
+    .nav-cta:hover { background:var(--gold-l); }
+    @media(max-width:768px){ .nav-links { display:none; } }
+
+    /* ── HERO ── */
+    .hero {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      padding: 8rem 6vw 6rem 6vw;
+      border-bottom:1px solid var(--border);
+    }
+    .hero-inner { max-width:700px; }
+    .hero-eyebrow {
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--gold);
+      margin-bottom:1.8rem;
+    }
+    .hero-title {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight:800;
+      line-height:1.06;
+      color:#fff;
+      margin-bottom:1.6rem;
+    }
+    .hero-title em { font-style:italic; color:var(--gold); }
+    .hero-sub {
+      font-size:1.05rem;
+      color:var(--muted);
+      line-height:1.8;
+      max-width:520px;
+      margin-bottom:2.8rem;
+    }
+    .hero-btns { display:flex; gap:.8rem; flex-wrap:wrap; }
+    .btn-solid {
+      background:var(--gold);
+      color:#0a0a0a;
+      font-weight:700;
+      font-size:.9rem;
+      letter-spacing:.03em;
+      padding:.75rem 1.8rem;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      transition:background var(--trans);
+    }
+    .btn-solid:hover { background:var(--gold-l); }
+    .btn-line {
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--border);
+      font-weight:500;
+      font-size:.9rem;
+      padding:.75rem 1.8rem;
+      text-decoration:none;
+      cursor:pointer;
+      transition:border-color var(--trans), color var(--trans);
+    }
+    .btn-line:hover { border-color:var(--gold); color:var(--gold); }
+    .hero-stats {
+      display:flex; gap:3rem; flex-wrap:wrap;
+      margin-top:4rem;
+      padding-top:3rem;
+      border-top:1px solid var(--border);
+    }
+    .stat-n {
+      font-family:'Playfair Display',serif;
+      font-size:2.6rem;
+      font-weight:800;
+      color:var(--gold);
+      line-height:1;
+    }
+    .stat-l {
+      font-size:.78rem;
+      color:var(--dim);
+      margin-top:.35rem;
+      font-weight:500;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    /* ── SHARED ── */
+    section { padding: 6rem 6vw; }
+    .s-inner { max-width:1160px; margin:0 auto; }
+    .s-eyebrow {
+      font-size:.7rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--gold);
+      margin-bottom:.9rem;
+    }
+    .s-title {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight:800;
+      color:#fff;
+      line-height:1.15;
+      margin-bottom:1rem;
+    }
+    .s-sub {
+      color:var(--muted);
+      font-size:.97rem;
+      line-height:1.8;
+      max-width:560px;
+    }
+    .divider {
+      width:40px;
+      height:2px;
+      background:var(--gold);
+      margin:1.4rem 0 2.8rem 0;
+    }
+
+    /* ── SOBRE ── */
+    #sobre { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .sobre-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6rem;
+      align-items:start;
+      margin-top:3.5rem;
+    }
+    @media(max-width:860px){ .sobre-grid { grid-template-columns:1fr; gap:3rem; } }
+    .sobre-visual { position:relative; }
+    .sobre-box {
+      width:100%; aspect-ratio:4/3;
+      background:var(--card);
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .sobre-box img {
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      filter:brightness(.88) saturate(.85);
+    }
+    .sobre-accent {
+      position:absolute;
+      bottom:-1px; left:-1px;
+      width:80px; height:2px;
+      background:var(--gold);
+    }
+    .sobre-text p {
+      color:var(--muted);
+      line-height:1.9;
+      margin-bottom:1rem;
+      font-size:.95rem;
+    }
+    .tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.8rem; }
+    .tag {
+      border:1px solid var(--border-gold);
+      color:var(--gold);
+      font-size:.73rem;
+      font-weight:600;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      padding:.3rem .85rem;
+    }
+
+    /* ── SERVIÇOS ── */
+    #servicos { background:var(--bg); }
+    .servicos-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+      gap:1px;
+      background:var(--border);
+      border:1px solid var(--border);
+      margin-top:3.5rem;
+    }
+    .svc-card {
+      background:var(--bg);
+      padding:2.2rem 2rem;
+      transition:background var(--trans);
+    }
+    .svc-card:hover { background:var(--card); }
+    .svc-num {
+      font-size:.7rem;
+      font-weight:700;
+      letter-spacing:.15em;
+      color:var(--gold);
+      margin-bottom:1.2rem;
+    }
+    .svc-card h3 { font-size:1rem; font-weight:700; color:#fff; margin-bottom:.65rem; }
+    .svc-card p { font-size:.85rem; color:var(--muted); line-height:1.7; }
+
+    /* ── DIFERENCIAIS ── */
+    #diferenciais { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .dif-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap:2.5rem;
+      margin-top:3.5rem;
+    }
+    .dif-n {
+      font-family:'Playfair Display',serif;
+      font-size:3rem;
+      font-weight:800;
+      color:var(--gold);
+      opacity:.5;
+      line-height:1;
+      margin-bottom:.8rem;
+    }
+    .dif-item h4 { font-size:.95rem; font-weight:700; color:#fff; margin-bottom:.5rem; }
+    .dif-item p { font-size:.85rem; color:var(--muted); line-height:1.7; }
+
+    /* ── DEPOIMENTOS ── */
+    #depoimentos { background:var(--bg); }
+    .dep-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap:1px;
+      background:var(--border);
+      border:1px solid var(--border);
+      margin-top:3.5rem;
+    }
+    .dep-card {
+      background:var(--bg);
+      padding:2.2rem 2rem;
+      transition:background var(--trans);
+    }
+    .dep-card:hover { background:var(--card); }
+    .dep-stars { font-size:.8rem; color:var(--gold); letter-spacing:.1em; margin-bottom:1.2rem; }
+    .dep-text { color:#bbb; font-size:.9rem; line-height:1.85; margin-bottom:1.6rem; }
+    .dep-sep { width:24px; height:1px; background:var(--gold); margin-bottom:1rem; }
+    .dep-name { font-size:.85rem; font-weight:700; color:#fff; }
+    .dep-role { font-size:.76rem; color:var(--dim); margin-top:.2rem; }
+
+    /* ── CTA ── */
+    #contato { background:var(--bg2); border-top:1px solid var(--border); }
+    .cta-wrap { max-width:700px; }
+    .cta-btns { display:flex; gap:.8rem; flex-wrap:wrap; margin-top:2rem; }
+    .cta-meta {
+      margin-top:3rem;
+      padding-top:2rem;
+      border-top:1px solid var(--border);
+      display:flex; gap:3rem; flex-wrap:wrap;
+    }
+    .meta-item { font-size:.8rem; color:var(--dim); line-height:1.6; }
+    .meta-item strong { color:var(--muted); display:block; font-weight:600; }
+
+    /* ── FOOTER ── */
+    footer {
+      background:var(--bg);
+      border-top:1px solid var(--border);
+      padding:1.8rem 6vw;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
+    .footer-logo { font-family:'Playfair Display',serif; font-size:1rem; color:var(--gold); }
+    footer p { font-size:.76rem; color:var(--dim); }
+
+    /* ── WA FLOAT ── */
+    .wa {
+      position:fixed; bottom:1.6rem; right:1.6rem;
+      width:50px; height:50px;
+      background:#25d366;
+      display:flex; align-items:center; justify-content:center;
+      z-index:999; text-decoration:none;
+      transition:opacity var(--trans);
+    }
+    .wa:hover { opacity:.85; }
+    .wa svg { width:26px; height:26px; fill:#fff; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(20px); transition:opacity .55s ease,transform .55s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Ferreira <em>&</em> Associados</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#depoimentos">Depoimentos</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a href="https://wa.me/556900000000" class="nav-cta" target="_blank">Falar com contador</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow reveal">Escritório de Contabilidade · Fundado em 2010</p>
+    <h1 class="hero-title reveal">
+      Sua empresa<br>em dia,<br><em>sem complicação.</em>
+    </h1>
+    <p class="hero-sub reveal">
+      Cuidamos de toda a parte contábil, fiscal e trabalhista do seu negócio
+      para que você foque no que realmente importa: crescer.
+    </p>
+    <div class="hero-btns reveal">
+      <a href="#contato" class="btn-solid">Solicitar consultoria gratuita</a>
+      <a href="#servicos" class="btn-line">Ver serviços</a>
+    </div>
+    <div class="hero-stats">
+      <div class="reveal"><div class="stat-n">+400</div><div class="stat-l">Empresas atendidas</div></div>
+      <div class="reveal"><div class="stat-n">15+</div><div class="stat-l">Anos de experiência</div></div>
+      <div class="reveal"><div class="stat-n">98%</div><div class="stat-l">Satisfação</div></div>
+      <div class="reveal"><div class="stat-n">Zero</div><div class="stat-l">Multas aos clientes</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="s-inner">
+    <div class="sobre-grid">
+      <div class="sobre-visual reveal">
+        <div class="sobre-box">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80" alt="Escritório Ferreira & Associados"/>
+        </div>
+        <div class="sobre-accent"></div>
+      </div>
+      <div>
+        <p class="s-eyebrow reveal">Quem somos</p>
+        <h2 class="s-title reveal">Mais de 15 anos cuidando do que importa</h2>
+        <div class="divider reveal"></div>
+        <div class="sobre-text">
+          <p class="reveal">O escritório Ferreira & Associados nasceu da necessidade de oferecer serviços contábeis de alto padrão para empresas de todos os portes, com atendimento personalizado e linguagem acessível.</p>
+          <p class="reveal">Nossa equipe de contadores, especialistas fiscais e consultores trabalha de forma integrada para garantir que seu negócio esteja sempre regularizado, sem sustos no fim do mês.</p>
+        </div>
+        <div class="tags reveal">
+          <span class="tag">CRC Ativo</span>
+          <span class="tag">MEI · ME · EPP</span>
+          <span class="tag">Simples Nacional</span>
+          <span class="tag">Lucro Presumido</span>
+          <span class="tag">Lucro Real</span>
+          <span class="tag">Holding Familiar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="s-inner">
+    <p class="s-eyebrow reveal">O que fazemos</p>
+    <h2 class="s-title reveal">Serviços completos<br>para o seu negócio</h2>
+    <div class="divider reveal"></div>
+    <p class="s-sub reveal">Do MEI à empresa de médio porte — temos a solução certa para cada etapa da sua jornada.</p>
+    <div class="servicos-grid">
+      <div class="svc-card reveal"><div class="svc-num">01</div><h3>Contabilidade Geral</h3><p>Escrituração contábil completa, balanços patrimoniais, DRE e relatórios gerenciais mensais para tomada de decisão.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">02</div><h3>Departamento Fiscal</h3><p>Apuração de impostos, emissão de guias (DARF, GPS, DAS), SPED fiscal e acompanhamento das obrigações acessórias.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">03</div><h3>Departamento Pessoal</h3><p>Folha de pagamento, eSocial, FGTS, admissões, rescisões, férias e toda a burocracia trabalhista da sua equipe.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">04</div><h3>Abertura de Empresa</h3><p>Constituição de CNPJ, escolha de regime tributário ideal, alvará, inscrições estadual e municipal.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">05</div><h3>Planejamento Tributário</h3><p>Análise do melhor enquadramento fiscal para reduzir a carga tributária legal e proteger o patrimônio da empresa.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">06</div><h3>Consultoria Contábil</h3><p>Análise financeira, projeções, viabilidade de investimentos e suporte para decisões estratégicas do negócio.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section id="diferenciais">
+  <div class="s-inner">
+    <p class="s-eyebrow reveal">Por que nos escolher</p>
+    <h2 class="s-title reveal">Diferenciais que<br>fazem a diferença</h2>
+    <div class="divider reveal"></div>
+    <p class="s-sub reveal">Não somos apenas um escritório — somos parceiros no crescimento do seu negócio.</p>
+    <div class="dif-grid">
+      <div class="dif-item reveal"><div class="dif-n">01</div><h4>Atendimento Personalizado</h4><p>Cada cliente tem um contador dedicado. Você fala diretamente com quem cuida das suas contas, sem intermediários.</p></div>
+      <div class="dif-item reveal"><div class="dif-n">02</div><h4>Comunicação Transparente</h4><p>Relatórios mensais simples, linguagem acessível e disponibilidade via WhatsApp para tirar dúvidas rápidas.</p></div>
+      <div class="dif-item reveal"><div class="dif-n">03</div><h4>Tecnologia e Automação</h4><p>Sistema contábil moderno, envio de documentos digital e integração com as principais plataformas de emissão.</p></div>
+      <div class="dif-item reveal"><div class="dif-n">04</div><h4>Compliance Total</h4><p>Zero tolerância a atrasos. Todas as obrigações entregues no prazo — sem multas, sem surpresas no PGFN.</p></div>
+      <div class="dif-item reveal"><div class="dif-n">05</div><h4>Especialistas por Segmento</h4><p>Atendemos comércio, serviços, saúde, construção civil, e-commerce e prestadores autônomos com expertise específica.</p></div>
+      <div class="dif-item reveal"><div class="dif-n">06</div><h4>Preço Justo e Fixo</h4><p>Mensalidade previsível, sem cobranças surpresa. Planos acessíveis para MEI, ME e empresas de médio porte.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos">
+  <div class="s-inner">
+    <p class="s-eyebrow reveal">Clientes</p>
+    <h2 class="s-title reveal">O que dizem sobre nós</h2>
+    <div class="divider reveal"></div>
+    <div class="dep-grid">
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">"Antes eu passava noites preocupado com impostos. Hoje durmo tranquilo sabendo que tudo está em ordem. O escritório é de outra qualidade."</p>
+        <div class="dep-sep"></div>
+        <div class="dep-name">Ricardo Moura</div>
+        <div class="dep-role">Proprietário · Distribuidora de Alimentos</div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">"Migramos do Simples para o Lucro Presumido com a ajuda deles e economizamos mais de R$1.800/mês em impostos. Simplesmente transformador."</p>
+        <div class="dep-sep"></div>
+        <div class="dep-name">Ana Paula Souza</div>
+        <div class="dep-role">Sócia · Clínica Estética</div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">"Atendimento rápido, relatórios fáceis de entender e sempre disponíveis. Já indiquei para três amigos empresários e todos aprovaram."</p>
+        <div class="dep-sep"></div>
+        <div class="dep-name">Jonas Cavalcante</div>
+        <div class="dep-role">CEO · Construtora JC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="s-inner">
+    <div class="cta-wrap">
+      <p class="s-eyebrow reveal">Contato</p>
+      <h2 class="s-title reveal">Pronto para regularizar<br>sua empresa?</h2>
+      <div class="divider reveal"></div>
+      <p class="s-sub reveal">Agende uma consultoria gratuita. Em 30 minutos analisamos a situação do seu negócio e apresentamos o melhor caminho.</p>
+      <div class="cta-btns reveal">
+        <a href="https://wa.me/556900000000" class="btn-solid" target="_blank">Falar pelo WhatsApp</a>
+        <a href="mailto:contato@ferreiracontabil.com.br" class="btn-line" target="_blank">Enviar e-mail</a>
+      </div>
+      <div class="cta-meta">
+        <div class="meta-item reveal"><strong>Localização</strong>Rondônia · Presencial e remoto</div>
+        <div class="meta-item reveal"><strong>Horário</strong>Seg–Sex 8h–18h · Sáb 8h–12h</div>
+        <div class="meta-item reveal"><strong>Resposta</strong>Até 2 horas úteis</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Ferreira & Associados</div>
+  <p>© 2026 · Escritório de Contabilidade · CRC/RO 000000</p>
+  <p>Desenvolvido por <strong style="color:var(--gold)">magno.dev</strong></p>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/556900000000" class="wa" target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896.001-3.176-1.24-6.165-3.48-8.45zM12.045 21.785h-.005a10.023 10.023 0 01-5.09-1.388l-.366-.217-3.788.983 1.01-3.668-.239-.375a9.84 9.84 0 01-1.52-5.26c.003-5.45 4.46-9.884 9.943-9.884 2.654.001 5.15 1.031 7.022 2.902a9.847 9.847 0 012.909 7.012c-.003 5.453-4.461 9.893-9.876 9.893zm5.44-7.407c-.298-.149-1.765-.864-2.038-.962-.273-.1-.472-.149-.67.149-.199.297-.77.963-.944 1.161-.174.199-.347.224-.645.075-.298-.15-1.258-.461-2.396-1.47-.885-.786-1.483-1.756-1.657-2.053-.174-.298-.018-.458.13-.607.134-.133.298-.347.447-.521.15-.174.199-.298.299-.497.099-.198.05-.372-.025-.521-.075-.149-.67-1.612-.918-2.207-.241-.579-.486-.5-.67-.51l-.57-.01c-.198 0-.52.075-.792.372-.272.298-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+</a>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

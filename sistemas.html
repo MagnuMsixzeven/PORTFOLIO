@@ -1069,7 +1069,7 @@ footer {
 
   <div class="hero-stats reveal">
     <div class="hstat">
-      <div class="hstat-num">9</div>
+      <div class="hstat-num">10</div>
       <div class="hstat-lbl">Sistemas</div>
     </div>
     <div class="hstat">
@@ -1092,6 +1092,7 @@ footer {
   <button class="filter-btn" data-filter="saude">Saúde</button>
   <button class="filter-btn" data-filter="comercio">Comércio</button>
   <button class="filter-btn" data-filter="agendamento">Agendamento</button>
+  <button class="filter-btn" data-filter="landing">Landing Page</button>
 </div>
 
 <!-- ============================================================
@@ -1243,17 +1244,6 @@ const SYSTEMS = [
     live: 'demos/techos.html',
   },
   {
-    id: 'techadmin',
-    badge: 'Dashboard Administrativo',
-    name: 'TechAdmin',
-    desc: 'Painel interno do TechOS. Visão completa das OS, gráficos de status, filtros rápidos e relatórios por período.',
-    tags: ['#dashboard', '#gestao', '#admin'],
-    filter: 'gestao',
-    accent: '#818cf8',
-    bg: 'radial-gradient(ellipse at 70% 40%, rgba(129,140,248,0.15) 0%, #06060f 60%)',
-    live: 'demos/techadmin.html',
-  },
-  {
     id: 'barberbook',
     badge: 'Agendamento Online',
     name: 'BarberBook',
@@ -1281,7 +1271,7 @@ const SYSTEMS = [
     name: 'MedAgenda',
     desc: 'Landing pública de clínica com agendamento online, equipe médica, especialidades e sistema de convênios.',
     tags: ['#saude', '#landing', '#agendamento'],
-    filter: 'saude',
+    filter: ['saude', 'agendamento'],
     accent: '#10b981',
     bg: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.16) 0%, #020f07 60%)',
     live: 'demos/medagenda.html',
@@ -1317,7 +1307,7 @@ const SYSTEMS = [
     filter: 'saude',
     accent: '#1a7a3c',
     bg: 'radial-gradient(ellipse at 65% 40%, rgba(26,122,60,0.20) 0%, #010c04 60%)',
-    live: 'demos/hospital/admin.html',
+    live: 'demos/hospital/admin.html?demo=1',
   },
   {
     id: 'tombamento',
@@ -1329,6 +1319,29 @@ const SYSTEMS = [
     accent: '#3b82f6',
     bg: 'radial-gradient(ellipse at 50% 35%, rgba(59,130,246,0.17) 0%, #03060f 60%)',
     live: 'demos/tombamento/index.html',
+  },
+  {
+    id: 'nutri-site',
+    badge: 'Landing Page',
+    name: 'Landing Page Profissional',
+    desc: 'Landing page para nutricionista. Design feminino, elegante e responsivo com seções de apresentação, serviços e contato.',
+    tags: ['#landing', '#saude', '#light-ui'],
+    filter: 'saude',
+    accent: '#d8248f',
+    bg: 'radial-gradient(ellipse at 45% 40%, rgba(216,36,143,0.18) 0%, #120008 60%)',
+    filter: ['saude', 'landing'],
+    live: 'demos/nutri-site/index.html',
+  },
+  {
+    id: 'contabilidade',
+    badge: 'Landing Page Pro',
+    name: 'LP Contabilidade',
+    desc: 'Landing page profissional dark/dourado para escritório contábil. 5 seções: hero, sobre, serviços, diferenciais, depoimentos e CTA.',
+    tags: ['#landing', '#financas', '#dark-theme'],
+    filter: 'landing',
+    accent: '#c9a84c',
+    bg: 'radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.17) 0%, #0a0800 60%)',
+    live: 'demos/contabilidade/index.html',
   },
 ];
 
@@ -1443,7 +1456,7 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     this.classList.add('active');
 
     const f = this.dataset.filter;
-    const filtered = f === 'all' ? SYSTEMS : SYSTEMS.filter(s => s.filter === f);
+    const filtered = f === 'all' ? SYSTEMS : SYSTEMS.filter(s => Array.isArray(s.filter) ? s.filter.includes(f) : s.filter === f);
     buildCards(filtered);
   });
 });

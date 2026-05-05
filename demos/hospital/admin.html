@@ -608,6 +608,13 @@
 <script>
 // ── Auth guard ────────────────────────────────────────
 (function authGuard(){
+  // Auto-login demo via ?demo=1
+  if (new URLSearchParams(location.search).get('demo') === '1') {
+    sessionStorage.setItem('fila_auth_carlos', '1');
+    sessionStorage.setItem('fila_session_user', 'carlos');
+    sessionStorage.setItem('fila_session_role', 'admin');
+    sessionStorage.setItem('fila_session_ts', Date.now());
+  }
   const role = sessionStorage.getItem('fila_session_role');
   const user = sessionStorage.getItem('fila_session_user');
   const ts   = parseInt(sessionStorage.getItem('fila_session_ts') || '0');
