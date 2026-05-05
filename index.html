@@ -2618,9 +2618,10 @@ function uiDesktopSlide(live) {
   return `<iframe src="${live}" style="position:absolute;top:0;left:0;width:280%;height:3200px;transform:scale(0.357);transform-origin:top left;border:none;" loading="lazy"></iframe>`;
 }
 
-// Phone slide: iframe escalado para caber na largura do phone
-function uiMobileSlide(live) {
-  return `<iframe src="${live}" style="position:absolute;top:0;left:0;width:400%;height:4000px;transform:scale(0.25);transform-origin:top left;border:none;pointer-events:none;" loading="lazy"></iframe>`;
+// Phone slide: iframe escalado — src injetado apenas quando ativo
+function uiMobileSlide(live, active) {
+  const src = active ? `src="${live}"` : `data-src="${live}"`;
+  return `<iframe ${src} style="position:absolute;top:0;left:0;width:400%;height:4000px;transform:scale(0.25);transform-origin:top left;border:none;pointer-events:none;"></iframe>`;
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -2647,7 +2648,8 @@ function buildSlides() {
     // slide phone
     const ph = document.createElement('div');
     ph.className = 'phone-slide' + (i === 0 ? ' active' : '');
-    ph.innerHTML = uiMobileSlide(p.live);
+    ph.dataset.src = p.live;
+    ph.innerHTML = uiMobileSlide(p.live, i === 0);
     phoneScreen.appendChild(ph);
   });
 }
@@ -2695,7 +2697,24 @@ function goTo(idx, dir) {
     oldSlide.classList.remove('active');
     oldSlide.style.opacity = '';
     oldSlide.style.transform = '';
-    if (oldPhone) { oldPhone.classList.remove('active'); oldPhone.style.opacity = ''; oldPhone.style.transform = ''; }
+    if (oldPhone) {
+      oldPhone.classList.remove('active');
+      oldPhone.style.opacity = '';
+      oldPhone.style.transform = '';
+      // descarrega iframe inativo para liberar memória no mobile
+      const oldIframe = oldPhone.querySelector('iframe');
+      if (oldIframe && oldIframe.src) {
+        oldIframe.dataset.src = oldIframe.src;
+        oldIframe.src = '';
+      }
+    }
+    // carrega iframe do slide ativo se ainda não carregou
+    if (newPhone) {
+      const newIframe = newPhone.querySelector('iframe');
+      if (newIframe && !newIframe.src && newIframe.dataset.src) {
+        newIframe.src = newIframe.dataset.src;
+      }
+    }
     busy = false;
   }, 750);
 
