@@ -315,6 +315,28 @@ nav a:hover::after { width: 100%; }
   box-shadow: 0 10px 32px rgba(255,255,255,0.18);
 }
 
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 11px 22px;
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: all 0.3s var(--ease-out);
+}
+
+.btn-outline:hover {
+  border-color: rgba(255,255,255,0.6);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
 .counter {
   font-size: 0.73rem;
   color: rgba(255,255,255,0.35);
@@ -1781,13 +1803,16 @@ nav a:hover::after { width: 100%; }
       </div>
 
       <div class="hero-cta">
-        <a href="#" class="btn-live" id="hLink">
+        <a href="sistemas.html" class="btn-live" id="hLink">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
             <polyline points="15 3 21 3 21 9"/>
             <line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
-          Ver Site Live
+          Visualizar Sistemas
+        </a>
+        <a href="#para-quem" class="btn-outline">
+          Valores
         </a>
         <span class="counter"><strong id="cCur">01</strong> / <span id="cTot">07</span></span>
       </div>
