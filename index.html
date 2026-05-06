@@ -1811,7 +1811,7 @@ nav a:hover::after { width: 100%; }
           </svg>
           Visualizar Sistemas
         </a>
-        <a href="#para-quem" class="btn-outline">
+        <a href="#precos" class="btn-outline">
           Valores
         </a>
         <span class="counter"><strong id="cCur">01</strong> / <span id="cTot">07</span></span>
@@ -2742,7 +2742,6 @@ function updateText() {
     document.getElementById('hBadge').textContent  = p.badge;
     document.getElementById('hTitle').innerHTML    = p.title;
     document.getElementById('hDesc').textContent   = p.desc;
-    document.getElementById('hLink').href          = p.live;
     document.getElementById('hUrl').textContent    = p.url;
     document.getElementById('cCur').textContent    = String(cur + 1).padStart(2, '0');
 
@@ -2857,13 +2856,6 @@ function closeDemo() {
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('demoFrame').src = ''; }, 300);
 }
-
-document.getElementById('hLink').addEventListener('click', function(e) {
-  e.preventDefault();
-  const p = PROJECTS[cur];
-  const label = p.badge + '  ·  ' + p.title.replace(/<[^>]+>/g, '');
-  openDemo(p.live, label);
-});
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeDemo();
