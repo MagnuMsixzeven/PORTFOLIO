@@ -2137,14 +2137,12 @@ nav a:hover::after { width: 100%; }
   </div>
 </section>
 
-
-
 <!-- ============================================================
      SOBRE MIM
 ============================================================ -->
 <section id="sobre" class="light-section">
   <div class="s-inner">
-    <div class="s-label reveal">// 01 Sobre Mim</div>
+    <div class="s-label reveal">01 Sobre Mim</div>
     <h2 class="s-title reveal">Desenvolvedor<br>Full-Stack</h2>
 
     <div class="sobre-grid reveal">
@@ -2205,7 +2203,7 @@ nav a:hover::after { width: 100%; }
 ============================================================ -->
 <section id="curriculo" class="white-section">
   <div class="s-inner">
-    <div class="s-label reveal">// 02 Trabalhos Entregues</div>
+    <div class="s-label reveal">02 Trabalhos Entregues</div>
     <h2 class="s-title reveal">Projetos<br>realizados.</h2>
 
     <ul class="work-list">
@@ -2299,7 +2297,7 @@ nav a:hover::after { width: 100%; }
 ============================================================ -->
 <section id="contato">
   <div class="s-inner">
-    <div class="s-label">// 03 — Contato</div>
+    <div class="s-label">03 Contato</div>
     <h2 class="s-title reveal">Vamos criar<br>algo juntos?</h2>
     <p class="s-text reveal">Aberto a projetos freelance, parcerias e novas oportunidades.</p>
 
@@ -2328,9 +2326,6 @@ nav a:hover::after { width: 100%; }
      JAVASCRIPT
 ============================================================ -->
 <script>
-// ──────────────────────────────────────────────────────────────
-// FAQ TOGGLE
-// ──────────────────────────────────────────────────────────────
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');
@@ -2338,9 +2333,6 @@ function toggleFaq(btn) {
   if (!isOpen) item.classList.add('open');
 }
 
-// ──────────────────────────────────────────────────────────────
-// PROJECTS DATA
-// ──────────────────────────────────────────────────────────────
 const PROJECTS = [
   {
     badge:   'Sistema de Gestão',
@@ -2421,9 +2413,6 @@ const PROJECTS = [
   },
 ];
 
-// ──────────────────────────────────────────────────────────────
-// MOCKUP UI BUILDERS
-// ──────────────────────────────────────────────────────────────
 function uiTechOS(p) {
   const [c1,,, bg] = p.palette;
   return `<div style="display:flex;height:100%;font-family:'Inter',sans-serif;background:#0c0b18">
@@ -2613,20 +2602,15 @@ function uiScreenshot(src) {
   </div>`;
 }
 
-// Desktop slide: apenas iframe puro que preenche o .screen
 function uiDesktopSlide(live) {
   return `<iframe src="${live}" style="position:absolute;top:0;left:0;width:280%;height:3200px;transform:scale(0.357);transform-origin:top left;border:none;" loading="lazy"></iframe>`;
 }
 
-// Phone slide: iframe escalado — src injetado apenas quando ativo
 function uiMobileSlide(live, active) {
   const src = active ? `src="${live}"` : `data-src="${live}"`;
   return `<iframe ${src} style="position:absolute;top:0;left:0;width:400%;height:4000px;transform:scale(0.25);transform-origin:top left;border:none;pointer-events:none;"></iframe>`;
 }
 
-// ──────────────────────────────────────────────────────────────
-// SLIDER STATE
-// ──────────────────────────────────────────────────────────────
 let cur = 0;
 let busy = false;
 
@@ -2638,14 +2622,12 @@ function buildSlides() {
   const t = 'opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)';
 
   PROJECTS.forEach((p, i) => {
-    // slide desktop
     const el = document.createElement('div');
     el.className = 'slide' + (i === 0 ? ' active' : '');
     el.style.transition = t;
     el.innerHTML = uiDesktopSlide(p.live);
     screen.appendChild(el);
 
-    // slide phone
     const ph = document.createElement('div');
     ph.className = 'phone-slide' + (i === 0 ? ' active' : '');
     ph.dataset.src = p.live;
@@ -2668,12 +2650,10 @@ function goTo(idx, dir) {
   const outX         = dir > 0 ? '-50px' : '50px';
   const inX          = dir > 0 ?  '50px' : '-50px';
 
-  // Saída
   oldSlide.style.opacity = '0';
   oldSlide.style.transform = `translateX(${outX})`;
   if (oldPhone) { oldPhone.style.opacity = '0'; oldPhone.style.transform = `translateX(${outX})`; }
 
-  // Entrada
   [newSlide, newPhone].forEach(el => {
     if (!el) return;
     el.style.transition = 'none';
@@ -2701,14 +2681,12 @@ function goTo(idx, dir) {
       oldPhone.classList.remove('active');
       oldPhone.style.opacity = '';
       oldPhone.style.transform = '';
-      // descarrega iframe inativo para liberar memória no mobile
       const oldIframe = oldPhone.querySelector('iframe');
       if (oldIframe && oldIframe.src) {
         oldIframe.dataset.src = oldIframe.src;
         oldIframe.src = '';
       }
     }
-    // carrega iframe do slide ativo se ainda não carregou
     if (newPhone) {
       const newIframe = newPhone.querySelector('iframe');
       if (newIframe && !newIframe.src && newIframe.dataset.src) {
@@ -2726,14 +2704,10 @@ function goTo(idx, dir) {
 function next() { goTo((cur + 1) % PROJECTS.length,  1); }
 function prev() { goTo((cur - 1 + PROJECTS.length) % PROJECTS.length, -1); }
 
-// ──────────────────────────────────────────────────────────────
-// UPDATE HERO TEXT
-// ──────────────────────────────────────────────────────────────
 function updateText() {
   const p = PROJECTS[cur];
   const textEl = document.getElementById('heroText');
 
-  // Fade out
   textEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
   textEl.style.opacity = '0';
   textEl.style.transform = 'translateY(10px)';
@@ -2745,24 +2719,18 @@ function updateText() {
     document.getElementById('hUrl').textContent    = p.url;
     document.getElementById('cCur').textContent    = String(cur + 1).padStart(2, '0');
 
-    // Palette dots
     document.getElementById('hDots').innerHTML =
       p.palette.map(c => `<div class="pdot-wrap"><div class="pdot" style="background:${c}"></div><span class="pdot-hex">${c}</span></div>`).join('');
 
-    // Tags
     document.getElementById('hTags').innerHTML =
       p.tags.map(t => `<span class="ptag">${t}</span>`).join('');
 
-    // Fade in
     textEl.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
     textEl.style.opacity = '1';
     textEl.style.transform = 'translateY(0)';
   }, 280);
 }
 
-// ──────────────────────────────────────────────────────────────
-// UPDATE MESH GRADIENT
-// ──────────────────────────────────────────────────────────────
 function updateGradient() {
   const p = PROJECTS[cur];
   document.getElementById('b1').style.background = p.blobs[0];
@@ -2770,9 +2738,6 @@ function updateGradient() {
   document.getElementById('b3').style.background = p.blobs[2];
 }
 
-// ──────────────────────────────────────────────────────────────
-// HEADER SCROLL TRANSITION
-// ──────────────────────────────────────────────────────────────
 const header = document.getElementById('header');
 const heroEl = document.getElementById('hero');
 
@@ -2784,7 +2749,6 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
-// ── Mobile menu toggle ──
 const menuBtn  = document.getElementById('menuBtn');
 const mobileNav = document.getElementById('mobileNav');
 if (menuBtn && mobileNav) {
@@ -2802,9 +2766,6 @@ if (menuBtn && mobileNav) {
   });
 }
 
-// ──────────────────────────────────────────────────────────────
-// SCROLL REVEAL
-// ──────────────────────────────────────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
     if (e.isIntersecting) {
@@ -2816,9 +2777,6 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ──────────────────────────────────────────────────────────────
-// KEYBOARD + TOUCH
-// ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prev();
@@ -2831,9 +2789,6 @@ heroEl.addEventListener('touchend',   e => {
   if (Math.abs(d) > 55) { d > 0 ? next() : prev(); }
 }, { passive: true });
 
-// ──────────────────────────────────────────────────────────────
-// INIT
-// ──────────────────────────────────────────────────────────────
 buildSlides();
 updateGradient();
 
@@ -2841,9 +2796,6 @@ document.getElementById('btnNext').addEventListener('click', next);
 document.getElementById('btnPrev').addEventListener('click', prev);
 document.getElementById('cTot').textContent = String(PROJECTS.length).padStart(2, '0');
 
-// ──────────────────────────────────────────────────────────────
-// DEMO OVERLAY
-// ──────────────────────────────────────────────────────────────
 function openDemo(url, label) {
   document.getElementById('demoFrame').src = url;
   document.getElementById('demoNameLabel').textContent = label;
