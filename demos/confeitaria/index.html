@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confeitaria Afeto | Demo</title>
+  <meta name="description" content="Demo com carrossel, carrinho e checkout no WhatsApp para confeitaria." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #c46935;
+      --primary-light: #e18a55;
+      --primary-dark: #7f321e;
+      --primary-glow: rgba(196, 105, 53, 0.28);
+      --accent: #f5a623;
+      --accent-soft: #ffd78a;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f4e7d1;
+      --bg-dark: #2a1b14;
+      --surface: #fff8ec;
+      --surface-strong: #f0dbc1;
+      --text: #3b2319;
+      --text-secondary: #7a5a49;
+      --border: rgba(127, 50, 30, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 20px;
+      --radius-full: 999px;
+      --shadow-sm: 0 4px 14px rgba(41, 25, 17, 0.08);
+      --shadow-md: 0 10px 26px rgba(41, 25, 17, 0.12);
+      --shadow-lg: 0 20px 45px rgba(41, 25, 17, 0.18);
+      --shadow-glow: 0 0 0 1px rgba(245, 166, 35, 0.2), 0 16px 34px rgba(245, 166, 35, 0.2);
+      --space-1: 8px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 20px;
+      --space-5: 28px;
+      --space-6: 40px;
+      --ease: cubic-bezier(.4, 0, .2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 8% 15%, rgba(255, 215, 138, 0.42), transparent 30%),
+        radial-gradient(circle at 92% 10%, rgba(196, 105, 53, 0.16), transparent 28%),
+        linear-gradient(180deg, #f7ecd7 0%, #f4e7d1 45%, #f1e1c8 100%);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 2.4rem));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      backdrop-filter: blur(12px);
+      background: rgba(244, 231, 209, 0.88);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-4);
+      align-items: center;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo svg {
+      filter: drop-shadow(0 2px 6px rgba(122,24,40,0.25));
+      transition: transform .25s ease;
+    }
+
+    .logo:hover svg {
+      transform: scale(1.04);
+    }
+
+    .search {
+      display: none;
+    }
+
+    .search input {
+      display: none;
+    }
+
+    .search span {
+      display: none;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-5);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .top-actions a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .top-actions a:hover {
+      color: var(--primary-dark);
+    }
+
+    .top-actions .nav-cart {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-dark);
+      color: #fff;
+      border-radius: var(--radius-full);
+      padding: 7px 16px;
+      transition: background .2s ease, transform .2s ease;
+      cursor: pointer;
+    }
+
+    .top-actions .nav-cart:hover {
+      background: var(--primary);
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    .nav-doll {
+      display: inline-flex;
+      align-items: flex-end;
+      margin-left: 4px;
+      animation: dollBounce 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(124,24,40,.18));
+    }
+    @keyframes dollBounce {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50%      { transform: translateY(-5px) rotate(2deg); }
+    }
+
+    .hero {
+      padding: var(--space-6) 0 var(--space-5);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: var(--space-4);
+    }
+
+    .hero-main {
+      position: relative;
+      border-radius: var(--radius-xl);
+      min-height: 430px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      box-shadow: var(--shadow-lg);
+      isolation: isolate;
+      transition: background-image .45s var(--ease);
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(43, 22, 13, 0.62), rgba(43, 22, 13, 0.18) 62%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: clamp(22px, 4vw, 42px);
+      max-width: 620px;
+      color: #fef7ec;
+    }
+
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: var(--radius-full);
+      background: rgba(127, 50, 30, 0.9);
+      color: #fff;
+      padding: 7px 14px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 16px;
+      animation: fadeInDown .6s var(--ease) both;
+    }
+
+    h1 {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.04;
+      color: #fffdf9;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      animation: fadeInUp .7s var(--ease) .05s both;
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.26);
+    }
+
+    .hero-copy {
+      color: rgba(255, 248, 236, 0.92);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      animation: fadeInUp .75s var(--ease) .1s both;
+      max-width: 580px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      animation: fadeInUp .8s var(--ease) .14s both;
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-full);
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #342417;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: #f7b63f;
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--primary-dark);
+      border: 1px solid rgba(127, 50, 30, 0.24);
+    }
+
+    .btn-soft:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-controls {
+      position: absolute;
+      left: 20px;
+      bottom: 16px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      cursor: pointer;
+      transition: all .3s var(--ease);
+    }
+
+    .hero-dot.active {
+      width: 24px;
+      border-radius: 999px;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .promo-card,
+    .hours-card {
+      border-radius: var(--radius-xl);
+      background: #fff8ec;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+    }
+
+    .promo-card h2 {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .promo-card p {
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .price-line {
+      background: linear-gradient(90deg, #7db840, #9dd15f);
+      color: #1f2a10;
+      border-radius: var(--radius-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      font-weight: 800;
+    }
+
+    .price-line + .price-line {
+      margin-top: 8px;
+    }
+
+    .hours-card h3 {
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .hours-item {
+      background: var(--surface-strong);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      border: 1px solid rgba(127, 50, 30, 0.14);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .hours-item strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .benefits {
+      margin-top: var(--space-5);
+      background: rgba(255, 250, 241, 0.9);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .benefit {
+      padding: 14px;
+      text-align: center;
+      border-right: 1px solid rgba(127, 50, 30, 0.14);
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .benefit:last-child {
+      border-right: none;
+    }
+
+    .benefit strong {
+      display: block;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+      font-size: 0.92rem;
+    }
+
+    .section {
+      padding: 56px 0;
+    }
+
+    .entrance {
+      padding: 18px 0 64px;
+    }
+
+    .entrance-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      grid-template-rows: 260px 220px;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .entrance-photo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(127, 50, 30, 0.15);
+      box-shadow: var(--shadow-md);
+      background: #efe1ca;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .entrance-photo:first-child {
+      grid-row: 1 / 3;
+    }
+
+    .entrance-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
+      display: block;
+    }
+
+    .entrance-photo:hover img {
+      transform: scale(1.07);
+    }
+
+    .entrance-photo .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(60,20,5,0.72) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity .35s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 18px 16px;
+    }
+
+    .entrance-photo:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .entrance-photo .photo-overlay span {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      transform: translateY(8px);
+      transition: transform .35s ease;
+    }
+
+    .entrance-photo:hover .photo-overlay span {
+      transform: translateY(0);
+    }
+
+    /* stagger reveal para as fotos */
+    .entrance-photo:nth-child(1) { animation-delay: .05s; }
+    .entrance-photo:nth-child(2) { animation-delay: .18s; }
+    .entrance-photo:nth-child(3) { animation-delay: .32s; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      color: var(--primary-dark);
+      line-height: 1.1;
+    }
+
+    .section-sub {
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.55;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .filter {
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: rgba(255, 248, 236, 0.8);
+      border-radius: var(--radius-full);
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .3s var(--ease);
+    }
+
+    .filter.active,
+    .filter:hover {
+      background: var(--primary-dark);
+      color: #fff;
+      border-color: var(--primary-dark);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid rgba(127, 50, 30, 0.14);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: fadeInUp .6s var(--ease) both;
+      transition: transform .32s cubic-bezier(.4,0,.2,1), box-shadow .32s cubic-bezier(.4,0,.2,1);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 44px rgba(255, 182, 193, 0.32), 0 4px 12px rgba(196,105,53,0.1);
+    }
+
+    .card-media {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+    }
+
+    .card img {
+      height: 100%;
+      transition: transform .45s var(--ease);
+    }
+
+    .card:hover img {
+      transform: scale(1.06);
+    }
+
+    .card-body {
+      padding: 14px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      min-height: 40px;
+    }
+
+    .card-meta {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .buy {
+      border: none;
+      border-radius: var(--radius-full);
+      background: var(--accent);
+      color: #342417;
+      font-weight: 800;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: transform .2s var(--ease), filter .2s var(--ease);
+    }
+
+    .buy:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .buy.added {
+      background: #a6d06e;
+      color: #233112;
+    }
+
+    .story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .about-us {
+      margin-top: 12px;
+      background: #1e0f0a;
+      padding: 64px 0;
+      margin-top: 0;
+    }
+
+    .about-card {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 24px;
+      background: rgba(46, 22, 12, 0.72);
+      border: 1px solid rgba(200, 130, 80, 0.22);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
+    }
+
+    .about-photo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      min-height: 340px;
+      border: 1px solid rgba(200, 130, 80, 0.28);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    }
+
+    .about-photo img {
+      height: 100%;
+    }
+
+    .about-text h3 {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 1.9rem;
+      color: #f5d7b0;
+      margin-bottom: 12px;
+    }
+
+    .about-text p {
+      color: rgba(240, 210, 175, 0.78);
+      line-height: 1.75;
+    }
+
+    .about-text p + p {
+      margin-top: 10px;
+    }
+
+    .about-address {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: rgba(196, 105, 53, 0.18);
+      border: 1px solid rgba(196, 105, 53, 0.45);
+      border-radius: var(--radius-md);
+      color: #f5d7b0;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .about-address-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .about-address-btns a,
+    .about-address-btns button {
+      flex: 1;
+      min-width: 140px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+      border: none;
+    }
+
+    .about-address-btns a:hover,
+    .about-address-btns button:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-maps,
+    .btn-encomenda {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .btn-maps:hover,
+    .btn-encomenda:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-maps {
+      background: #1a73e8;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.35);
+    }
+
+    .btn-maps:hover {
+      box-shadow: 0 6px 20px rgba(26,115,232,0.5);
+    }
+
+    .btn-encomenda {
+      background: #25d366;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37,211,102,0.35);
+    }
+
+    .btn-encomenda:hover {
+      box-shadow: 0 6px 20px rgba(37,211,102,0.5);
+    }
+
+    .about-us .section-head-about {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .about-us .section-head-about h2 {
+      color: #f5d7b0;
+    }
+
+    .about-us .section-head-about p {
+      color: rgba(240, 210, 175, 0.65);
+    }
+
+    .story-photo {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(127, 50, 30, 0.15);
+      min-height: 360px;
+    }
+
+    .story-photo img {
+      height: 100%;
+    }
+
+    .story-text {
+      background: rgba(255, 248, 236, 0.8);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(127, 50, 30, 0.16);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .story-text h3 {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 1.6rem;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    .story-text p {
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .story-text p + p {
+      margin-top: 10px;
+    }
+
+    .quick {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .quick span {
+      background: var(--surface-strong);
+      border: 1px solid rgba(127, 50, 30, 0.2);
+      color: var(--primary-dark);
+      border-radius: var(--radius-full);
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .cart-float {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 99;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary-dark);
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whats-float {
+      position: fixed;
+      right: 18px;
+      bottom: 90px;
+      z-index: 99;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      background: #25d366;
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(37,211,102,0.45);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .whats-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 24px rgba(37,211,102,0.6);
+    }
+
+    .cart-float .cart-count {
+      position: absolute;
+      right: -4px;
+      top: -4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #2d1b13;
+      background: var(--accent);
+      border: 2px solid #f4e7d1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(34, 20, 13, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s var(--ease);
+    }
+
+    .cart-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -410px;
+      width: min(400px, 100vw);
+      height: 100vh;
+      z-index: 101;
+      background: #fff8ec;
+      border-left: 1px solid var(--border);
+      box-shadow: -24px 0 50px rgba(35, 20, 14, 0.25);
+      transition: right .3s var(--ease);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open {
+      right: 0;
+    }
+
+    .cart-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cart-head strong {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+    }
+
+    .cart-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 40px 20px;
+      font-size: 0.92rem;
+    }
+
+    .cart-item {
+      background: #fffdf8;
+      border: 1px solid rgba(127, 50, 30, 0.15);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .cart-item-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .cart-item-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .qty-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .qty-wrap button {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 800;
+    }
+
+    .cart-foot {
+      border-top: 1px solid var(--border);
+      padding: 14px 18px 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .cart-payment-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    .cart-payment-btns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .pay-btn {
+      border: 1.5px solid rgba(127,50,30,0.2);
+      border-radius: 10px;
+      background: #fffaf1;
+      color: var(--text);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 9px 6px 7px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+
+    .pay-btn:hover {
+      border-color: var(--primary);
+      background: #fff3df;
+      transform: translateY(-2px);
+    }
+
+    .pay-btn svg {
+      flex-shrink: 0;
+    }
+
+    .cart-whats {
+      border: none;
+      border-radius: 999px;
+      background: #25d366;
+      color: #fff;
+      padding: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Modal em desenvolvimento */
+    .dev-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    .dev-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .dev-modal {
+      background: #fff8ec;
+      border-radius: 20px;
+      padding: 36px 32px;
+      max-width: 340px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+      transform: scale(0.92);
+      transition: transform .25s ease;
+    }
+
+    .dev-modal-overlay.open .dev-modal {
+      transform: scale(1);
+    }
+
+    .dev-modal-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .dev-modal h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .dev-modal p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .dev-modal-close {
+      margin-top: 22px;
+      border: none;
+      border-radius: 999px;
+      background: var(--primary-dark);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 28px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      margin-top: 58px;
+      border-top: 1px solid var(--border);
+      background: rgba(255, 248, 236, 0.65);
+      padding: 20px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 14px;
+      font-weight: 700;
+    }
+
+    .footer-nav a:hover {
+      color: var(--primary-dark);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .6s var(--ease), transform .6s var(--ease);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .entrance-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .entrance-photo:first-child {
+        grid-column: 1 / -1;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .story {
+        grid-template-columns: 1fr;
+      }
+
+      .about-card {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .benefit:nth-child(2) {
+        border-right: none;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 14px 0;
+      }
+
+      .top-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .logo svg {
+        width: 160px;
+        height: 42px;
+      }
+
+      .top-actions {
+        justify-content: space-between;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .entrance-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hours-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits {
+        grid-template-columns: 1fr;
+      }
+
+      .benefit {
+        border-right: none;
+        border-bottom: 1px solid rgba(127, 50, 30, 0.14);
+      }
+
+      .benefit:last-child {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#" class="logo" aria-label="A Bueno Confeitaria">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 64" width="210" height="54">
+          <rect width="248" height="64" rx="10" fill="#7a1828"/>
+          <text x="14" y="43"
+            font-family="Georgia,'Times New Roman',serif"
+            font-size="31"
+            font-style="italic"
+            font-weight="bold"
+            fill="white"
+            letter-spacing="-0.3">A Bueno</text>
+          <!-- coração estilizado -->
+          <g transform="translate(186,18)" fill="white">
+            <path d="M17 8 C17 3 11 0 8 4 C5 0 -1 3 -1 8 C-1 13 8 20 8 20 C8 20 17 13 17 8 Z"/>
+            <!-- loop direito -->
+            <path d="M19 6 C21 2 27 2 27 7 C27 11 20 15 17 17" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </g>
+          <text x="14" y="59"
+            font-family="Arial,Helvetica,sans-serif"
+            font-size="9.5"
+            font-weight="700"
+            fill="rgba(255,255,255,0.82)"
+            letter-spacing="4.5">CONFEITARIA</text>
+        </svg>
+      </a>
+      <label class="search" for="search" aria-hidden="true" style="display:none">
+        <input id="search" type="text" placeholder="Digite o que voce procura" />
+        <span>Busca</span>
+      </label>
+      <nav class="top-actions" aria-label="Menu principal">
+        <a href="#vitrine">Cardapio</a>
+        <a href="#sobre-nos">Sobre nos</a>
+        <a href="#endereco">Endereco</a>
+        <a href="#" class="nav-cart" id="navCartBtn" aria-label="Abrir carrinho">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM3 2H1v2h2l3.6 7.59L5.25 14c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h14v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.43 4H5.21l-.94-2H3z"/></svg>
+          Carrinho
+        </a>
+        <!-- bonequinha confeiteira → acesso ADM -->
+        <a href="admin.html" class="nav-doll" title="Painel ADM" aria-label="Acessar painel administrativo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 62" width="30" height="46">
+            <!-- chapéu de confeiteiro -->
+            <rect x="12" y="3" width="16" height="3" rx="1.5" fill="#7a1828"/>
+            <rect x="14" y="0" width="12" height="6" rx="2.5" fill="#fff8ec" stroke="#c46935" stroke-width="1"/>
+            <!-- cabeça -->
+            <circle cx="20" cy="13" r="6.5" fill="#f5cba7"/>
+            <!-- cabelo longo (atrás) -->
+            <path d="M13 13 Q10 20 11 28 Q13 30 15 29" fill="#3b1a0a"/>
+            <path d="M27 13 Q30 20 29 28 Q27 30 25 29" fill="#3b1a0a"/>
+            <!-- cabelo (topo e franja) -->
+            <path d="M13.5 10 Q14 5 20 5 Q26 5 26.5 10 Q24 8 20 8.5 Q16 8 13.5 10Z" fill="#3b1a0a"/>
+            <!-- olhos com cílios -->
+            <ellipse cx="17" cy="12.5" rx="1.1" ry="1.3" fill="#3b2319"/>
+            <ellipse cx="23" cy="12.5" rx="1.1" ry="1.3" fill="#3b2319"/>
+            <line x1="15.5" y1="11" x2="16" y2="10" stroke="#3b2319" stroke-width=".7"/>
+            <line x1="17" y1="10.8" x2="17" y2="10" stroke="#3b2319" stroke-width=".7"/>
+            <line x1="18.5" y1="11" x2="18.8" y2="10.2" stroke="#3b2319" stroke-width=".7"/>
+            <line x1="21.5" y1="11" x2="21.2" y2="10.2" stroke="#3b2319" stroke-width=".7"/>
+            <line x1="23" y1="10.8" x2="23" y2="10" stroke="#3b2319" stroke-width=".7"/>
+            <line x1="24.5" y1="11" x2="25" y2="10.2" stroke="#3b2319" stroke-width=".7"/>
+            <!-- bochecha rosada -->
+            <circle cx="15" cy="14.5" r="1.5" fill="#f5a0a0" opacity=".55"/>
+            <circle cx="25" cy="14.5" r="1.5" fill="#f5a0a0" opacity=".55"/>
+            <!-- boca sorriso -->
+            <path d="M17 15.5 Q20 17.5 23 15.5" stroke="#c46935" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+            <!-- pescoço -->
+            <rect x="18" y="19" width="4" height="3" rx="1" fill="#f5cba7"/>
+            <!-- vestido (corpo) -->
+            <path d="M12 22 Q10 34 10 42 L30 42 Q30 34 28 22 Q24 25 20 25 Q16 25 12 22Z" fill="#7a1828"/>
+            <!-- avental/detalhe frente -->
+            <path d="M15 23 Q15 34 15 40 L25 40 Q25 34 25 23 Q22 25 20 25.5 Q18 25 15 23Z" fill="#fff8ec" opacity=".8"/>
+            <!-- laço no vestido -->
+            <path d="M17 24 Q20 26.5 23 24" stroke="#f5a623" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <!-- braço esq -->
+            <path d="M12 24 Q7 28 6 32" stroke="#f5cba7" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- braço dir (levantado segurando bolo) -->
+            <path d="M28 24 Q33 20 34 16" stroke="#f5cba7" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- mão dir -->
+            <circle cx="34" cy="15" r="2.2" fill="#f5cba7"/>
+            <!-- bolo na mão direita -->
+            <rect x="30" y="7" width="9" height="7" rx="2" fill="#c46935"/>
+            <rect x="30" y="5" width="9" height="3" rx="1.5" fill="#fff8ec"/>
+            <path d="M31 5 Q34.5 2 38 5" fill="#f5a623"/>
+            <circle cx="34.5" cy="2.5" r="1" fill="#ef4444"/>
+            <!-- listras no bolo -->
+            <line x1="33" y1="8" x2="33" y2="13" stroke="#fff8ec" stroke-width=".6" opacity=".5"/>
+            <line x1="36" y1="8" x2="36" y2="13" stroke="#fff8ec" stroke-width=".6" opacity=".5"/>
+            <!-- mão esq -->
+            <circle cx="6" cy="32" r="2" fill="#f5cba7"/>
+            <!-- saia evasê -->
+            <path d="M10 40 Q6 50 8 56 L32 56 Q34 50 30 40Z" fill="#7a1828"/>
+            <!-- barra saia detalhe -->
+            <path d="M8 54 Q20 58 32 54" stroke="#f5a623" stroke-width="1.2" fill="none"/>
+            <!-- sapato salto -->
+            <ellipse cx="14" cy="57" rx="5" ry="2" fill="#3b1a0a"/>
+            <rect x="17" y="55" width="2" height="4" rx="1" fill="#3b1a0a"/>
+            <ellipse cx="26" cy="57" rx="5" ry="2" fill="#3b1a0a"/>
+            <rect x="29" y="55" width="2" height="4" rx="1" fill="#3b1a0a"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <article class="hero-main" id="heroMain">
+          <div class="hero-content">
+            <span class="hero-chip" id="heroChip">Ofertas por tempo limitado</span>
+            <h1 id="heroTitle">Festival de sabores da casa</h1>
+            <p class="hero-copy" id="heroCopy">Selecao especial de bolos, chocolates e sobremesas quentes com precos promocionais para sua semana.</p>
+            <div class="hero-buttons">
+              <button class="btn btn-primary" id="btnPromocoes">Ver promocoes</button>
+              <button class="btn btn-soft" id="btnMontar">Montar pedido</button>
+            </div>
+          </div>
+          <div class="hero-controls" id="heroDots"></div>
+        </article>
+
+        <aside class="hero-side">
+          <article class="promo-card">
+            <h2>Tabela rapida de promo</h2>
+            <p>Inspirada na vitrine da loja: lote curto, alta rotacao e preco agressivo.</p>
+            <div class="price-line"><span>Chocolate branco premium</span><span>R$ 79,90</span></div>
+            <div class="price-line"><span>Bolo mousse da semana</span><span>R$ 99,90</span></div>
+            <div class="price-line"><span>Combo festa em casa</span><span>R$ 189,90</span></div>
+          </article>
+
+          <article class="hours-card">
+            <h3>Pedidos agendados</h3>
+            <div class="hours-grid">
+              <div class="hours-item">Entrega<strong>R$ 00,00</strong></div>
+              <div class="hours-item">Frete<strong>R$ 00,00</strong></div>
+              <div class="hours-item">Pedido minimo<strong>R$ 00,00</strong></div>
+            </div>
+          </article>
+        </aside>
+      </div>
+
+      <div class="container benefits reveal">
+        <div class="benefit"><strong>Frete inteligente</strong>Entrega local e agendada</div>
+        <div class="benefit"><strong>Retirada expressa</strong>Balcao pronto em poucos minutos</div>
+        <div class="benefit"><strong>Pagamento flexivel</strong>Cartao, pix e parcelamento</div>
+        <div class="benefit"><strong>Atendimento humano</strong>Suporte direto no WhatsApp</div>
+      </div>
+    </section>
+
+    <section class="entrance" id="entrada-loja">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h2 class="section-title">Conheca nosso ambiente</h2>
+            <p class="section-sub">Entrada e atmosfera da confeitaria para apresentar o espaco antes da compra.</p>
+          </div>
+        </div>
+        <div class="entrance-grid reveal">
+          <figure class="entrance-photo">
+            <img src="frente.jpg" alt="Fachada da confeitaria" loading="lazy" />
+            <div class="photo-overlay"><span>Nossa fachada</span></div>
+          </figure>
+          <figure class="entrance-photo">
+            <img src="dentro.jpg" alt="Interior e prateleiras" loading="lazy" />
+            <div class="photo-overlay"><span>Prateleiras artesanais</span></div>
+          </figure>
+          <figure class="entrance-photo">
+            <img src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=1200&q=80" alt="Vitrine de bolos" loading="lazy" />
+            <div class="photo-overlay"><span>Vitrine de bolos</span></div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="vitrine">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h2 class="section-title">Vitrine da confeitaria</h2>
+            <p class="section-sub">Fotos reais de produtos e categorias com compra rapida.</p>
+          </div>
+        </div>
+
+        <div class="filters reveal" id="filters"></div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+
+    <section class="section" id="mais-pedidos">
+      <div class="container story">
+        <figure class="story-photo reveal">
+          <img src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=1400&q=80" alt="Vitrine real da confeitaria" />
+        </figure>
+        <article class="story-text reveal">
+          <h3>Ambiente quente, visual premium</h3>
+          <p>A paleta foi puxada do interior da loja: terracota da parede, creme das luzes e dourado do letreiro. O resultado reforca acolhimento com cara de produto artesanal.</p>
+          <p>Com o carrinho ativo, qualquer item vai direto para montagem de pedido no WhatsApp com resumo e total.</p>
+          <div class="quick">
+            <span>Layout responsivo</span>
+            <span>Categorias filtraveis</span>
+            <span>Carrinho no WhatsApp</span>
+            <span>Hero em carrossel</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section about-us" id="sobre-nos">
+      <div class="container">
+        <div class="section-head-about reveal">
+          <h2 class="section-title" style="color:#f5d7b0">Sobre nos</h2>
+          <p class="section-sub" style="color:rgba(240,210,175,0.65)">Confeitaria artesanal no coracao de Porto Velho.</p>
+        </div>
+        <div class="about-card reveal">
+          <figure class="about-photo">
+            <img src="Sobre.jpg" alt="Ambiente da confeitaria" loading="lazy" />
+          </figure>
+          <article class="about-text">
+            <p>Somos uma confeitaria artesanal com foco em atendimento proximo, produtos frescos e visual premium. Cada vitrine e montada para transformar visita em experiencia.</p>
+            <p>Inspiramos o projeto nesta identidade quente e acolhedora, com tons terrosos e dourados para reforcar o clima da loja fisica.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO ENDEREÇO -->
+    <section id="endereco" style="background:#1a0a06; padding:64px 0;">
+      <div class="container">
+        <div class="reveal" style="text-align:center; margin-bottom:36px;">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:2rem; color:#f5d7b0; margin-bottom:8px;">Nossa Unidade</h2>
+          <p style="color:rgba(240,210,175,0.65); font-size:1rem;">Venha nos visitar em Porto Velho!</p>
+        </div>
+        <div class="reveal" style="max-width:680px; margin:0 auto 28px;">
+          <figure style="margin:0; border-radius:16px; overflow:hidden; max-height:420px; box-shadow:0 20px 50px rgba(0,0,0,0.5); border:1px solid rgba(200,130,80,0.2);">
+            <img src="frente.jpg" alt="Fachada A Bueno Confeitaria" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" />
+          </figure>
+        </div>
+        <div class="reveal" style="background:rgba(46,22,12,0.72); border:1px solid rgba(196,105,53,0.4); border-radius:16px; padding:28px 32px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px; max-width:680px; margin:0 auto;">
+          <div>
+            <p style="color:#f5d7b0; font-size:1.1rem; font-weight:800; margin-bottom:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="#f5a623" style="vertical-align:middle; margin-right:6px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              A Bueno Confeitaria
+            </p>
+            <p style="color:rgba(240,210,175,0.7); font-size:0.92rem; line-height:1.6;">Av. Guapor&eacute;, 5873 &bull; Rio Madeira &bull; Porto Velho &ndash; RO</p>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a class="btn-maps" href="https://maps.google.com/?q=Av.+Guapore,+5873,+Porto+Velho,+RO" target="_blank" rel="noopener" style="text-decoration:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              Ver no Maps
+            </a>
+            <a class="btn-encomenda" href="https://wa.me/5569999999999?text=Ola%2C+gostaria+de+fazer+uma+encomenda!" target="_blank" rel="noopener" style="text-decoration:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="currentColor"><path d="M16 2C8.268 2 2 8.268 2 16c0 2.47.67 4.784 1.832 6.77L2 30l7.438-1.797A13.94 13.94 0 0 0 16 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm6.29 19.03c-.344-.172-2.038-1.005-2.353-1.12-.316-.116-.546-.172-.776.172-.23.344-.888 1.12-1.09 1.35-.2.23-.4.258-.744.086-.344-.172-1.452-.535-2.766-1.707-1.022-.912-1.712-2.038-1.912-2.382-.2-.344-.022-.53.15-.702.154-.154.344-.4.516-.6.172-.2.23-.344.344-.574.116-.23.058-.43-.028-.602-.086-.172-.776-1.87-1.063-2.562-.28-.672-.564-.58-.776-.59l-.66-.012c-.23 0-.602.086-.916.43s-1.204 1.176-1.204 2.868 1.232 3.326 1.404 3.556c.172.23 2.424 3.702 5.872 5.192.82.354 1.46.566 1.958.724.822.262 1.572.224 2.164.136.66-.1 2.038-.832 2.326-1.636.286-.804.286-1.492.2-1.636-.086-.144-.316-.23-.66-.4z"/></svg>
+              Fazer Encomenda
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="whats-float" href="https://wa.me/5569999999999" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" fill="currentColor">
+      <path d="M16 2C8.268 2 2 8.268 2 16c0 2.47.67 4.784 1.832 6.77L2 30l7.438-1.797A13.94 13.94 0 0 0 16 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.44 11.44 0 0 1-5.844-1.602l-.418-.248-4.41 1.066 1.1-4.3-.272-.44A11.455 11.455 0 0 1 4.5 16C4.5 9.596 9.596 4.5 16 4.5S27.5 9.596 27.5 16 22.404 27.5 16 27.5zm6.29-8.47c-.344-.172-2.038-1.005-2.353-1.12-.316-.116-.546-.172-.776.172-.23.344-.888 1.12-1.09 1.35-.2.23-.4.258-.744.086-.344-.172-1.452-.535-2.766-1.707-1.022-.912-1.712-2.038-1.912-2.382-.2-.344-.022-.53.15-.702.154-.154.344-.4.516-.6.172-.2.23-.344.344-.574.116-.23.058-.43-.028-.602-.086-.172-.776-1.87-1.063-2.562-.28-.672-.564-.58-.776-.59l-.66-.012c-.23 0-.602.086-.916.43s-1.204 1.176-1.204 2.868 1.232 3.326 1.404 3.556c.172.23 2.424 3.702 5.872 5.192.82.354 1.46.566 1.958.724.822.262 1.572.224 2.164.136.66-.1 2.038-.832 2.326-1.636.286-.804.286-1.492.2-1.636-.086-.144-.316-.23-.66-.4z"/>
+    </svg>
+  </a>
+
+  <button class="cart-float" id="cartFloat" aria-label="Abrir carrinho">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="28" height="28" fill="currentColor">
+      <rect x="8" y="30" width="48" height="26" rx="4"/>
+      <rect x="14" y="22" width="36" height="10" rx="3"/>
+      <rect x="20" y="14" width="24" height="10" rx="3"/>
+      <rect x="26" y="6" width="12" height="10" rx="3"/>
+      <rect x="18" y="38" width="6" height="10" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="29" y="38" width="6" height="10" rx="2" fill="rgba(255,255,255,0.35)"/>
+      <rect x="40" y="38" width="6" height="10" rx="2" fill="rgba(255,255,255,0.35)"/>
+    </svg>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Carrinho">
+    <div class="cart-head">
+      <strong>Seu pedido</strong>
+      <button class="cart-close" id="cartClose" aria-label="Fechar carrinho">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p class="cart-empty">Carrinho vazio. Adicione os itens da vitrine.</p>
+    </div>
+    <div class="cart-foot">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">R$ 0,00</span>
+      </div>
+      <p class="cart-payment-label">Forma de pagamento</p>
+      <div class="cart-payment-btns">
+        <button class="pay-btn" id="payPix">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#32bcad"><path d="M17.6 3.5L13.5 7.6c-.8.8-2.1.8-2.9 0L6.4 3.5C5 2.1 2.5 3.1 2.5 5.1v13.8c0 2 2.5 3 3.9 1.6l4.2-4.2c.8-.8 2.1-.8 2.9 0l4.2 4.2c1.4 1.4 3.9.4 3.9-1.6V5.1c-.1-2-2.6-3-4-1.6z"/></svg>
+          Pix
+        </button>
+        <button class="pay-btn" id="payDebito">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#3b82f6"><rect x="2" y="5" width="20" height="14" rx="2" fill="#3b82f6"/><rect x="2" y="9" width="20" height="3" fill="#1d4ed8"/><rect x="5" y="15" width="4" height="2" rx="1" fill="#fff"/></svg>
+          Debito
+        </button>
+        <button class="pay-btn" id="payCredito">
+          <svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="5" width="20" height="14" rx="2" fill="#7c3aed"/><rect x="2" y="9" width="20" height="3" fill="#5b21b6"/><circle cx="15" cy="15" r="2.5" fill="#f59e0b" opacity="0.9"/><circle cx="18" cy="15" r="2.5" fill="#ef4444" opacity="0.7"/></svg>
+          Credito
+        </button>
+      </div>
+      <button class="cart-whats" id="checkoutBtn">Finalizar no WhatsApp</button>
+    </div>
+  </aside>
+
+  <!-- Modal em desenvolvimento -->
+  <div class="dev-modal-overlay" id="devModalOverlay">
+    <div class="dev-modal">
+      <span class="dev-modal-icon">🔧</span>
+      <h3>Em Desenvolvimento</h3>
+      <p>Esta forma de pagamento ainda nao esta disponivel.<br>Em breve voce podera pagar direto pelo site!</p>
+      <button class="dev-modal-close" id="devModalClose">Entendido</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>2026 Afeto Confeitaria. Demo visual para apresentacao.</p>
+      <nav class="footer-nav" aria-label="Rodape">
+        <a href="#vitrine">Produtos</a>
+        <a href="#mais-pedidos">Loja</a>
+        <a href="#sobre-nos">Sobre nos</a>
+        <a href="admin.html" style="opacity:.4;font-size:.78rem;letter-spacing:.08em;">ADM</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const whatsappNumber = "5569999999999";
+
+    const heroSlides = [
+      {
+        chip: "Ofertas por tempo limitado",
+        title: "Festival de sabores da casa",
+        copy: "Selecao especial de bolos, chocolates e sobremesas quentes com precos promocionais para sua semana.",
+        image: "https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        chip: "Mais pedidos do dia",
+        title: "Doces de vitrine em alta",
+        copy: "Linha de bolos de pote, brigadeiros e kits presente para entrega rapida e retirada expressa.",
+        image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        chip: "Salgados e combos",
+        title: "Menu misto para eventos",
+        copy: "Combinacoes doces e salgadas para aniversario, empresa e encontros especiais com montagem personalizada.",
+        image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=1400&q=80"
+      }
+    ];
+
+    const products = [
+      {
+        id: 1,
+        category: "bolos",
+        title: "Bolo Ninho com Brigadeiro",
+        desc: "Massa leve, recheio cremoso e finalizacao gourmet.",
+        price: 89.9,
+        image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 2,
+        category: "bolos",
+        title: "Bolo Morango da Casa",
+        desc: "Camadas de creme fresco com cobertura de frutas.",
+        price: 99,
+        image: "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 3,
+        category: "doces",
+        title: "Cesta Presente",
+        desc: "Kit artesanal para datas especiais e comemoracoes.",
+        price: 139,
+        image: "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 4,
+        category: "doces",
+        title: "Chocolate no Pote",
+        desc: "Textura cremosa, finalizado com raspas crocantes.",
+        price: 17.9,
+        image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 5,
+        category: "salgados",
+        title: "Coxinha de Carne de Sol",
+        desc: "Massa fina e recheio suculento, assinatura da casa.",
+        price: 18,
+        image: "https://images.unsplash.com/photo-1571197119282-7c4d2f4f8f2d?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 6,
+        category: "combos",
+        title: "Bento Cake + 6 Brigadeiros",
+        desc: "Combo para presentear com visual de boutique.",
+        price: 99,
+        image: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 7,
+        category: "bebidas",
+        title: "Bebidas Quentes",
+        desc: "Linha de cappuccino, chocolate quente e cha cremoso.",
+        price: 12,
+        prefix: "A partir de ",
+        image: "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        id: 8,
+        category: "combos",
+        title: "Mini Festival",
+        desc: "Selecao mista de bolo, docinhos e fatias premium.",
+        price: 189.9,
+        image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=1000&q=80"
+      }
+    ];
+
+    const categories = [
+      { id: "todos", label: "Todos" },
+      { id: "bolos", label: "Bolos" },
+      { id: "doces", label: "Doces" },
+      { id: "salgados", label: "Salgados" },
+      { id: "bebidas", label: "Bebidas" },
+      { id: "combos", label: "Combos" }
+    ];
+
+    const filtersEl = document.getElementById("filters");
+    const cardsEl = document.getElementById("cards");
+    const heroMain = document.getElementById("heroMain");
+    const heroChip = document.getElementById("heroChip");
+    const heroTitle = document.getElementById("heroTitle");
+    const heroCopy = document.getElementById("heroCopy");
+    const heroDots = document.getElementById("heroDots");
+    const cartFloat = document.getElementById("cartFloat");
+    const cartCount = document.getElementById("cartCount");
+    const cartOverlay = document.getElementById("cartOverlay");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+
+    let current = "todos";
+    let activeSlide = 0;
+    let slideTimer;
+    const cart = {};
+
+    function money(value) {
+      return `R$ ${value.toFixed(2).replace('.', ',')}`;
+    }
+
+    function productById(id) {
+      return products.find((item) => item.id === id);
+    }
+
+    function renderHero() {
+      const slide = heroSlides[activeSlide];
+      heroMain.style.backgroundImage = `url("${slide.image}")`;
+      heroChip.textContent = slide.chip;
+      heroTitle.textContent = slide.title;
+      heroCopy.textContent = slide.copy;
+      heroDots.querySelectorAll(".hero-dot").forEach((dot, index) => {
+        dot.classList.toggle("active", index === activeSlide);
+      });
+    }
+
+    function buildHeroDots() {
+      heroDots.innerHTML = heroSlides
+        .map((_, index) => `<button class="hero-dot ${index === 0 ? "active" : ""}" data-hero="${index}" aria-label="Slide ${index + 1}"></button>`)
+        .join("");
+
+      heroDots.querySelectorAll(".hero-dot").forEach((dot) => {
+        dot.addEventListener("click", () => {
+          activeSlide = Number(dot.dataset.hero);
+          renderHero();
+          restartHeroTimer();
+        });
+      });
+    }
+
+    function restartHeroTimer() {
+      clearInterval(slideTimer);
+      slideTimer = setInterval(() => {
+        activeSlide = (activeSlide + 1) % heroSlides.length;
+        renderHero();
+      }, 4800);
+    }
+
+    function renderFilters() {
+      filtersEl.innerHTML = categories
+        .map((cat) => `<button class="filter ${cat.id === current ? "active" : ""}" data-id="${cat.id}">${cat.label}</button>`)
+        .join("");
+
+      filtersEl.querySelectorAll(".filter").forEach((button) => {
+        button.addEventListener("click", () => {
+          current = button.dataset.id;
+          renderFilters();
+          renderCards();
+        });
+      });
+    }
+
+    function renderCards() {
+      const visible = current === "todos" ? products : products.filter((item) => item.category === current);
+
+      cardsEl.innerHTML = visible.map((item, index) => `
+        <article class="card" style="animation-delay:${index * 70}ms">
+          <figure class="card-media">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.desc}</p>
+            <div class="card-meta">
+              <span class="price">${item.prefix || ""}${money(item.price)}</span>
+              <button class="buy" data-add="${item.id}">Adicionar</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      cardsEl.querySelectorAll("button[data-add]").forEach((button) => {
+        button.addEventListener("click", () => {
+          addToCart(Number(button.dataset.add));
+          button.classList.add("added");
+          button.textContent = "Adicionado";
+          setTimeout(() => {
+            button.classList.remove("added");
+            button.textContent = "Adicionar";
+          }, 900);
+        });
+      });
+    }
+
+    function addToCart(id) {
+      const product = productById(id);
+      if (!product) return;
+
+      if (!cart[id]) {
+        cart[id] = { id, qty: 1 };
+      } else {
+        cart[id].qty += 1;
+      }
+
+      updateCart();
+    }
+
+    function changeQty(id, amount) {
+      if (!cart[id]) return;
+      cart[id].qty += amount;
+      if (cart[id].qty <= 0) {
+        delete cart[id];
+      }
+      updateCart();
+    }
+
+    function cartSummary() {
+      const lines = Object.values(cart).map((entry) => {
+        const product = productById(entry.id);
+        if (!product) return null;
+        const subtotal = product.price * entry.qty;
+        return {
+          id: entry.id,
+          title: product.title,
+          qty: entry.qty,
+          subtotal,
+          line: `${entry.qty}x ${product.title} - ${money(subtotal)}`
+        };
+      }).filter(Boolean);
+
+      const total = lines.reduce((sum, item) => sum + item.subtotal, 0);
+      return { lines, total };
+    }
+
+    function renderCartItems() {
+      const { lines } = cartSummary();
+      if (!lines.length) {
+        cartItems.innerHTML = '<p class="cart-empty">Carrinho vazio. Adicione os itens da vitrine.</p>';
+        return;
+      }
+
+      cartItems.innerHTML = lines.map((item) => `
+        <article class="cart-item">
+          <p class="cart-item-title">${item.title}</p>
+          <div class="cart-item-meta">
+            <span>${money(item.subtotal)}</span>
+            <div class="qty-wrap">
+              <button data-qty="${item.id}" data-change="-1">-</button>
+              <strong>${item.qty}</strong>
+              <button data-qty="${item.id}" data-change="1">+</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      cartItems.querySelectorAll("button[data-qty]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          changeQty(Number(btn.dataset.qty), Number(btn.dataset.change));
+        });
+      });
+    }
+
+    function updateCart() {
+      const { total, lines } = cartSummary();
+      const totalQty = lines.reduce((sum, item) => sum + item.qty, 0);
+      cartCount.textContent = totalQty;
+      cartTotal.textContent = money(total);
+      cartFloat.style.display = totalQty > 0 ? "flex" : "none";
+      renderCartItems();
+    }
+
+    function openCart() {
+      cartOverlay.classList.add("open");
+      cartDrawer.classList.add("open");
+    }
+
+    function closeCart() {
+      cartOverlay.classList.remove("open");
+      cartDrawer.classList.remove("open");
+    }
+
+    function checkoutWhatsApp() {
+      const { lines, total } = cartSummary();
+      if (!lines.length) return;
+
+      const messageLines = lines.map((item) => `• ${item.line}`).join("%0A");
+      const msg = `Olá! Quero fechar este pedido:%0A%0A${messageLines}%0A%0A*Total: ${money(total)}*`;
+      window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, "_blank");
+    }
+
+    function revealOnScroll() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+      // stagger individual para cada foto da galeria
+      const photoObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            const delay = Array.from(entry.target.parentElement.children).indexOf(entry.target) * 130;
+            setTimeout(() => {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0) scale(1)";
+            }, delay);
+            photoObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll(".entrance-photo").forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(22px) scale(0.97)";
+        el.style.transition = "opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1)";
+        photoObs.observe(el);
+      });
+    }
+
+    document.getElementById("btnPromocoes").addEventListener("click", () => {
+      document.getElementById("vitrine").scrollIntoView({ behavior: "smooth" });
+    });
+
+    document.getElementById("btnMontar").addEventListener("click", () => {
+      openCart();
+    });
+
+    cartFloat.addEventListener("click", openCart);
+    document.getElementById("navCartBtn").addEventListener("click", (e) => { e.preventDefault(); openCart(); });
+    cartOverlay.addEventListener("click", closeCart);
+    document.getElementById("cartClose").addEventListener("click", closeCart);
+    checkoutBtn.addEventListener("click", checkoutWhatsApp);
+
+    // Modal pagamento
+    const devOverlay = document.getElementById("devModalOverlay");
+    const devClose = document.getElementById("devModalClose");
+    ["payPix","payDebito","payCredito"].forEach(id => {
+      document.getElementById(id).addEventListener("click", () => devOverlay.classList.add("open"));
+    });
+    devClose.addEventListener("click", () => devOverlay.classList.remove("open"));
+    devOverlay.addEventListener("click", (e) => { if (e.target === devOverlay) devOverlay.classList.remove("open"); });
+
+    buildHeroDots();
+    renderHero();
+    restartHeroTimer();
+    renderFilters();
+    renderCards();
+    updateCart();
+    revealOnScroll();
+  </script>
+</body>
+</html>
