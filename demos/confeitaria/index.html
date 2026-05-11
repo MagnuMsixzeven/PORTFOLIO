@@ -337,31 +337,73 @@
 
     .promo-card h2 {
       font-family: "Plus Jakarta Sans", sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       color: var(--primary-dark);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .promo-card p {
       color: var(--text-secondary);
       margin-bottom: 14px;
-      line-height: 1.5;
+      line-height: 1.55;
+      font-size: .92rem;
     }
 
-    .price-line {
-      background: linear-gradient(90deg, #7db840, #9dd15f);
-      color: #1f2a10;
-      border-radius: var(--radius-md);
+    .delivery-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 10px;
       padding: 10px 12px;
-      font-weight: 800;
+      border-radius: var(--radius-md);
+      background: var(--surface-strong);
+      border: 1px solid rgba(127,50,30,.13);
+      margin-bottom: 8px;
     }
 
-    .price-line + .price-line {
-      margin-top: 8px;
+    .delivery-row:last-of-type { margin-bottom: 0; }
+
+    .delivery-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
+
+    .delivery-info strong {
+      display: block;
+      font-size: .88rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .delivery-info span {
+      font-size: .78rem;
+      color: var(--text-secondary);
+    }
+
+    .promo-cta {
+      display: block;
+      width: 100%;
+      margin-top: 14px;
+      padding: 11px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: .86rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background .2s;
+    }
+
+    .promo-cta:hover { background: var(--primary-dark); }
 
     .hours-card h3 {
       font-size: 1.05rem;
@@ -1237,17 +1279,88 @@
       }
     }
 
+    .ham-btn {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .ham-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ham-lines span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--primary-dark);
+      border-radius: 2px;
+      transition: all .25s ease;
+    }
+
+    .ham-btn.open .ham-lines span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .ham-btn.open .ham-lines span:nth-child(2) { opacity: 0; }
+    .ham-btn.open .ham-lines span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .ham-hat {
+      display: block;
+      margin-bottom: 1px;
+    }
+
     @media (max-width: 780px) {
       .topbar-inner {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 14px 0;
+        grid-template-columns: 1fr auto;
+        gap: 0;
+        padding: 12px 0;
+        align-items: center;
       }
 
+      .ham-btn { display: flex; }
+
       .top-actions {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(244,231,209,.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 8px 16px 14px;
+        z-index: 89;
+      }
+
+      .top-actions.open {
+        display: flex;
+      }
+
+      .top-actions a {
+        padding: 12px 4px;
+        border-bottom: 1px solid rgba(127,50,30,.1);
+        font-size: .88rem;
+      }
+
+      .top-actions a:last-child { border-bottom: none; }
+
+      .top-actions .nav-cart {
         justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
+        margin-top: 4px;
+        border-radius: var(--radius-md);
+      }
+
+      .nav-doll {
+        justify-content: center;
+        margin-left: 0;
       }
 
       .logo svg {
@@ -1288,7 +1401,7 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="container topbar-inner">
+    <div class="container topbar-inner" style="position:relative">
       <a href="#" class="logo" aria-label="A Bueno Confeitaria">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 64" width="210" height="54">
           <rect width="248" height="64" rx="10" fill="#7a1828"/>
@@ -1317,7 +1430,18 @@
         <input id="search" type="text" placeholder="Digite o que voce procura" />
         <span>Busca</span>
       </label>
-      <nav class="top-actions" aria-label="Menu principal">
+      <button class="ham-btn" id="hamBtn" aria-label="Menu">
+        <svg class="ham-hat" xmlns="http://www.w3.org/2000/svg" width="26" height="18" viewBox="0 0 26 18">
+          <rect x="0" y="14" width="26" height="4" rx="2" fill="#7a1828"/>
+          <rect x="4" y="8" width="18" height="7" rx="2" fill="white" stroke="#c46935" stroke-width="1"/>
+          <path d="M7 8 Q7 2 13 2 Q19 2 19 8" fill="white" stroke="#c46935" stroke-width="1"/>
+          <path d="M10 8 Q10 4 13 4 Q16 4 16 8" fill="#fff8ec"/>
+        </svg>
+        <div class="ham-lines">
+          <span></span><span></span><span></span>
+        </div>
+      </button>
+      <nav class="top-actions" id="topNav" aria-label="Menu principal">
         <a href="#vitrine">Cardapio</a>
         <a href="#sobre-nos">Sobre nos</a>
         <a href="#endereco">Endereco</a>
@@ -1351,11 +1475,30 @@
 
         <aside class="hero-side">
           <article class="promo-card">
-            <h2>Tabela rapida de promo</h2>
-            <p>Inspirada na vitrine da loja: lote curto, alta rotacao e preco agressivo.</p>
-            <div class="price-line"><span>Chocolate branco premium</span><span>R$ 79,90</span></div>
-            <div class="price-line"><span>Bolo mousse da semana</span><span>R$ 99,90</span></div>
-            <div class="price-line"><span>Combo festa em casa</span><span>R$ 189,90</span></div>
+            <h2>Entrega ou retirada</h2>
+            <p>Receba em casa ou retire no balcao. Seu pedido feito com carinho, entregue do jeito certo.</p>
+
+            <div class="delivery-row">
+              <div class="delivery-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div class="delivery-info">
+                <strong>Entrega em domicilio</strong>
+                <span>Pedido saindo em ate 40 min para sua casa</span>
+              </div>
+            </div>
+
+            <div class="delivery-row">
+              <div class="delivery-icon" style="background:var(--accent)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div class="delivery-info">
+                <strong>Retirada expressa</strong>
+                <span>Pronto no balcao em poucos minutos</span>
+              </div>
+            </div>
+
+            <a href="#" class="promo-cta" onclick="openCart(); return false;">Faca ja sua encomenda</a>
           </article>
 
           <article class="hours-card">
@@ -1910,6 +2053,12 @@
 
     cartFloat.addEventListener("click", openCart);
     document.getElementById("navCartBtn").addEventListener("click", (e) => { e.preventDefault(); openCart(); });
+    document.getElementById("hamBtn").addEventListener("click", () => {
+      const btn = document.getElementById("hamBtn");
+      const nav = document.getElementById("topNav");
+      btn.classList.toggle("open");
+      nav.classList.toggle("open");
+    });
     cartOverlay.addEventListener("click", closeCart);
     document.getElementById("cartClose").addEventListener("click", closeCart);
     checkoutBtn.addEventListener("click", checkoutWhatsApp);
