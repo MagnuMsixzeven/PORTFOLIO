@@ -51,22 +51,60 @@ body {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+.logo:hover { opacity: 0.85; }
+
+.logo-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(6,182,212,0.5)) drop-shadow(0 0 16px rgba(124,58,237,0.3));
+}
+.logo-hex {
+  fill: rgba(10,10,15,0.7);
+  stroke: url(#lgGrad);
+  stroke-width: 2.8;
+}
+.logo-m {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.logo-circuit {
+  fill: none;
+  stroke: url(#lgGrad);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.logo-node {
+  fill: #0a0a0f;
+  stroke: #06B6D4;
+  stroke-width: 2.2;
+}
+
+.logo-text {
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.9);
-  text-decoration: none;
   transition: color 0.4s;
 }
-
-.logo em {
+.logo-text em {
   font-style: normal;
   color: rgba(255,255,255,0.4);
   transition: color 0.4s;
 }
 
-#header.scrolled .logo  { color: #111; }
-#header.scrolled .logo em { color: #aaa; }
+#header.scrolled .logo-text { color: #111; }
+#header.scrolled .logo-text em { color: #aaa; }
+#header.scrolled .logo-icon { filter: none; }
 
 .menu-btn { display: none; }
 
@@ -1756,7 +1794,28 @@ nav a:hover::after { width: 100%; }
      HEADER
 ============================================================ -->
 <header id="header">
-  <a href="#" class="logo">magno<em>DSG</em></a>
+  <a href="#" class="logo">
+    <svg class="logo-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#06B6D4"/>
+          <stop offset="0.48" stop-color="#2563EB"/>
+          <stop offset="1" stop-color="#7C3AED"/>
+        </linearGradient>
+      </defs>
+      <path class="logo-hex" d="M100 9 L178 54 L178 146 L100 191 L22 146 L22 54 Z"/>
+      <path class="logo-circuit" d="M40 71 H69 Q78 71 78 62 V41"/>
+      <path class="logo-circuit" d="M160 72 H132 Q123 72 123 60 V38"/>
+      <path class="logo-circuit" d="M38 132 H67 Q77 132 77 146 V166"/>
+      <path class="logo-circuit" d="M162 131 H133 Q123 131 123 146 V167"/>
+      <path class="logo-m" d="M54 137 V62 L100 115 L146 62 V137"/>
+      <circle class="logo-node" cx="78" cy="42" r="5"/>
+      <circle class="logo-node" cx="123" cy="38" r="5"/>
+      <circle class="logo-node" cx="77" cy="166" r="5"/>
+      <circle class="logo-node" cx="123" cy="167" r="5"/>
+    </svg>
+    <span class="logo-text">magno<em>DSG</em></span>
+  </a>
   <button class="menu-btn" id="menuBtn" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
