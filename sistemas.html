@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Magno esteve por aqui · 05/05/2026 · magno.dev -->
+
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -10,9 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   RESET & TOKENS
-============================================================ */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -39,9 +37,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================================
-   HEADER
-============================================================ */
 #header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -106,9 +101,6 @@ body {
   box-shadow: 0 6px 20px rgba(255,255,255,0.12);
 }
 
-/* ============================================================
-   HERO
-============================================================ */
 .hero {
   position: relative;
   padding: 11rem 2.5rem 5rem;
@@ -116,7 +108,6 @@ body {
   overflow: hidden;
 }
 
-/* background radial glow */
 .hero::before {
   content: '';
   position: absolute;
@@ -207,9 +198,6 @@ body {
   margin-top: 3px;
 }
 
-/* ============================================================
-   FILTER PILLS
-============================================================ */
 .filters {
   display: flex;
   justify-content: center;
@@ -238,9 +226,6 @@ body {
   background: rgba(255,255,255,0.07);
 }
 
-/* ============================================================
-   GRID
-============================================================ */
 .systems-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -250,9 +235,6 @@ body {
   margin: 0 auto;
 }
 
-/* ============================================================
-   SYSTEM CARD
-============================================================ */
 .sys-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -271,7 +253,6 @@ body {
   box-shadow: 0 24px 60px rgba(0,0,0,0.45);
 }
 
-/* glow on hover from accent color */
 .sys-card:hover .card-glow {
   opacity: 1;
 }
@@ -286,7 +267,6 @@ body {
   z-index: 0;
 }
 
-/* ── Card Preview (phone mockup area) ── */
 .card-preview {
   position: relative;
   width: 100%;
@@ -305,7 +285,6 @@ body {
   transition: background 0.5s ease;
 }
 
-/* ── Browser Mockup (card preview) ── */
 .bmock {
   position: relative;
   width: 74%;
@@ -379,7 +358,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Phone (floating over browser in card) ── */
 .phone-float-card {
   position: absolute;
   right: 6%;
@@ -439,7 +417,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Panel Tabs ── */
 .mp-tabs {
   display: flex;
   gap: 3px;
@@ -474,7 +451,6 @@ body {
   color: rgba(255,255,255,0.65);
 }
 
-/* ── Web view in panel ── */
 .mpweb-mock {
   width: 100%;
   border-radius: 10px;
@@ -509,7 +485,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Card Body ── */
 .card-body {
   padding: 1.25rem 1.4rem 1.4rem;
   position: relative;
@@ -616,9 +591,6 @@ body {
   border-color: rgba(255,255,255,0.2);
 }
 
-/* ============================================================
-   MOBILE PREVIEW PANEL (drawer from right)
-============================================================ */
 #mobilePanel {
   position: fixed;
   inset: 0;
@@ -697,7 +669,6 @@ body {
   gap: 1.5rem;
 }
 
-/* Big phone mockup inside panel */
 .mp-phone {
   position: relative;
   width: 180px;
@@ -779,7 +750,6 @@ body {
   pointer-events: none;
 }
 
-/* Home indicator */
 .mp-indicator {
   position: absolute;
   bottom: 10px;
@@ -792,7 +762,6 @@ body {
   z-index: 3;
 }
 
-/* Status bar mock */
 .mp-statusbar {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -820,7 +789,6 @@ body {
 
 .mp-icons svg { opacity: 0.75; }
 
-/* Info below phone */
 .mp-info {
   width: 100%;
   text-align: center;
@@ -883,9 +851,6 @@ body {
   box-shadow: 0 8px 24px rgba(255,255,255,0.12);
 }
 
-/* ============================================================
-   DEMO OVERLAY (full screen)
-============================================================ */
 #demoOverlay {
   display: none;
   position: fixed;
@@ -961,9 +926,6 @@ body {
   display: block;
 }
 
-/* ============================================================
-   FOOTER
-============================================================ */
 footer {
   padding: 2.5rem;
   border-top: 1px solid var(--border);
@@ -979,9 +941,6 @@ footer {
 
 .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
 
-/* ============================================================
-   SCROLL REVEAL
-============================================================ */
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -989,9 +948,6 @@ footer {
 }
 .reveal.in { opacity: 1; transform: translateY(0); }
 
-/* ============================================================
-   RESPONSIVE
-============================================================ */
 @media (max-width: 768px) {
   #header { padding: 1rem 1.25rem; }
 
@@ -1014,7 +970,7 @@ footer {
 
   footer { padding: 1.5rem; flex-direction: column; text-align: center; }
 
-  /* ── Perf: desativa ops pesadas de GPU no mobile ── */
+  
   .bmock, .phone-float-card { animation: none !important; will-change: auto !important; }
   .mp-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(0,0,0,0.88) !important; }
   .hero-label { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
@@ -1038,9 +994,6 @@ footer {
 </head>
 <body>
 
-<!-- ============================================================
-     HEADER
-============================================================ -->
 <header id="header">
   <a href="index.html" class="logo">magno<em>DSG</em></a>
   <nav class="header-nav">
@@ -1052,9 +1005,6 @@ footer {
   </nav>
 </header>
 
-<!-- ============================================================
-     HERO
-============================================================ -->
 <section class="hero">
   <div class="hero-label reveal">
     <span class="dot"></span>
@@ -1085,9 +1035,6 @@ footer {
   </div>
 </section>
 
-<!-- ============================================================
-     FILTER
-============================================================ -->
 <div class="filters reveal">
   <button class="filter-btn active" data-filter="all">Todos</button>
   <button class="filter-btn" data-filter="gestao">Gestão</button>
@@ -1097,24 +1044,15 @@ footer {
   <button class="filter-btn" data-filter="landing">Landing Page</button>
 </div>
 
-<!-- ============================================================
-     GRID
-============================================================ -->
 <div class="systems-grid" id="systemsGrid">
-  <!-- cards injetados via JS -->
+  
 </div>
 
-<!-- ============================================================
-     FOOTER
-============================================================ -->
 <footer>
   <span class="footer-logo">magno<em>DSG</em></span>
   <span class="footer-copy">© 2026 magnoDSG — Todos os direitos reservados.</span>
 </footer>
 
-<!-- ============================================================
-     MOBILE PREVIEW PANEL
-============================================================ -->
 <div id="mobilePanel">
   <div class="mp-backdrop" id="mpBackdrop"></div>
   <div class="mp-drawer">
@@ -1135,7 +1073,7 @@ footer {
     </div>
     <div class="mp-body">
 
-      <!-- Mobile View -->
+      
       <div id="mpViewMobile">
 
       <div class="mp-phone">
@@ -1144,24 +1082,24 @@ footer {
         <div class="mp-btn-vol"></div>
         <div class="mp-btn-pwr"></div>
         <div class="mp-screen" id="mpScreen">
-          <!-- status bar -->
+          
           <div class="mp-statusbar">
             <span class="mp-time" id="mpTime">9:41</span>
             <div class="mp-icons">
-              <!-- signal -->
+              
               <svg width="12" height="10" viewBox="0 0 12 10" fill="white">
                 <rect x="0" y="6" width="2" height="4" rx="0.5"/>
                 <rect x="3" y="4" width="2" height="6" rx="0.5"/>
                 <rect x="6" y="2" width="2" height="8" rx="0.5"/>
                 <rect x="9" y="0" width="2" height="10" rx="0.5" opacity="0.35"/>
               </svg>
-              <!-- wifi -->
+              
               <svg width="11" height="8" viewBox="0 0 11 8" fill="none" stroke="white" stroke-width="1.4" stroke-linecap="round">
                 <path d="M1 3 Q5.5 0 10 3"/>
                 <path d="M2.5 5 Q5.5 3.2 8.5 5"/>
                 <circle cx="5.5" cy="7" r="0.8" fill="white" stroke="none"/>
               </svg>
-              <!-- battery -->
+              
               <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
                 <rect x="0" y="1" width="15" height="8" rx="2" stroke="white" stroke-width="1.2"/>
                 <rect x="1" y="2" width="10" height="6" rx="1.2" fill="white"/>
@@ -1174,9 +1112,9 @@ footer {
         <div class="mp-indicator"></div>
       </div>
 
-      </div><!-- /mpViewMobile -->
+      </div>
 
-      <!-- Web View -->
+      
       <div id="mpViewWeb" style="display:none; width:100%">
         <div class="mpweb-mock">
           <div class="mpweb-chrome">
@@ -1189,9 +1127,9 @@ footer {
             <iframe id="mpWebIframe" src="" loading="lazy"></iframe>
           </div>
         </div>
-      </div><!-- /mpViewWeb -->
+      </div>
 
-      <!-- Info -->
+      
       <div class="mp-info">
         <div class="mp-info-badge" id="mpBadge"></div>
         <div class="mp-info-name" id="mpName"></div>
@@ -1211,9 +1149,6 @@ footer {
   </div>
 </div>
 
-<!-- ============================================================
-     DEMO OVERLAY
-============================================================ -->
 <div id="demoOverlay">
   <div id="demoTopBar">
     <button class="demo-back-btn" onclick="closeDemo()">
@@ -1229,9 +1164,6 @@ footer {
   <iframe id="demoFrame" src="" allowfullscreen></iframe>
 </div>
 
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
 <script>
 const SYSTEMS = [
   {
@@ -1358,7 +1290,6 @@ const SYSTEMS = [
   },
 ];
 
-// ── Build cards ──────────────────────────────────────────────
 function buildCards(systems) {
   const grid = document.getElementById('systemsGrid');
   grid.innerHTML = '';
@@ -1371,14 +1302,14 @@ function buildCards(systems) {
     card.dataset.filter = s.filter;
 
     card.innerHTML = `
-      <!-- glow layer -->
+      
       <div class="card-glow" style="background:radial-gradient(ellipse at 50% 0%, ${s.accent}28 0%, transparent 65%)"></div>
 
-      <!-- preview -->
+      
       <div class="card-preview">
         <div class="preview-bg" style="background:${s.bg}"></div>
 
-        <!-- Browser mockup -->
+        
         <div class="bmock">
           <div class="bmock-chrome">
             <div class="bmock-dots"><span class="bd bd-r"></span><span class="bd bd-y"></span><span class="bd bd-g"></span></div>
@@ -1389,7 +1320,7 @@ function buildCards(systems) {
           </div>
         </div>
 
-        <!-- Phone floating -->
+        
         <div class="phone-float-card">
           <div class="phone-card-shell"></div>
           <div class="phone-card-notch"></div>
@@ -1399,7 +1330,7 @@ function buildCards(systems) {
         </div>
       </div>
 
-      <!-- body -->
+      
       <div class="card-body">
         <div class="card-meta">
           <span class="card-badge">${s.badge}</span>
@@ -1434,10 +1365,8 @@ function buildCards(systems) {
     grid.appendChild(card);
   });
 
-  // re-observe
   observeReveals();
 
-  // bind events
   grid.querySelectorAll('.card-btn-demo').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -1453,7 +1382,6 @@ function buildCards(systems) {
     });
   });
 
-  // card click → demo
   grid.querySelectorAll('.sys-card').forEach(card => {
     card.addEventListener('click', function() {
       const demoBtn = this.querySelector('.card-btn-demo');
@@ -1462,7 +1390,6 @@ function buildCards(systems) {
   });
 }
 
-// ── Filter ───────────────────────────────────────────────────
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1474,7 +1401,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-// ── Mobile Panel ─────────────────────────────────────────────
 function openMobilePanel(sys, view = 'mobile') {
   document.getElementById('mpBadge').textContent  = sys.badge;
   document.getElementById('mpName').textContent   = sys.name;
@@ -1504,7 +1430,6 @@ function switchMpView(view) {
   if (tab) tab.classList.add('active');
   document.getElementById('mpViewMobile').style.display = view === 'mobile' ? '' : 'none';
   document.getElementById('mpViewWeb').style.display    = view === 'web'    ? '' : 'none';
-  // lazy-load: só carrega o iframe da aba ativa
   if (window._mpSysLive) {
     const el = view === 'mobile' ? document.getElementById('mpIframe') : document.getElementById('mpWebIframe');
     if ((el.dataset.loaded || '') !== window._mpSysLive) {
@@ -1532,7 +1457,6 @@ document.querySelectorAll('.mp-tab').forEach(tab => {
   tab.addEventListener('click', () => switchMpView(tab.dataset.view));
 });
 
-// ── Demo Overlay ──────────────────────────────────────────────
 function openDemo(url, label) {
   document.getElementById('demoFrame').src = url;
   document.getElementById('demoNameLabel').textContent = label;
@@ -1550,7 +1474,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeDemo(); closeMobilePanel(); }
 });
 
-// ── Scroll reveal ─────────────────────────────────────────────
 function observeReveals() {
   const obs = new IntersectionObserver(entries => {
     entries.forEach((e, i) => {
@@ -1564,7 +1487,6 @@ function observeReveals() {
   document.querySelectorAll('.reveal:not(.in)').forEach(el => obs.observe(el));
 }
 
-// ── Init ──────────────────────────────────────────────────────
 buildCards(SYSTEMS);
 </script>
 
