@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Boss | Barbearia Premium</title>
+  <meta name="description" content="Landing page mobile first da barbearia The Boss com visual premium, elegante e industrial chic." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Syne:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            boss: {
+              bg: "#090909",
+              card: "#151515",
+              accent: "#8B0000",
+              gold: "#CDA349",
+              wood: "#4B3424",
+              text: "#F8F6F2",
+              muted: "#B0A79A"
+            }
+          },
+          fontFamily: {
+            display: ["Playfair Display", "serif"],
+            accent: ["Syne", "sans-serif"],
+            body: ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #090909;
+      color: #F8F6F2;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-title {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2.1rem, 10vw, 4.8rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-bg-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 70% center;
+      filter: grayscale(0.15) contrast(1.05) brightness(0.42) saturate(0.85);
+      transform: scale(1.08);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 35%, rgba(205, 163, 73, 0.18), transparent 35%),
+        radial-gradient(circle at 25% 75%, rgba(75, 52, 36, 0.4), transparent 35%),
+        linear-gradient(to bottom, rgba(9, 9, 9, 0.55), rgba(9, 9, 9, 0.93));
+      z-index: 1;
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg, rgba(21, 21, 21, 0.86), rgba(9, 9, 9, 0.82));
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(205, 163, 73, 0.24);
+      border-radius: 24px;
+    }
+
+    .organic-card {
+      border-radius: 24px;
+      background: linear-gradient(145deg, #171717, #111111);
+      border: 1px solid rgba(205, 163, 73, 0.2);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    .lux-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #CDA349, transparent);
+    }
+
+    .btn-float {
+      transition: transform 0.28s ease, box-shadow 0.28s ease, background-color 0.2s ease;
+    }
+    .btn-float:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.55);
+    }
+  </style>
+</head>
+<body class="bg-boss-bg text-boss-text">
+
+  <header class="sticky top-0 z-50 bg-boss-bg/85 backdrop-blur-md border-b border-boss-gold/20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="#inicio" class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-full bg-boss-accent text-white flex items-center justify-center text-xs font-accent font-bold">TB</span>
+        <span class="font-accent text-lg tracking-[0.14em]">THE BOSS</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-accent tracking-[0.12em] text-boss-muted">
+        <a href="#servicos" class="hover:text-boss-gold transition">SERVICOS</a>
+        <a href="#equipe" class="hover:text-boss-gold transition">EQUIPE</a>
+        <a href="#local" class="hover:text-boss-gold transition">LOCAL</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://wa.me/5569000000000" target="_blank" rel="noopener" class="btn-float rounded-full px-5 py-2.5 bg-boss-accent hover:bg-boss-gold text-white text-xs sm:text-sm font-accent font-bold tracking-[0.12em]">
+          AGENDAR
+        </a>
+        <button id="menu-btn" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Abrir menu" aria-expanded="false">
+          <span class="menu-bar block w-6 h-0.5 bg-boss-text transition-all duration-300"></span>
+          <span class="menu-bar block w-6 h-0.5 bg-boss-text transition-all duration-300"></span>
+          <span class="menu-bar block w-6 h-0.5 bg-boss-text transition-all duration-300"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-boss-bg/95 backdrop-blur-md border-t border-boss-gold/15">
+      <nav class="flex flex-col px-6 py-5 gap-5 font-accent tracking-[0.14em] text-boss-muted text-sm">
+        <a href="#servicos" class="mobile-link hover:text-boss-gold transition py-1">SERVICOS</a>
+        <a href="#equipe" class="mobile-link hover:text-boss-gold transition py-1">EQUIPE</a>
+        <a href="#local" class="mobile-link hover:text-boss-gold transition py-1">LOCAL</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" class="relative min-h-[90vh] sm:min-h-screen flex items-center overflow-hidden">
+      <div class="hero-bg-image" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1800&q=80" alt="" />
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
+        <div class="max-w-2xl glass-card p-6 sm:p-10 fade-in-up">
+          <p class="font-accent text-boss-gold text-xs sm:text-sm tracking-[0.22em] mb-5">BARBEARIA PREMIUM</p>
+          <h1 class="hero-title mb-5">
+            Seu estilo<br />
+            em outro nivel
+          </h1>
+          <p class="text-boss-muted text-base sm:text-lg leading-relaxed mb-8">
+            Corte, barba e acabamento com tecnica precisa em um ambiente elegante e confortavel.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <a href="https://wa.me/5569000000000" target="_blank" rel="noopener" class="btn-float rounded-full px-7 py-3.5 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em] text-center">
+              AGENDAR AGORA
+            </a>
+            <a href="#servicos" class="btn-float rounded-full px-7 py-3.5 border border-boss-gold/50 text-boss-gold hover:bg-boss-gold hover:text-boss-bg text-sm font-accent font-bold tracking-[0.12em] text-center">
+              VER SERVICOS
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicos" class="py-20 sm:py-28 bg-boss-bg">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="fade-in-up mb-12 sm:mb-16">
+          <p class="font-accent text-boss-gold text-xs sm:text-sm tracking-[0.22em] mb-4">SERVICOS</p>
+          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl">Nossos servicos</h2>
+          <div class="lux-line w-32 mt-6"></div>
+        </div>
+
+        <div class="grid gap-5 sm:gap-6 md:grid-cols-2">
+          <article class="organic-card p-6 sm:p-8 fade-in-up">
+            <h3 class="font-display text-2xl sm:text-3xl mb-3">Corte premium</h3>
+            <p class="text-boss-muted leading-relaxed mb-5">Corte personalizado para valorizar seu rosto e seu estilo.</p>
+            <p class="font-accent text-boss-gold text-2xl mb-6">R$ 60</p>
+            <a href="https://wa.me/5569000000000?text=Ola%2C+gostaria+de+agendar+um+Corte+Premium" target="_blank" rel="noopener" class="btn-float inline-block rounded-full px-6 py-2.5 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em]">AGENDAR</a>
+          </article>
+
+          <article class="organic-card p-6 sm:p-8 fade-in-up" style="animation-delay: 0.08s;">
+            <h3 class="font-display text-2xl sm:text-3xl mb-3">Barba classica</h3>
+            <p class="text-boss-muted leading-relaxed mb-5">Modelagem completa com navalha e acabamento limpo.</p>
+            <p class="font-accent text-boss-gold text-2xl mb-6">R$ 50</p>
+            <a href="https://wa.me/5569000000000?text=Ola%2C+gostaria+de+agendar+uma+Barba+Classica" target="_blank" rel="noopener" class="btn-float inline-block rounded-full px-6 py-2.5 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em]">AGENDAR</a>
+          </article>
+
+          <article class="organic-card p-6 sm:p-8 fade-in-up" style="animation-delay: 0.12s;">
+            <h3 class="font-display text-2xl sm:text-3xl mb-3">Corte com alinhamento</h3>
+            <p class="text-boss-muted leading-relaxed mb-5">Laterais e contornos definidos para um visual moderno.</p>
+            <p class="font-accent text-boss-gold text-2xl mb-6">R$ 70</p>
+            <a href="https://wa.me/5569000000000?text=Ola%2C+gostaria+de+agendar+um+Corte+com+Alinhamento" target="_blank" rel="noopener" class="btn-float inline-block rounded-full px-6 py-2.5 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em]">AGENDAR</a>
+          </article>
+
+          <article class="organic-card p-6 sm:p-8 fade-in-up" style="animation-delay: 0.16s;">
+            <h3 class="font-display text-2xl sm:text-3xl mb-3">Experiencia completa</h3>
+            <p class="text-boss-muted leading-relaxed mb-5">Pacote com corte, barba e sobrancelha em um unico atendimento.</p>
+            <p class="font-accent text-boss-gold text-2xl mb-6">R$ 125</p>
+            <a href="https://wa.me/5569000000000?text=Ola%2C+gostaria+de+agendar+a+Experiencia+Completa" target="_blank" rel="noopener" class="btn-float inline-block rounded-full px-6 py-2.5 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em]">AGENDAR</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="equipe" class="py-20 sm:py-28 bg-boss-card">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="fade-in-up mb-12 sm:mb-16">
+          <p class="font-accent text-boss-gold text-xs sm:text-sm tracking-[0.22em] mb-4">EQUIPE</p>
+          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl">Equipe</h2>
+          <div class="lux-line w-32 mt-6"></div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          <article class="organic-card p-5 sm:p-6 fade-in-up text-center">
+            <div class="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-zinc-700 to-zinc-900 border-2 border-boss-gold/30 flex items-center justify-center">
+              <svg class="w-10 h-10 text-boss-gold/40" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </div>
+            <h3 class="font-display text-2xl mb-3">Paulo Renan</h3>
+            <div class="flex flex-wrap justify-center gap-2">
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">CORTE</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">BARBA</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">PEZINHO</span>
+            </div>
+          </article>
+
+          <article class="organic-card p-5 sm:p-6 fade-in-up text-center" style="animation-delay: 0.1s;">
+            <div class="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-zinc-700 to-zinc-900 border-2 border-boss-gold/30 flex items-center justify-center">
+              <svg class="w-10 h-10 text-boss-gold/40" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </div>
+            <h3 class="font-display text-2xl mb-3">Joao Mendes</h3>
+            <div class="flex flex-wrap justify-center gap-2">
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">CORTE</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">FADE</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">ALINHAMENTO</span>
+            </div>
+          </article>
+
+          <article class="organic-card p-5 sm:p-6 fade-in-up text-center" style="animation-delay: 0.14s;">
+            <div class="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-zinc-700 to-zinc-900 border-2 border-boss-gold/30 flex items-center justify-center">
+              <svg class="w-10 h-10 text-boss-gold/40" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </div>
+            <h3 class="font-display text-2xl mb-3">Lucas Barreto</h3>
+            <div class="flex flex-wrap justify-center gap-2">
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">BARBA</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">ACABAMENTO</span>
+              <span class="rounded-full px-3 py-1 border border-boss-gold/40 text-boss-gold font-accent text-xs tracking-[0.1em]">PIGMENTACAO</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="local" class="py-20 sm:py-28 bg-boss-card">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="fade-in-up mb-12 sm:mb-16">
+          <p class="font-accent text-boss-gold text-xs sm:text-sm tracking-[0.22em] mb-4">LOCAL</p>
+          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl">Nosso endereco</h2>
+          <div class="lux-line w-32 mt-6"></div>
+        </div>
+
+        <article class="organic-card p-6 sm:p-8 fade-in-up grid gap-6 md:grid-cols-2 items-center">
+          <div>
+            <h3 class="font-display text-2xl mb-3">Unidade Centro</h3>
+            <p class="text-boss-muted leading-relaxed mb-4">
+              Rua Exemplo Premium 245<br />
+              Porto Velho RO<br />
+              CEP: 76801-000
+            </p>
+            <p class="text-boss-muted mb-6">Segunda a sexta das 09h as 20h e sabado das 09h as 18h</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Rua+Exemplo+Premium+245+Rio+Branco+AC" target="_blank" rel="noopener" class="btn-float inline-flex items-center gap-2 rounded-full px-6 py-3 bg-boss-accent hover:bg-boss-gold text-white text-sm font-accent font-bold tracking-[0.12em]">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              VER NO MAPS
+            </a>
+          </div>
+          <div class="rounded-2xl overflow-hidden border border-boss-gold/20" style="min-height:220px;">
+            <iframe
+              title="Localizacao The Boss Barbearia"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.0!2d-67.8099!3d-9.9754!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOcKwNTgnMzEuNCJTIDY3wrA0OCczNS42Ilc!5e0!3m2!1spt!2sbr!4v1700000000000!5m2!1spt!2sbr"
+              width="100%"
+              height="220"
+              style="border:0; display:block; filter:grayscale(30%) contrast(1.1);"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 sm:py-14 bg-black border-t border-boss-gold/25">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid gap-8 md:grid-cols-4">
+      <div>
+        <p class="font-accent text-lg tracking-[0.14em] mb-3">THE BOSS</p>
+        <p class="text-boss-muted text-sm">Barbearia premium com atendimento de qualidade e cuidado em cada detalhe.</p>
+      </div>
+      <div>
+        <p class="font-accent text-boss-gold text-xs tracking-[0.14em] mb-3">MENU</p>
+        <ul class="space-y-2 text-sm text-boss-muted">
+          <li><a href="#servicos" class="hover:text-boss-gold transition">Servicos</a></li>
+          <li><a href="#equipe" class="hover:text-boss-gold transition">Equipe</a></li>
+
+        </ul>
+      </div>
+      <div>
+        <p class="font-accent text-boss-gold text-xs tracking-[0.14em] mb-3">CONTATO</p>
+        <p class="text-boss-muted text-sm">(69) 9 8199 6313</p>
+        <p class="text-boss-muted text-sm">contato@theboss.com</p>
+      </div>
+      <div>
+        <p class="font-accent text-boss-gold text-xs tracking-[0.14em] mb-3">SOCIAL</p>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="block text-boss-muted text-sm hover:text-boss-gold transition mb-2">Instagram</a>
+        <a href="https://wa.me/5569000000000" target="_blank" rel="noopener" class="block text-boss-muted text-sm hover:text-boss-gold transition">WhatsApp</a>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-10 pt-6 border-t border-boss-gold/15 text-center text-xs text-boss-muted">
+      <p>© 2026 The Boss Barbearia. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/5569000000000" target="_blank" rel="noopener" class="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-boss-accent hover:bg-boss-gold text-white flex items-center justify-center shadow-2xl z-50 transition" aria-label="Falar no WhatsApp">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.967 1.523 9.905 9.905 0 00-2.826 5.104 9.924 9.924 0 00-.53 3.82 9.94 9.94 0 00.476 2.847l-.56 2.05 2.099-.551a9.976 9.976 0 002.762.556 10.009 10.009 0 0010.002-10.002c0-2.688-1.046-5.213-2.945-7.112a10.009 10.009 0 00-7.108-2.275" />
+    </svg>
+  </a>
+
+  <script>
+    const observerOptions = { threshold: 0.12, rootMargin: "0px 0px -40px 0px" };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll(".fade-in-up").forEach((el) => observer.observe(el));
+
+    // Hamburger menu
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const bars = menuBtn.querySelectorAll(".menu-bar");
+
+    menuBtn.addEventListener("click", () => {
+      const isOpen = !mobileMenu.classList.contains("hidden");
+      mobileMenu.classList.toggle("hidden");
+      menuBtn.setAttribute("aria-expanded", String(!isOpen));
+      // Animate bars into X
+      if (!isOpen) {
+        bars[0].style.transform = "translateY(8px) rotate(45deg)";
+        bars[1].style.opacity = "0";
+        bars[2].style.transform = "translateY(-8px) rotate(-45deg)";
+      } else {
+        bars[0].style.transform = "";
+        bars[1].style.opacity = "";
+        bars[2].style.transform = "";
+      }
+    });
+
+    // Close menu when clicking a link
+    document.querySelectorAll(".mobile-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
+        bars[0].style.transform = "";
+        bars[1].style.opacity = "";
+        bars[2].style.transform = "";
+      });
+    });
+  </script>
+</body>
+</html>
